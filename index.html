@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sledilnik športnih aktivnosti</title>
     
-    <!-- PWA in ikone preko Data URI (SVG) -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%232563eb'/><path d='M320 96c0-17.7-14.3-32-32-32h-64c-17.7 0-32 14.3-32 32s14.3 32 32 32h64c17.7 0 32-14.3 32-32zM144 192c-26.5 0-48 21.5-48 48s21.5 48 48 48H160v160c0 17.7 14.3 32 32 32s32-14.3 32-32V288h32v112c0 17.7 14.3 32 32 32s32-14.3 32-32V288h16c26.5 0 48-21.5 48-48s-21.5-48-48-48H144z' fill='%23ffffff'/></svg>">
+    <!-- PWA nastavitev za mobilne naprave -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Športni sledilnik">
+    <meta name="theme-color" content="#0f172a">
+
+    <!-- Ikona za Apple naprave (iOS) -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%232563eb'/><path d='M320 96c0-17.7-14.3-32-32-32h-64c-17.7 0-32 14.3-32 32s14.3 32 32 32h64c17.7 0 32-14.3 32-32zM144 192c-26.5 0-48 21.5-48 48s21.5 48 48 48H160v160c0 17.7 14.3 32 32 32s32-14.3 32-32V288h32v112c0 17.7 14.3 32 32 32s32-14.3 32-32V288h16c26.5 0 48-21.5 48-48s-21.5-48-48-48H144z' fill='%23ffffff'/></svg>">
-    
-    <!-- Dinamični Web App Manifest preko Data URI -->
-    <link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;Športni sledilnik&quot;,&quot;short_name&quot;:&quot;Šport&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%230f172a&quot;,&quot;theme_color&quot;:&quot;%232563eb&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%232563eb'/><path d='M320 96c0-17.7-14.3-32-32-32h-64c-17.7 0-32 14.3-32 32s14.3 32 32 32h64c17.7 0 32-14.3 32-32zM144 192c-26.5 0-48 21.5-48 48s21.5 48 48 48H160v160c0 17.7 14.3 32 32 32s32-14.3 32-32V288h32v112c0 17.7 14.3 32 32 32s32-14.3 32-32V288h16c26.5 0 48-21.5 48-48s-21.5-48-48-48H144z' fill='%23ffffff'/></svg>&quot;,&quot;sizes&quot;:&quot;512x512&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%232563eb'/><path d='M320 96c0-17.7-14.3-32-32-32h-64c-17.7 0-32 14.3-32 32s14.3 32 32 32h64c17.7 0 32-14.3 32-32zM144 192c-26.5 0-48 21.5-48 48s21.5 48 48 48H160v160c0 17.7 14.3 32 32 32s32-14.3 32-32V288h32v112c0 17.7 14.3 32 32 32s32-14.3 32-32V288h16c26.5 0 48-21.5 48-48s-21.5-48-48-48H144z' fill='%23ffffff'/></svg>">
 
     <!-- Tailwind CSS prek CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -38,6 +41,13 @@
             </h1>
             <p class="text-slate-400 text-sm">Beleži svoje treninge in spremljaj tedenski napredek</p>
         </header>
+
+        <!-- PWA gumb za namestitev (prikazan samo, ko je možna namestitev) -->
+        <div id="installContainer" class="hidden mb-6 text-center">
+            <button id="installBtn" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-lg transition-all inline-flex items-center gap-2">
+                <i class="fa-solid fa-download"></i> Namesti aplikacijo na telefon
+            </button>
+        </div>
 
         <section class="bg-cardBg border border-slate-800 rounded-2xl p-6 shadow-lg mb-8">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -124,7 +134,64 @@
     </div>
 
     <script>
-        // Ikone za posamezne športe
+        // 1. Dinamično generiranje in vstavljanje PWA Manifesta prek Bloba
+        const manifestData = {
+            "name": "Športni sledilnik",
+            "short_name": "Šport",
+            "start_url": window.location.href,
+            "display": "standalone",
+            "background_color": "#0f172a",
+            "theme_color": "#2563eb",
+            "icons": [
+                {
+                    "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%232563eb'/><path d='M320 96c0-17.7-14.3-32-32-32h-64c-17.7 0-32 14.3-32 32s14.3 32 32 32h64c17.7 0 32-14.3 32-32zM144 192c-26.5 0-48 21.5-48 48s21.5 48 48 48H160v160c0 17.7 14.3 32 32 32s32-14.3 32-32V288h32v112c0 17.7 14.3 32 32 32s32-14.3 32-32V288h16c26.5 0 48-21.5 48-48s-21.5-48-48-48H144z' fill='%23ffffff'/></svg>",
+                    "sizes": "512x512",
+                    "type": "image/svg+xml"
+                }
+            ]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
+        const manifestURL = URL.createObjectURL(manifestBlob);
+        const manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = manifestURL;
+        document.head.appendChild(manifestLink);
+
+        // 2. Registracija Service Workerja (preko Data URI, da vse ostane v eni datoteki)
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', (e) => { self.skipWaiting(); });
+                self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
+                self.addEventListener('fetch', (e) => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });
+            `;
+            const swBlob = new Blob([swCode], { type: 'text/javascript' });
+            const swUrl = URL.createObjectURL(swBlob);
+            navigator.serviceWorker.register(swUrl).catch(err => console.log('SW napaka:', err));
+        }
+
+        // 3. Logika za gumb za namestitev (Prompt za Android / Chrome)
+        let deferredPrompt;
+        const installContainer = document.getElementById('installContainer');
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installContainer.classList.remove('hidden'); // Prikaži gumb
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    installContainer.classList.add('hidden');
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        // 4. Aplikacijska logika za vnos in prikaz aktivnosti
         const sportIcons = {
             'Fitnes': 'fa-dumbbell',
             'Kolesarjenje': 'fa-person-biking',
@@ -134,10 +201,7 @@
             'Ostalo': 'fa-star'
         };
 
-        // Nastavitev današnjega datuma kot privzetega
         document.getElementById('date').valueAsDate = new Date();
-
-        // Inicializacija baze podatkov iz localStorage
         let activities = JSON.parse(localStorage.getItem('sports_activities')) || [];
 
         const form = document.getElementById('activityForm');
@@ -147,7 +211,6 @@
         const progressBarEl = document.getElementById('progressBar');
         const goalPercentageEl = document.getElementById('goalPercentage');
 
-        // Glavna funkcija za osvežitev prikaza
         function renderApp() {
             activityListEl.innerHTML = '';
 
@@ -155,14 +218,10 @@
                 emptyStateEl.classList.remove('hidden');
             } else {
                 emptyStateEl.classList.add('hidden');
-                
-                // Prikaži zadnjih 10 aktivnosti (najnovejše na vrhu)
                 const recentActivities = [...activities].reverse().slice(0, 10);
 
                 recentActivities.forEach((act) => {
-                    // Poišči originalni indeks v array-u zaradi brisanja
                     const originalIndex = activities.indexOf(act);
-                    
                     const card = document.createElement('div');
                     card.className = "bg-cardBg border border-slate-800 rounded-xl p-4 flex items-center justify-between shadow transition hover:border-slate-700";
                     
@@ -193,28 +252,24 @@
             updateDashboard();
         }
 
-        // Posodobitev statistike (tedenski seštevek in progress bar)
         function updateDashboard() {
-            // Izračun minut v tekočem tednu (poenostavljeno sešteva zadnjih 7 dni ali vseh, za robustnost seštejemo vse zabeležene)
             const totalMinutes = activities.reduce((sum, act) => sum + Number(act.duration), 0);
-            
             totalMinutesTextEl.textContent = `Skupaj: ${totalMinutes} minut`;
 
             const weeklyGoal = 150;
             let percentage = Math.round((totalMinutes / weeklyGoal) * 100);
-            if (percentage > 100) percentage = 100; // Omejitev na max 100% za vizualni bar
+            if (percentage > 100) percentage = 100;
 
             progressBarEl.style.width = `${percentage}%`;
             goalPercentageEl.textContent = `${percentage}%`;
         }
 
-        // Dodajanje nove aktivnosti
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
             const newActivity = {
                 date: document.getElementById('date').value,
-                type: document.getElementById('type' ).value,
+                type: document.getElementById('type').value,
                 duration: parseInt(document.getElementById('duration').value),
                 intensity: document.getElementById('intensity').value,
                 note: document.getElementById('note').value.trim()
@@ -224,18 +279,16 @@
             localStorage.setItem('sports_activities', JSON.stringify(activities));
 
             form.reset();
-            document.getElementById('date').valueAsDate = new Date(); // Ponastavi datum na danes
+            document.getElementById('date').valueAsDate = new Date();
             renderApp();
         });
 
-        // Brisanje aktivnosti
         window.deleteActivity = function(index) {
             activities.splice(index, 1);
             localStorage.setItem('sports_activities', JSON.stringify(activities));
             renderApp();
         }
 
-        // Prvi zagon ob nalaganju strani
         renderApp();
     </script>
 </body>
