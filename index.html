@@ -51,43 +51,43 @@
         </div>
 
         <!-- Glavna nadzorna plošča za tekoči teden -->
-        <section class="bg-cardBg border border-slate-800 rounded-2xl p-6 shadow-lg mb-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b border-slate-800 pb-4">
+        <section class="bg-cardBg border border-slate-800 rounded-2xl p-5 shadow-lg mb-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3 border-b border-slate-800 pb-4">
                 <div>
-                    <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-week text-blue-400"></i> Tedenski povzetek (<span id="currentWeekRange">...</span>)
+                    <h2 class="text-sm font-semibold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-week text-blue-400"></i> Tedenski povzetek
                     </h2>
-                    <p class="text-xs text-slate-400 mt-1">Avtomatska ponastavitev ob začetku novega tedna</p>
+                    <p id="currentWeekRange" class="text-xs text-blue-400 font-medium mt-0.5">...</p>
                 </div>
-                <div class="grid grid-cols-3 gap-4 text-center md:text-right">
-                    <div>
-                        <span class="block text-xs text-slate-400">Aktivnost</span>
-                        <span id="weeklyMinutes" class="text-lg font-bold text-blue-400">0 min</span>
+                <div class="grid grid-cols-3 gap-3 text-center sm:text-right w-full sm:w-auto">
+                    <div class="bg-slate-900/50 sm:bg-transparent p-2 sm:p-0 rounded-lg">
+                        <span class="block text-[10px] text-slate-400">Aktivnost</span>
+                        <span id="weeklyMinutes" class="text-sm font-bold text-blue-400">0 min</span>
                     </div>
-                    <div>
-                        <span class="block text-xs text-slate-400">Porabljeno</span>
-                        <span id="weeklyBurned" class="text-lg font-bold text-emerald-400">0 kcal</span>
+                    <div class="bg-slate-900/50 sm:bg-transparent p-2 sm:p-0 rounded-lg">
+                        <span class="block text-[10px] text-slate-400">Porabljeno</span>
+                        <span id="weeklyBurned" class="text-sm font-bold text-emerald-400">0 kcal</span>
                     </div>
-                    <div>
-                        <span class="block text-xs text-slate-400">Zaužito</span>
-                        <span id="weeklyCalories" class="text-lg font-bold text-amber-400">0 kcal</span>
+                    <div class="bg-slate-900/50 sm:bg-transparent p-2 sm:p-0 rounded-lg">
+                        <span class="block text-[10px] text-slate-400">Zaužito</span>
+                        <span id="weeklyCalories" class="text-sm font-bold text-amber-400">0 kcal</span>
                     </div>
                 </div>
             </div>
 
             <!-- Energijska bilanca / razlika -->
-            <div class="bg-slate-900/60 rounded-xl p-3 mb-4 flex justify-between items-center text-xs md:text-sm">
-                <span class="text-slate-300 font-medium">Neto energijska bilanca (Porabljeno - Zaužito):</span>
+            <div class="bg-slate-900/60 rounded-xl p-3 mb-4 flex justify-between items-center text-xs">
+                <span class="text-slate-300 font-medium">Neto energijska bilanca:</span>
                 <span id="netCalories" class="font-bold">0 kcal</span>
             </div>
 
             <div>
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-sm font-medium text-slate-300">Cilj aktivnosti (150 min)</span>
-                    <span id="goalPercentage" class="text-sm font-bold text-blue-400">0%</span>
+                <div class="flex justify-between items-center mb-1.5">
+                    <span class="text-xs font-medium text-slate-300">Cilj aktivnosti (150 min)</span>
+                    <span id="goalPercentage" class="text-xs font-bold text-blue-400">0%</span>
                 </div>
-                <div class="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
-                    <div id="progressBar" class="bg-blue-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5 overflow-hidden">
+                    <div id="progressBar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
                 </div>
             </div>
         </section>
@@ -195,7 +195,7 @@
                     </div>
 
                     <div class="md:col-span-2">
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Opis obroka (npr. pizza, ovseni kosmiči, 2 topla sendviča...)</label>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Opis obroka (npr. pizza, ovseni kosmiči, sendvič...)</label>
                         <input type="text" id="mealDesc" required placeholder="npr. piščančja jufka"
                             class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
                     </div>
@@ -273,7 +273,6 @@
             }
         }
 
-        // Ikone za šport
         const sportIcons = {
             'Fitnes': 'fa-dumbbell',
             'Kolesarjenje': 'fa-person-biking',
@@ -288,6 +287,23 @@
 
         let activities = JSON.parse(localStorage.getItem('sports_activities')) || [];
         let meals = JSON.parse(localStorage.getItem('sports_meals')) || [];
+
+        function getWeekRange(d) {
+            d = new Date(d);
+            let day = d.getDay();
+            let diff = d.getDate() - day + (day == 0 ? -6: 1); // Ponedeljek
+            let monday = new Date(d.setDate(diff));
+            let sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+
+            const formatDate = (date) => {
+                let dd = String(date.getDate()).padStart(2, '0');
+                let mm = String(date.getMonth() + 1).padStart(2, '0');
+                return `${dd}.${mm}.`;
+            };
+
+            return `${formatDate(monday)} - ${formatDate(sunday)}`;
+        }
 
         function getWeekNumber(d) {
             d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -396,7 +412,9 @@
             actListEl.innerHTML = '';
             mealListEl.innerHTML = '';
 
-            const currentW = getWeekNumber(new Date());
+            const today = new Date();
+            const currentW = getWeekNumber(today);
+            const rangeStr = getWeekRange(today);
 
             let weeklyMinutes = 0;
             let weeklyBurned = 0;
@@ -421,7 +439,7 @@
             document.getElementById('weeklyMinutes').textContent = `${weeklyMinutes} min`;
             document.getElementById('weeklyBurned').textContent = `${weeklyBurned} kcal`;
             document.getElementById('weeklyCalories').textContent = `${weeklyCalories} kcal`;
-            document.getElementById('currentWeekRange').textContent = `Teden št. ${currentW.week}`;
+            document.getElementById('currentWeekRange').textContent = `Teden ${currentW.week} (${rangeStr})`;
 
             const net = weeklyBurned - weeklyCalories;
             const netEl = document.getElementById('netCalories');
