@@ -335,6 +335,7 @@
         let activities = JSON.parse(localStorage.getItem('sports_activities')) || [];
         let meals = JSON.parse(localStorage.getItem('sports_meals')) || [];
 
+        // Zanesljiva funkcija z vgrajenim forced JSON mime-type in robustnim parsiranjem
         async function analyzeWithGemini(base64Image, promptText) {
             const apiKey = localStorage.getItem('gemini_api_key');
             if (!apiKey) {
@@ -356,7 +357,10 @@
                             }
                         }
                     ]
-                }]
+                }],
+                generationConfig: {
+                    responseMimeType: "application/json"
+                }
             };
 
             try {
@@ -376,21 +380,26 @@
 
                 if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
                     let textResponse = data.candidates[0].content.parts[0].text;
-                    let cleanJson = textResponse;
-                    const jsonMatch = textResponse.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-                    if (jsonMatch) {
-                        cleanJson = jsonMatch[1];
-                    } else {
-                        const firstBrace = textResponse.indexOf('{');
-                        const lastBrace = textResponse.lastIndexOf('}');
-                        if (firstBrace !== -1 && lastBrace !== -1) {
-                            cleanJson = textResponse.substring(firstBrace, lastBrace + 1);
+                    try {
+                        return JSON.parse(textResponse);
+                    } catch (parseErr) {
+                        // Rezervni mehanizem za čiščenje markdown blokov, če jih model kljub temu vrne
+                        let cleanJson = textResponse;
+                        const jsonMatch = textResponse.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+                        if (jsonMatch) {
+                            cleanJson = jsonMatch[1];
+                        } else {
+                            const firstBrace = textResponse.indexOf('{');
+                            const lastBrace = textResponse.lastIndexOf('}');
+                            if (firstBrace !== -1 && lastBrace !== -1) {
+                                cleanJson = textResponse.substring(firstBrace, lastBrace + 1);
+                            }
                         }
+                        return JSON.parse(cleanJson);
                     }
-                    return JSON.parse(cleanJson);
                 } else {
                     console.error("Neočekovan format odgovora:", data);
-                    alert("Model ni vrnil veljavnega odgovora. Preveri konzolo (F12).");
+                    alert("Model ni vrnil veljavnega odgovora.");
                     return null;
                 }
             } catch (err) {
@@ -424,11 +433,11 @@
 
                     document.getElementById('actImgData').value = compressedBase64;
 
-                    const prompt = `Analiziraj to sliko športne aktivnosti ali zaslona ure/vadbe. Vpogled vrni IZKLJUČNO v veljavni JSON obliki brez dodatnih besedil:
+                    const prompt = `Analiziraj to sliko športne aktivnosti ali zaslona ure/vadbe. Vrni JSON z naslednjimi ključi:
                     {
-                        "type": "Fitnes" | "Kolesarjenje" | "Odbojka na mivki" | "Tenis" | "Pohodništvo" | "Ostalo",
+                        "type": "Fitnes" ali "Kolesarjenje" ali "Odbojka na mivki" ali "Tenis" ali "Pohodništvo" ali "Ostalo",
                         "duration": številka_v_minutah,
-                        "intensity": "Nizka" | "Srednja" | "Visoka",
+                        "intensity": "Nizka" ali "Srednja" ali "Visoka",
                         "note": "kratek opis v slovenščini"
                     }`;
 
@@ -476,11 +485,11 @@
 
                     document.getElementById('mealImgData').value = compressedBase64;
 
-                    const prompt = `Analiziraj to sliko hrane/obroka. Vrni IZKLJUČNO veljaven JSON z ocena v slovenščini brez dodatnih opomb:
+                    const prompt = `Analiziraj to sliko hrane/obroka. Vrni JSON z naslednjimi ključi:
                     {
                         "description": "kratek natančen opis obroka v slovenščini",
                         "calories": ocenjene_kalorije_kot_številka,
-                        "type": "Zajtrk" | "Malica" | "Kosilo" | "Večerja"
+                        "type": "Zajtrk" ali "Malica" ali "Kosilo" ali "Večerja"
                     }`;
 
                     const aiResult = await analyzeWithGemini(compressedBase64, prompt);
