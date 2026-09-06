@@ -5,21 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Športni sledilnik in prehrana</title>
     
-    <!-- PWA nastavitev za mobilne naprave (iOS & Android) -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Fitnes">
     <meta name="theme-color" content="#0f172a">
 
-    <!-- Ikona za Apple naprave in favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iIzBmMTcyYSIvPjx0ZXh0IHg9IjI1NiIgeT0iMzMyIiBmb250LXNpemU9IjI0MCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMjU2M2ViIj7WgjwvdGV4dD48L3N2Zz4=">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iIzBmMTcyYSIvPjx0ZXh0IHg9IjI1NiIgeT0iMzMyIiBmb250LXNpemU9IjI0MCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMjU2M2ViIj7WgjwvdGV4dD48L3N2Zz4=">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iIzBmMTcyYSIvPjxwYXRoIGQ9Ik0yNTYgNDguMmMwIDAgLTExMiA5NiAtMTEyIDE5MmMgMCA2MS45IDQ5LjkgMTEyIDExMiAxMTJzMTEyLTUwLjEgMTEyLTExMmMwLTk2IC0xMTItMTkyIC0xMTItMTkyem0wIDI5MC43Yy01NC42IDAtOTktNDQuNC05OS05OSAwLTYwLjkgNzEtMTM1LjkgOTktMTU4LjMgMjcuOSAyMi40IDk5IDk3LjQgOTkgMTU4LjMgMCA1NC42LTQ0LjQgOTktOTkgOTl6IiBmaWxsPSIjMjU2M2ViIi8+PC9zdmc+">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iIzBmMTcyYSIvPjxwYXRoIGQ9Ik0yNTYgNDguMmMwIDAgLTExMiA5NiAtMTEyIDE5MmMgMCA2MS45IDQ5LjkgMTEyIDExMiAxMTJzMTEyLTUwLjEgMTEyLTExMmMwLTk2IC0xMTItMTkyIC-xMTItMTkyem0wIDI5MC43Yy01NC42IDAtOTktNDQuNC05OS05OSAwLTYwLjkgNzEtMTM1LjkgOTktMTU4LjMgMjcuOSAyMi40IDk5IDk3LjQgOTktMTU4LjMgMCA1NC42LTQ0LjQgOTktOTkgOTl6IiBmaWxsPSIjMjU2M2ViIi8+PC9zdmc+">
     
-    <!-- Popravljen manifest z relativnimi potmi (./) -->
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%C5%A0port%20in%20Prehrana%22%2C%22short_name%22%3A%22Fitnes%22%2C%22start_url%22%3A%22.%2F%22%2C%22scope%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iIzBmMTcyYSIvPjx0ZXh0IHg9IjI1NiIgeT0iMzMyIiBmb250LXNpemU9IjI0MCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMjU2M2ViIj7WgjwvdGV4dD48L3N2Zz4%3D%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%C5%A0port%20in%20Prehrana%22%2C%22short_name%22%3A%22Fitnes%22%2C%22start_url%22%3A%22.%2F%22%2C%22scope%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iIzBmMTcyYSIvPjxwYXRoIGQ9Ik0yNTYgNDguMmMwIDAgLTExMiA5NiAtMTEyIDE5MmMgMCA2MS45IDQ5LjkgMTEyIDExMiAxMTJzMTEyLTUwLjEgMTEyLTExMmMwLTk2IC0xMTItMTkyIC0xMTItMTkyem0wIDI5MC43Yy01NC42IDAtOTktNDQuNC05OS05OSAwLTYwLjkgNzEtMTM1LjkgOTktMTU4LjMgMjcuOSAyMi40IDk5IDk3LjQgOTktMTU4LjMgMCA1NC42LTQ0LjQgOTktOTkgOTl6IiBmaWxsPSIjMjU2M2ViIi8+PC9zdmc%2B%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 
-    <!-- Tailwind CSS prek CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -46,14 +42,12 @@
             <p class="text-slate-400 text-sm">Tedenski sledilnik aktivnosti, obrokov in energijske bilance</p>
         </header>
 
-        <!-- PWA gumb za namestitev -->
         <div id="installContainer" class="hidden mb-6 text-center">
             <button id="installBtn" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-lg transition-all inline-flex items-center gap-2">
                 <i class="fa-solid fa-download"></i> Namesti aplikacijo na telefon
             </button>
         </div>
 
-        <!-- Glavna nadzorna plošča za tekoči teden -->
         <section class="bg-cardBg border border-slate-800 rounded-2xl p-5 shadow-lg mb-8">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3 border-b border-slate-800 pb-4">
                 <div>
@@ -78,7 +72,6 @@
                 </div>
             </div>
 
-            <!-- Energijska bilanca / razlika -->
             <div class="bg-slate-900/60 rounded-xl p-3 mb-4 flex justify-between items-center text-xs">
                 <span class="text-slate-300 font-medium">Neto energijska bilanca:</span>
                 <span id="netCalories" class="font-bold">0 kcal</span>
@@ -95,7 +88,6 @@
             </div>
         </section>
 
-        <!-- Glavni zavihki (Tabs) -->
         <div class="flex border-b border-slate-800 mb-6">
             <button onclick="switchTab('activities')" id="tabBtnActivities" class="flex-1 py-3 text-center font-semibold text-sm border-b-2 border-blue-500 text-blue-400 transition-colors flex items-center justify-center gap-2">
                 <i class="fa-solid fa-person-running"></i> Športne aktivnosti
@@ -105,7 +97,6 @@
             </button>
         </div>
 
-        <!-- Zavihek 1: Športne aktivnosti -->
         <div id="tabContentActivities" class="space-y-6">
             <div class="bg-cardBg border border-slate-800 rounded-2xl p-5 shadow-lg">
                 <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
@@ -172,7 +163,6 @@
             </div>
         </div>
 
-        <!-- Zavihek 2: Prehrana in obroki -->
         <div id="tabContentMeals" class="space-y-6 hidden">
             <div class="bg-cardBg border border-slate-800 rounded-2xl p-5 shadow-lg">
                 <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
@@ -229,7 +219,6 @@
 
     </div>
 
-    <!-- JavaScript logika -->
     <script>
         // PWA in Service Worker registracija
         if ('serviceWorker' in navigator) {
