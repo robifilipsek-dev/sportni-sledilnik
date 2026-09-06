@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="sl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sledilnik športnih aktivnosti</title>
+    
+    <!-- PWA in ikone preko Data URI (SVG) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%232563eb'/><path d='M320 96c0-17.7-14.3-32-32-32h-64c-17.7 0-32 14.3-32 32s14.3 32 32 32h64c17.7 0 32-14.3 32-32zM144 192c-26.5 0-48 21.5-48 48s21.5 48 48 48H160v160c0 17.7 14.3 32 32 32s32-14.3 32-32V288h32v112c0 17.7 14.3 32 32 32s32-14.3 32-32V288h16c26.5 0 48-21.5 48-48s-21.5-48-48-48H144z' fill='%23ffffff'/></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%232563eb'/><path d='M320 96c0-17.7-14.3-32-32-32h-64c-17.7 0-32 14.3-32 32s14.3 32 32 32h64c17.7 0 32-14.3 32-32zM144 192c-26.5 0-48 21.5-48 48s21.5 48 48 48H160v160c0 17.7 14.3 32 32 32s32-14.3 32-32V288h32v112c0 17.7 14.3 32 32 32s32-14.3 32-32V288h16c26.5 0 48-21.5 48-48s-21.5-48-48-48H144z' fill='%23ffffff'/></svg>">
+    
+    <!-- Dinamični Web App Manifest preko Data URI -->
+    <link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;Športni sledilnik&quot;,&quot;short_name&quot;:&quot;Šport&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%230f172a&quot;,&quot;theme_color&quot;:&quot;%232563eb&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%232563eb'/><path d='M320 96c0-17.7-14.3-32-32-32h-64c-17.7 0-32 14.3-32 32s14.3 32 32 32h64c17.7 0 32-14.3 32-32zM144 192c-26.5 0-48 21.5-48 48s21.5 48 48 48H160v160c0 17.7 14.3 32 32 32s32-14.3 32-32V288h32v112c0 17.7 14.3 32 32 32s32-14.3 32-32V288h16c26.5 0 48-21.5 48-48s-21.5-48-48-48H144z' fill='%23ffffff'/></svg>&quot;,&quot;sizes&quot;:&quot;512x512&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}">
+
+    <!-- Tailwind CSS prek CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a',
+                        cardBg: '#1e293b',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-darkBg text-slate-100 min-h-screen font-sans antialiased">
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-extrabold tracking-tight text-white mb-2">
+                <i class="fa-solid fa-person-running text-blue-500 mr-2"></i> Športni sledilnik
+            </h1>
+            <p class="text-slate-400 text-sm">Beleži svoje treninge in spremljaj tedenski napredek</p>
+        </header>
+
+        <section class="bg-cardBg border border-slate-800 rounded-2xl p-6 shadow-lg mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                <div>
+                    <h2 class="text-lg font-semibold text-white">Tedenski cilj (150 min)</h2>
+                    <p class="text-sm text-slate-400" id="totalMinutesText">Skupaj: 0 minut</p>
+                </div>
+                <div class="text-right w-full md:w-auto">
+                    <span id="goalPercentage" class="text-2xl font-bold text-blue-400">0%</span>
+                </div>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
+                <div id="progressBar" class="bg-blue-500 h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <div class="md:col-span-1 bg-cardBg border border-slate-800 rounded-2xl p-6 shadow-lg h-fit">
+                <h2 class="text-lg font-semibold text-white mb-4">Nova aktivnost</h2>
+                
+                <form id="activityForm" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Datum</label>
+                        <input type="date" id="date" required 
+                            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Vrsta aktivnosti</label>
+                        <select id="type" required 
+                            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+                            <option value="Fitnes">Fitnes</option>
+                            <option value="Kolesarjenje">Kolesarjenje</option>
+                            <option value="Odbojka na mivki">Odbojka na mivki</option>
+                            <option value="Tenis">Tenis</option>
+                            <option value="Pohodništvo">Pohodništvo</option>
+                            <option value="Ostalo">Ostalo</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Trajanje (minut)</label>
+                        <input type="number" id="duration" min="1" required placeholder="npr. 45"
+                            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Intenzivnost</label>
+                        <select id="intensity" 
+                            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+                            <option value="Nizka">Nizka</option>
+                            <option value="Srednja" selected>Srednja</option>
+                            <option value="Visoka">Visoka</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Opomba (opcijsko)</label>
+                        <textarea id="note" rows="2" placeholder="Podrobnosti treninga..."
+                            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500 resize-none"></textarea>
+                    </div>
+
+                    <button type="submit" 
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors text-sm shadow-md">
+                        Dodaj aktivnost
+                    </button>
+                </form>
+            </div>
+
+            <div class="md:col-span-2 space-y-4">
+                <h2 class="text-lg font-semibold text-white">Zadnje aktivnosti</h2>
+                
+                <div id="activityList" class="space-y-3">
+                    </div>
+                
+                <div id="emptyState" class="text-center py-12 text-slate-500 bg-cardBg border border-slate-800 rounded-2xl hidden">
+                    <i class="fa-regular fa-folder-open text-3xl mb-2"></i>
+                    <p class="text-sm">Ni zabeleženih aktivnosti. Dodaj prvo!</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Ikone za posamezne športe
+        const sportIcons = {
+            'Fitnes': 'fa-dumbbell',
+            'Kolesarjenje': 'fa-person-biking',
+            'Odbojka na mivki': 'fa-volleyball',
+            'Tenis': 'fa-baseball-bat-ball',
+            'Pohodništvo': 'fa-mountain',
+            'Ostalo': 'fa-star'
+        };
+
+        // Nastavitev današnjega datuma kot privzetega
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Inicializacija baze podatkov iz localStorage
+        let activities = JSON.parse(localStorage.getItem('sports_activities')) || [];
+
+        const form = document.getElementById('activityForm');
+        const activityListEl = document.getElementById('activityList');
+        const emptyStateEl = document.getElementById('emptyState');
+        const totalMinutesTextEl = document.getElementById('totalMinutesText');
+        const progressBarEl = document.getElementById('progressBar');
+        const goalPercentageEl = document.getElementById('goalPercentage');
+
+        // Glavna funkcija za osvežitev prikaza
+        function renderApp() {
+            activityListEl.innerHTML = '';
+
+            if (activities.length === 0) {
+                emptyStateEl.classList.remove('hidden');
+            } else {
+                emptyStateEl.classList.add('hidden');
+                
+                // Prikaži zadnjih 10 aktivnosti (najnovejše na vrhu)
+                const recentActivities = [...activities].reverse().slice(0, 10);
+
+                recentActivities.forEach((act) => {
+                    // Poišči originalni indeks v array-u zaradi brisanja
+                    const originalIndex = activities.indexOf(act);
+                    
+                    const card = document.createElement('div');
+                    card.className = "bg-cardBg border border-slate-800 rounded-xl p-4 flex items-center justify-between shadow transition hover:border-slate-700";
+                    
+                    const iconClass = sportIcons[act.type] || 'fa-medal';
+
+                    card.innerHTML = `
+                        <div class="flex items-center space-x-4">
+                            <div class="bg-slate-800 text-blue-400 w-10 h-10 rounded-lg flex items-center justify-center text-lg">
+                                <i class="fa-solid ${iconClass}"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 class="font-semibold text-white text-sm">${act.type}</h3>
+                                    <span class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300">${act.intensity}</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-0.5">${act.date} &bull; <span class="text-blue-400 font-medium">${act.duration} min</span></p>
+                                ${act.note ? `<p class="text-xs text-slate-300 mt-1 italic">"${act.note}"</p>` : ''}
+                            </div>
+                        </div>
+                        <button onclick="deleteActivity(${originalIndex})" class="text-slate-500 hover:text-red-400 p-2 transition-colors" title="Izbriši">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    `;
+                    activityListEl.appendChild(card);
+                });
+            }
+
+            updateDashboard();
+        }
+
+        // Posodobitev statistike (tedenski seštevek in progress bar)
+        function updateDashboard() {
+            // Izračun minut v tekočem tednu (poenostavljeno sešteva zadnjih 7 dni ali vseh, za robustnost seštejemo vse zabeležene)
+            const totalMinutes = activities.reduce((sum, act) => sum + Number(act.duration), 0);
+            
+            totalMinutesTextEl.textContent = `Skupaj: ${totalMinutes} minut`;
+
+            const weeklyGoal = 150;
+            let percentage = Math.round((totalMinutes / weeklyGoal) * 100);
+            if (percentage > 100) percentage = 100; // Omejitev na max 100% za vizualni bar
+
+            progressBarEl.style.width = `${percentage}%`;
+            goalPercentageEl.textContent = `${percentage}%`;
+        }
+
+        // Dodajanje nove aktivnosti
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const newActivity = {
+                date: document.getElementById('date').value,
+                type: document.getElementById('type' ).value,
+                duration: parseInt(document.getElementById('duration').value),
+                intensity: document.getElementById('intensity').value,
+                note: document.getElementById('note').value.trim()
+            };
+
+            activities.push(newActivity);
+            localStorage.setItem('sports_activities', JSON.stringify(activities));
+
+            form.reset();
+            document.getElementById('date').valueAsDate = new Date(); // Ponastavi datum na danes
+            renderApp();
+        });
+
+        // Brisanje aktivnosti
+        window.deleteActivity = function(index) {
+            activities.splice(index, 1);
+            localStorage.setItem('sports_activities', JSON.stringify(activities));
+            renderApp();
+        }
+
+        // Prvi zagon ob nalaganju strani
+        renderApp();
+    </script>
+</body>
+</html>
