@@ -33,9 +33,15 @@
 
     <div class="max-w-4xl mx-auto px-4 py-8">
         <header class="mb-8 text-center">
-            <h1 class="text-3xl font-extrabold tracking-tight text-white mb-2">
-                <i class="fa-solid fa-bolt text-blue-500 mr-2"></i> Šport in prehrana
-            </h1>
+            <div class="flex justify-between items-center mb-4">
+                <div></div>
+                <h1 class="text-3xl font-extrabold tracking-tight text-white">
+                    <i class="fa-solid fa-bolt text-blue-500 mr-2"></i> Šport in prehrana
+                </h1>
+                <button onclick="downloadApp()" title="Prenesi aplikacijo" class="bg-slate-800 hover:bg-slate-700 text-blue-400 p-2.5 rounded-xl border border-slate-700 transition-colors shadow-sm">
+                    <i class="fa-solid fa-download text-sm"></i>
+                </button>
+            </div>
             <p class="text-slate-400 text-sm mb-4">Tedenski sledilnik aktivnosti, obrokov in energijske bilance</p>
             
             <div class="max-w-md mx-auto bg-cardBg border border-slate-800 rounded-xl p-3 shadow-sm text-left">
@@ -271,6 +277,19 @@
                 localStorage.removeItem('gemini_api_key');
                 alert('API ključ odstranjen.');
             }
+        }
+
+        function downloadApp() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sport_prehrana_app.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
         function switchTab(tab) {
@@ -657,7 +676,6 @@
                         </div>
                         <button onclick="deleteMeal(${meal.id})" class="text-slate-500 hover:text-red-400 p-2"><i class="fa-solid fa-trash-can text-xs"></i></button>
                     `;
-                    mealListListEl = document.getElementById('mealList');
                     mealListEl.appendChild(card);
                 });
             }
