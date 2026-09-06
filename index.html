@@ -335,7 +335,7 @@
         let activities = JSON.parse(localStorage.getItem('sports_activities')) || [];
         let meals = JSON.parse(localStorage.getItem('sports_meals')) || [];
 
-        // Zanesljiva funkcija z vgrajenim forced JSON mime-type in robustnim parsiranjem
+        // Zanesljiva funkcija z vgrajenim forced JSON mime-type in varnim pošiljanjem preko glave (x-goog-api-key)
         async function analyzeWithGemini(base64Image, promptText) {
             const apiKey = localStorage.getItem('gemini_api_key');
             if (!apiKey) {
@@ -344,7 +344,7 @@
             }
 
             const base64Data = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`;
 
             const payload = {
                 contents: [{
@@ -366,7 +366,10 @@
             try {
                 const response = await fetch(url, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-goog-api-key': apiKey
+                    },
                     body: JSON.stringify(payload)
                 });
 
@@ -383,7 +386,6 @@
                     try {
                         return JSON.parse(textResponse);
                     } catch (parseErr) {
-                        // Rezervni mehanizem za čiščenje markdown blokov, če jih model kljub temu vrne
                         let cleanJson = textResponse;
                         const jsonMatch = textResponse.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
                         if (jsonMatch) {
