@@ -337,10 +337,13 @@
 
         async function analyzeWithGemini(base64Image, promptText) {
             const apiKey = localStorage.getItem('gemini_api_key');
-            if (!apiKey) return null;
+            if (!apiKey) {
+                alert("API ključ ni nastavljen! Prosim, shrani svoj Gemini API ključ v nastavitvah.");
+                return null;
+            }
 
-            const base64Data = base64Image.split(',')[1];
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            const base64Data = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
             const payload = {
                 contents: [{
@@ -364,26 +367,35 @@
                 });
 
                 const data = await response.json();
-                if (!data.candidates || data.candidates.length === 0) {
-                    console.error("Gemini API Napaka:", data);
+                
+                if (data.error) {
+                    console.error("Gemini API Error:", data.error);
+                    alert(`API napaka: ${data.error.message}`);
                     return null;
                 }
-                const textResponse = data.candidates[0].content.parts[0].text;
-                
-                let cleanJson = textResponse;
-                const jsonMatch = textResponse.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-                if (jsonMatch) {
-                    cleanJson = jsonMatch[1];
-                } else {
-                    const firstBrace = textResponse.indexOf('{');
-                    const lastBrace = textResponse.lastIndexOf('}');
-                    if (firstBrace !== -1 && lastBrace !== -1) {
-                        cleanJson = textResponse.substring(firstBrace, lastBrace + 1);
+
+                if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+                    let textResponse = data.candidates[0].content.parts[0].text;
+                    let cleanJson = textResponse;
+                    const jsonMatch = textResponse.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+                    if (jsonMatch) {
+                        cleanJson = jsonMatch[1];
+                    } else {
+                        const firstBrace = textResponse.indexOf('{');
+                        const lastBrace = textResponse.lastIndexOf('}');
+                        if (firstBrace !== -1 && lastBrace !== -1) {
+                            cleanJson = textResponse.substring(firstBrace, lastBrace + 1);
+                        }
                     }
+                    return JSON.parse(cleanJson);
+                } else {
+                    console.error("Neočekovan format odgovora:", data);
+                    alert("Model ni vrnil veljavnega odgovora. Preveri konzolo (F12).");
+                    return null;
                 }
-                return JSON.parse(cleanJson);
             } catch (err) {
                 console.error("Gemini API Napaka:", err);
+                alert("Napaka pri povezavi ali obdelavi slike z Gemini API-jem.");
                 return null;
             }
         }
@@ -431,7 +443,7 @@
                         statusEl.textContent = `Gemini AI: Zaznano ${aiResult.type} (${aiResult.duration || 0} min)!`;
                         statusEl.className = "text-[10px] text-emerald-400 mt-2 font-semibold";
                     } else {
-                        statusEl.textContent = "API ključ ni nastavljen v lokalnem shrambi ali napaka.";
+                        statusEl.textContent = "Analiza ni uspela. Preveri API ključ.";
                         statusEl.className = "text-[10px] text-amber-400 mt-2 font-semibold";
                     }
                 };
@@ -464,7 +476,7 @@
 
                     document.getElementById('mealImgData').value = compressedBase64;
 
-                    const prompt = `Analiziraj to sliko hrane/obroka. Vrni IZKLJUČNO veljaven JSON z oceno v slovenščini brez dodatnih opomb:
+                    const prompt = `Analiziraj to sliko hrane/obroka. Vrni IZKLJUČNO veljaven JSON z ocena v slovenščini brez dodatnih opomb:
                     {
                         "description": "kratek natančen opis obroka v slovenščini",
                         "calories": ocenjene_kalorije_kot_številka,
@@ -481,7 +493,7 @@
                         statusEl.textContent = `Gemini AI: ${aiResult.description} (~${aiResult.calories} kcal)`;
                         statusEl.className = "text-[10px] text-amber-400 mt-2 font-semibold";
                     } else {
-                        statusEl.textContent = "API ključ ni nastavljen v lokalnem shrambi ali napaka.";
+                        statusEl.textContent = "Analiza ni uspela. Preveri API ključ.";
                         statusEl.className = "text-[10px] text-amber-400 mt-2 font-semibold";
                     }
                 };
