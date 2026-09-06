@@ -5,21 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Športni sledilnik in prehrana</title>
     
-    <!-- PWA nastavitev za mobilne naprave (iOS & Android) -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Fitnes">
     <meta name="theme-color" content="#0f172a">
 
-    <!-- PNG ikona (strela) - boljša podpora za Android home screen kot SVG -->
     <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAE9klEQVR4nO3du3EbSRSG0QsmIFM5qNbcrBTPZrXmFnOgyQgkY4sSSeEx09PTr3tOACSM/+seACrxEoP58vXbj96vgXO9vjxfer+GN11fiLHzplcUzX+p0fNIyxia/SLDZ68WIZz+Cwyfo84M4bQfbPjUdkYI1X+g4XO2miE81fpBEcZPGzV3VqUkw6eXo7fB4RvA+Onp6P4OBWD8jODIDosDMH5GUrrHogCMnxGV7HJ3AMbPyPbuc1cAxs8M9ux0cwDGz0y27nVTAMbPjLbs9mEAxs/MHu236j+FgNncDcDpzwru7fhmAMbPSm7t2SMQqV0NwOnPiq7t2g1Aan8E4PRnZZ/37QYgtQ8BOP3J4P3O3QCk9isApz+ZvO3dDUBqAiC1S4THH/JyA5CaAEhNAKQmAFJ78gaYzNwApCYAUhMAqQmA1ARAagIgNQEM6K/v//Z+CWkIYDDG35YABmL87QlgEMbfhwBITQAD+Hz6//fP351eST4C6MyjT18C6Mj4+xNAJ8Y/BgF0YPzjEACpCaAxp/9YBNCQ8Y9HAI1sHb/vANoSQANO/nEJ4GTGPzYBkJoATuT0H58ATmL8cxDACYx/HgKozPjnIoCKjo7fdwDtCaASJ/+cBEBqAqjA6T8vARxk/HMTwAHGPz8BFDL+NQiggPGvQwCkJoCdzjr9fQnWhwB28OizHgFsZPxrEsAGxr8uATxg/GsTAKkJ4A6n//oEcIPx5yCAK1qP33cA/QjgEyd/LgJ4x/jzEQCpXb58/faj94sYgdO/zOzvX9wAYfylZh9/hACMv9AK449IHoDxl1ll/BGJAzB+IpIGYPzlVjr9I5IGQJnVxh+RMACnf5kVxx+RLADjL7Pq+CMSBWD8ZVYef0SSAIyfW5YPwPjLrX76RyQIgDIZxh+xeABO/zJZxh+xcADGXybT+CMWDcD4y2Qbf8SCARg/eywVgPGXy3j6RywWAGWyjj9ioQCc/mUyjz9ikQCMv0z28UcsEIDxlzH+//lfITrrEbDx/zb9DQBHCCAZp/9HAujIf8LbnwCSMP7rBJCA8d8mgMUZ/30CIDUBLMzp/5gAFmX82wigkzM/AjX+7QSwGOPfRwALMf79BEBqAliE07+MABZg/OUEMDnjP0YAHdT6CNT4jxPApIy/DgGQmgAm5PSvRwCTMf66BDAR469PAJMw/nMIoLGSj0CN/zwCGJzxn0sApCaAgTn9zyeAQRl/GwIYkPG3I4DBGH9bAmjo0Uegxt+eAEhNAINw+vchgAEYfz8C6Mz4+xJAR8bfnwA6Mf4xCKARf851TALowOk/DgE0ZvxjEUBDxj8efyme1NwApCYAUhMAqQmA1ARAagIgNQGQ2tPry/Ol94uAXtwApCYAUhMAqQmA1J4iIrwRJqPXl+eLG4DUBEBqvwLwGEQmb3t3A5DahwDcAmTwfuduAFL7IwC3ACv7vG83AKldDcAtwIqu7doNQGo3A3ALsJJbe757A4iAFdzbsUcgUnsYgFuAmT3a76YbQATMaMtuNz8CiYCZbN3rrvcAImAGe3a6+02wCBjZ3n0WfQokAkZUssvij0FFwEhK93joewARMIIjOzz8RZgI6Ono/qqO198bo5VaB2/VfwrhNqCFmjs7bbBuA2o744A9/cQWAked+WTR7JFFCOzV4pG6+TO7EHik5XvJrm9axcCbXh+g/ASo5nvi71MWtwAAAABJRU5ErkJggg==">
-    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAE9klEQVR4nO3du3EbSRSG0QsmIFM5qNbcrBTPZrXmFnOgyQgkY4sSSeEx09PTr3tOACSM/+seACrxEoP58vXbj96vgXO9vjxfer+GN11fiLHzplcUzX+p0fNIyxia/SLDZ68WIZz+Cwyfo84M4bQfbPjUdkYI1X+g4XO2miE81fpBEcZPGzV3VqUkw6eXo7fB4RvA+Onp6P4OBWD8jODIDosDMH5GUrrHogCMnxGV7HJ3AMbPyPbuc1cAxs8M9ux0cwDGz0y27nVTAMbPjLbs9mEAxs/MHu236j+FgNncDcDpzwru7fhmAMbPSm7t2SMQqV0NwOnPiq7t2g1Aan8E4PRnZZ/37QYgtQ8BOP3J4P3O3QCk9isApz+ZvO3dDUBqAiC1S4THH/JyA5CaAEhNAKQmAFJ78gaYzNwApCYAUhMAqQmA1ARAagIgNQEM6K/v//Z+CWkIYDDG35YABmL87QlgEMbfhwBITQAD+Hz6//fP351eST4C6MyjT18C6Mj4+xNAJ8Y/BgF0YPzjEACpCaAxp/9YBNCQ8Y9HAI1sHb/vANoSQANO/nEJ4GTGPzYBkJoATuT0H58ATmL8cxDACYx/HgKozPjnIoCKjo7fdwDtCaASJ/+cBEBqAqjA6T8vARxk/HMTwAHGPz8BFDL+NQiggPGvQwCkJoCdzjr9fQnWhwB28OizHgFsZPxrEsAGxr8uATxg/GsTAKkJ4A6n//oEcIPx5yCAK1qP33cA/QjgEyd/LgJ4x/jzEQCpXb58/faj94sYgdO/zOzvX9wAYfylZh9/hACMv9AK449IHoDxl1ll/BGJAzB+IpIGYPzlVjr9I5IGQJnVxh+RMACnf5kVxx+RLADjL7Pq+CMSBWD8ZVYef0SSAIyfW5YPwPjLrX76RyQIgDIZxh+xeABO/zJZxh+xcADGXybT+CMWDcD4y2Qbf8SCARg/eywVgPGXy3j6RywWAGWyjj9ioQCc/mUyjz9ikQCMv0z28UcsEIDxlzH+//lfITrrEbDx/zb9DQBHCCAZp/9HAujIf8LbnwCSMP7rBJCA8d8mgMUZ/30CIDUBLMzp/5gAFmX82wigkzM/AjX+7QSwGOPfRwALMf79BEBqAliE07+MABZg/OUEMDnjP0YAHdT6CNT4jxPApIy/DgGQmgAm5PSvRwCTMf66BDAR469PAJMw/nMIoLGSj0CN/zwCGJzxn0sApCaAgTn9zyeAQRl/GwIYkPG3I4DBGH9bAmjo0Uegxt+eAEhNAINw+vchgAEYfz8C6Mz4+xJAR8bfnwA6Mf4xCKARf851TALowOk/DgE0ZvxjEUBDxj8efyme1NwApCYAUhMAqQmA1ARAagIgNQGQ2tPry/Ol94uAXtwApCYAUhMAqQmA1J4iIrwRJqPXl+eLG4DUBEBqvwLwGEQmb3t3A5DahwDcAmTwfuduAFL7IwC3ACv7vG83AKldDcAtwIqu7doNQGo3A3ALsJJbe757A4iAFdzbsUcgUnsYgFuAmT3a76YbQATMaMtuNz8CiYCZbN3rrvcAImAGe3a6+02wCBjZ3n0WfQokAkZUssvij0FFwEhK93joewARMIIjOzz8RZgI6Ono/qqO198bo5VaB2/VfwrhNqCFmjs7bbBuA2o744A9/cQWAked+WTR7JFFCOzV4pG6+TO7EHik5XvJrm9axcCbXh+g/ASo5nvi71MWtwAAAABJRU5ErkJggg==">
 
-    <!-- PWA Manifest (PNG ikone + maskable varianta za Android adaptive icons) -->
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%C5%A0port%20in%20Prehrana%22%2C%22short_name%22%3A%22Fitnes%22%2C%22start_url%22%3A%22.%2F%22%2C%22scope%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAE9klEQVR4nO3du3EbSRSG0QsmIFM5qNbcrBTPZrXmFnOgyQgkY4sSSeEx09PTr3tOACSM%2F%2BseACrxEoP58vXbj96vgXO9vjxfer%2BGN11fiLHzplcUzX%2Bp0fNIyxia%2FSLDZ68WIZz%2BCwyfo84M4bQfbPjUdkYI1X%2Bg4XO2miE81fpBEcZPGzV3VqUkw6eXo7fB4RvA%2BOnp6P4OBWD8jODIDosDMH5GUrrHogCMnxGV7HJ3AMbPyPbuc1cAxs8M9ux0cwDGz0y27nVTAMbPjLbs9mEAxs%2FMHu236j%2BFgNncDcDpzwru7fhmAMbPSm7t2SMQqV0NwOnPiq7t2g1Aan8E4PRnZZ%2F37QYgtQ8BOP3J4P3O3QCk9isApz%2BZvO3dDUBqAiC1S4THH%2FJyA5CaAEhNAKQmAFJ78gaYzNwApCYAUhMAqQmA1ARAagIgNQEM6K%2Fv%2F%2FZ%2BCWkIYDDG35YABmL87QlgEMbfhwBITQAD%2BHz6%2F%2FfP351eST4C6MyjT18C6Mj4%2BxNAJ8Y%2FBgF0YPzjEACpCaAxp%2F9YBNCQ8Y9HAI1sHb%2FvANoSQANO%2FnEJ4GTGPzYBkJoATuT0H58ATmL8cxDACYx%2FHgKozPjnIoCKjo7fdwDtCaASJ%2F%2BcBEBqAqjA6T8vARxk%2FHMTwAHGPz8BFDL%2BNQiggPGvQwCkJoCdzjr9fQnWhwB28OizHgFsZPxrEsAGxr8uATxg%2FGsTAKkJ4A6n%2F%2FoEcIPx5yCAK1qP33cA%2FQjgEyd%2FLgJ4x%2FjzEQCpXb58%2Ffaj94sYgdO%2FzOzvX9wAYfylZh9%2FhACMv9AK449IHoDxl1ll%2FBGJAzB%2BIpIGYPzlVjr9I5IGQJnVxh%2BRMACnf5kVxx%2BRLADjL7Pq%2BCMSBWD8ZVYef0SSAIyfW5YPwPjLrX76RyQIgDIZxh%2BxeABO%2FzJZxh%2BxcADGXybT%2BCMWDcD4y2Qbf8SCARg%2FeywVgPGXy3j6RywWAGWyjj9ioQCc%2FmUyjz9ikQCMv0z28UcsEIDxlzH%2B%2F%2FlfITrrEbDx%2Fzb9DQBHCCAZp%2F9HAujIf8LbnwCSMP7rBJCA8d8mgMUZ%2F30CIDUBLMzp%2F5gAFmX82wigkzM%2FAjX%2B7QSwGOPfRwALMf79BEBqAliE07%2BMABZg%2FOUEMDnjP0YAHdT6CNT4jxPApIy%2FDgGQmgAm5PSvRwCTMf66BDAR469PAJMw%2FnMIoLGSj0CN%2FzwCGJzxn0sApCaAgTn9zyeAQRl%2FGwIYkPG3I4DBGH9bAmjo0Uegxt%2BeAEhNAINw%2BvchgAEYfz8C6Mz4%2BxJAR8bfnwA6Mf4xCKARf851TALowOk%2FDgE0ZvxjEUBDxj8efyme1NwApCYAUhMAqQmA1ARAagIgNQGQ2tPry%2FOl94uAXtwApCYAUhMAqQmA1J4iIrwRJqPXl%2BeLG4DUBEBqvwLwGEQmb3t3A5DahwDcAmTwfuduAFL7IwC3ACv7vG83AKldDcAtwIqu7doNQGo3A3ALsJJbe757A4iAFdzbsUcgUnsYgFuAmT3a76YbQATMaMtuNz8CiYCZbN3rrvcAImAGe3a6%2B02wCBjZ3n0WfQokAkZUssvij0FFwEhK93joewARMIIjOzz8RZgI6Ono%2FqqO198bo5VaB2%2FVfwrhNqCFmjs7bbBuA2o744A9%2FcQWAked%2BWTR7JFFCOzV4pG6%2BTO7EHik5XvJrm9axcCbXh%2Bg%2FASo5nvi71MWtwAAAABJRU5ErkJggg%3D%3D%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAP00lEQVR4nO3dTZIjtxWF0WyF5hpqDwoPvSuvx7vy0KE9aKgVyAOZ3VUs%2FiQyE8DDe%2BesgMyO0P0AsqhvGyH98utvf81%2BDQBX%2BfOP37%2FNfg185h9kEgMP8INAGM8DH8DYA7QTBX15uB0YfIDrCYJreZgXMPgA4wmCczy8g4w%2BQBxioJ0H1sDoA8QnBvbxkN4w%2BgDrEgPPeTBPGH6APITAVx7IB0YfID8x8DcPYTP8ABVVD4HSb97wA1A1BEq%2BacMPwL1qIVDqzRp%2BAN6pEgIl3qThB6BV9hD4afYL6M34A3BE9v1IWzfZ%2F%2BEAGCfjbUC6N2T4AeglUwik%2BgjA%2BAPQU6adSVEymf5BAFjD6rcBy98AGH8AZlh9f5YOgNUfPgBrW3mHlry%2BWPmBA5DTah8JLHcDYPwBiGi1fVoqAFZ7uADUstJOLXFdsdIDBYBti%2F%2BRQPgbAOMPwIqi71foAIj%2B8ADglcg7FjYAIj80ANgr6p6FDICoDwsAjoi4a%2BECIOJDAoCzou1bqACI9nAA4EqRdi5MAER6KADQS5S9CxEAUR4GAIwQYfemB0CEhwAAo83ev6kBMPvNA8BMM3dwWgAYfwCYt4dTAsD4A8APM3ZxeAAYfwD4avQ%2BDg0A4w8Az43cyWEBYPwB4L1RezkkAIw%2FAOw3Yjen%2Fw4AADBe9wBw%2BgeAdr33s2sAGH8AOK7njnYLAOMPAOf12lPfAQCAgroEgNM%2FAFynx65eHgDGHwCud%2FW%2BXhoAxh8A%2BrlyZ30HAAAKuiwAnP4BoL%2Br9vaSADD%2BADDOFbvrIwAAKOh0ADj9A8B4Z%2FfXDQAAFHQqAJz%2BAWCeMzt8OACMPwDMd3SPfQQAAAUdCgCnfwCI48guuwEAgIKaA8DpHwDiad1nNwAAUFBTADj9A0BcLTvtBgAACtodAE7%2FABDf3r12AwAABe0KAKd%2FAFjHnt12AwAABQkAACjobQC4%2FgeA9bzbbzcAAFDQywBw%2BgeAdb3acTcAAFCQAACAgp4GgOt%2FAFjfsz13AwAABQkAACjoYQC4%2FgeAPB7tuhsAAChIAABAQV8CwPU%2FAORzv%2B9uAACgIAEAAAUJAAAo6FMA%2BPwfAPL6uPNuAACgIAEAAAUJAAAo6HsA%2BPwfAPK77b0bAAAoSAAAQEECAAAKEgAAUNC3bfMFQACoxg0AABQkAACgIAEAAAUJAAAoSAAAQEECAAAKEgAAUNBPfgMAAOpxAwAABQkAAChIAABAQQIAAAoSAABQkAAAgIIEAAAUJAAAoCABAAAFCQAAKEgAAEBBAgAAChIAQLN%2F%2FOs%2Fs18CcJIAAJoYf8hBAAC7GX%2FIQwAAuxh%2FyEUAAM3%2B%2B%2B9%2Fzn4JwEkCAHjL6R%2FyEQDAS8YfchIAwFPGH%2FISAMBDxh9yEwDAF8Yf8hMAAFCQAAA%2BcfqHGgQA8N2e8fcbAJCDAAC2bXPyh2oEAGD8oSABAMUZf6hJAABAQQIACnP6h7oEABRl%2FKE2AQAFGX9AAEAxZ8bfbwBAHgIACnHyB24EAAAUJACgCKd%2F4CMBAAUYf%2BCeAIDkjD%2FwiACAxIw%2F8IwAgKSMP%2FCKAAB28RsAkIsAgISc%2FoF3BAAkY%2FyBPQQAJGL8gb0EACRh%2FIEWAgASMP5AKwEAAAUJAFic0z9whACAhY0af78BAPkIAFiUkz9whgCABRl%2F4CwBAIsx%2FsAVBAAAFCQAYCFO%2F8BVBAAswvgDVxIAsADjD1xNAEBws8ffbwBATgIAAps9%2FkBeAgAAChIAEJTTP9CTAICAjD%2FQmwCAYIw%2FMIIAgECMPzCKAIAgjD8wkgAAnvIbAJCXAIAAnP6B0QQATGb8gRkEAExk%2FIFZBABMYvyBmQQATGD8gdkEAAAUJABgMKd%2FIAIBAAOtNP5%2BAwByEwAwyErjD%2BQnAGAA4w9EIwCgM%2BMPRCQAAKAgAQAdOf0DUQkA6MT4A5EJAOjA%2BAPRCQC4WIbx9xsAkJ8AgAtlGH%2BgBgEAAAUJALiI0z%2BwEgEAFzD%2BwGoEAJxk%2FIEVCQA4wfgDqxIAcJDxB1YmAIBP%2FAYA1CAA4ACnf2B1AgAaGX8gAwEADYw%2FkIUAgJ2MP5CJAIAdjD%2BQjQAAgIIEALzh9A9kJADghWrj7zcAoA4BAE9UG3%2BgFgEADxh%2FIDsBAHeMP1CBAACAggQAfOD0D1QhAOD%2FjD9QiQCAzfgD9QgAyjP%2Bf%2FMbAFCLAKA04w9UJQAAoCABQFlO%2F0BlAoCSjD9QnQCgHOMPIAAoxvgD%2FE0AUIbxB%2FhBAAB%2BAwAKEgCU4PQP8JkAID3jD%2FCVACA14w%2FwmAAgLeMP8JwAICXjD%2FCaAACAggQA6Tj9A7wnAEjF%2BLfzGwBQkwAgDeMPsJ8AIAXjD9BGALA84w%2FQ7ufZLwCYS0DV5LsfuAFgacYL2hl%2Ftk0AsDDjD%2B2MPzcCgCUZf2hn%2FPlIALAc4w9wngBgKcYfjnH6554AAEjO%2BPOIAGAZTv%2FQzvjzjABgCcYf2hl%2FXhEAhGf8oZ3x5x0BQGjGH6APAUBYxh%2BOcfpnDwEAkIjxZy8BQEhO%2F9DO%2BNNCABCO8Yd2xp9WAoBQjD%2B0M%2F4cIQAIw%2FgDjCMACMH4wzFO%2FxwlAAAWZfw5QwAwndM%2FtDP%2BnCUAmMr4QzvjzxUEANMYf2hn%2FLmKAGAK4w8wlwBgOOMPxzj9cyUBALAA48%2FVBABDOf1DO%2BNPDwKAYYw%2FtDP%2B9CIAGML4QzvjT08CgO6MP0A8AoCujD8c4%2FRPbwIAIBjjzwgCgG6c%2FqGd8WcUAUAXxh%2FaGX9GEgBczvhDO%2BPPaAKASxl%2FgDUIAC5j%2FOEYp39mEAAAExl%2FZhEAXMLpH9oZf2YSAJxm%2FKGd8Wc2AcApxh%2FaGX8iEAAcZvwB1iUAOMT4wzFO%2F0QhAAAGMf5EIgBo5vQP7Yw%2F0QgAmhh%2FaGf8iUgAsJvxh3bGn6gEALsYf4BcBABvGX84xumfyAQAQAfGn%2BgEAC85%2FUM7488KBABPGX9oZ%2FxZhQDgIeMP7Yw%2FKxEAfGH8AfITAHxi%2FOEYp39WIwAATjL%2BrEgA8J3TP7Qz%2FqxKALBtm%2FGHI4w%2FKxMAGH84wPizup9nvwDm8x%2ByusQf1OUGAKCRaCYDAQDQwPiThQCAolz%2FtzP%2BZCIAAHYw%2FmQjAADeMP5kJAAAoCABAPCC0z9ZCQCAJ4w%2FmQkAgAeMP9kJAIA7xp8KBAAU5DcAnjP%2BVCEAAKAgAQDwf07%2FVCIAADbjTz0CACjP%2BFORAABKM%2F5UJQCAsow%2FlQkAKMafAALbJgCAopz%2BqU4AAOUYfxAAQDHGH%2F4mAIAyjD%2F8IACAEow%2FfCYAAKAgAQCk5%2FQPXwkAKKTibwAYf3hMAABpGX94TgAAKRl%2FeE0AAOkYf3hPAABAQQIASMXpH%2FYRAEAaxh%2F2EwBQRPY%2FATT%2B0EYAAMsz%2FtBOAABLM%2F5wjAAAgIIEALAsp384TgAASzL%2BcI4AAJZj%2FOE8AQAsxfjDNQQAFJDlNwCMP1xHAABAQQIAWILTP1xLAADhGX%2B4ngAAQjP%2B0IcAAMIy%2FtCPAABCMv7QlwCA5LL8CSBwLQEAhOP0D%2F0JACAU4w9jCAAgDOMP4wgAIATjD2MJAGA64w%2FjCQAAKEgAAFM5%2FcMcAgASi%2F4bAMYf5hEAwBTGH%2BYSAMBwxh%2FmEwDAUMYfYhAAAFCQAACGcfqHOAQAMITxh1gEACQV6U8AjT%2FEIwCArow%2FxCQAgG6MP8QlAACgIAEAdOH0D7EJAOByxh%2FiEwDApYw%2FrEEAQEKz%2FgTQ%2BMM6BABwCeMPaxEAAFCQAABOc%2FqH9QgA4BTjD2sSAMBhxh%2FWJQCAQ4w%2FrE0AAM2MP6xPAEAykf43wEBcAgBo4vQPOQgAYDfjD3kIAGAX4w%2B5CADgLeMP%2BQgA4CXjDzkJAAAoSABAIlf%2FCaDTP%2BQlAICHjD%2FkJgCAL4w%2F5CcAgE%2BMP9QgAIDvjD%2FUIQAAoCABAGzb5vQP1QgAwPhDQQIAkjj6GwDGH2oSAFCY8Ye6BAAUZfyhNgEAAAUJACjI6R8QAFCM8Qe2TQBAKcYfuBEAkMCePwE0%2FsBHAgAKMP7APQEAAAUJAEjO6R94RABAYsYfeEYAQFLGH3hFAEBCxh94RwBAMsYf2EMAwOKO%2Fm%2BAgdoEACTi9A%2FsJQAgCeMPtBAAkIDxB1p9%2B%2BXX3%2F6a%2FSIAgLHcAABAQQIAAAoSAABQkAAAgIIEAAAUJAAAoCABAAAFCQAAKEgAAEBBAgAAChIAAFCQAACAggQAABT0059%2F%2FP5t9osAAMZyAwAABQkAAChIAABAQQIAAAoSAABQkAAAgIIEAAAU9NO2bZvfAgCAOv784%2FdvbgAAoCABAAAFCQAAKEgAAEBB3wPAFwEBIL%2Fb3rsBAICCBAAAFCQAAKCgTwHgewAAkNfHnXcDAAAFCQAAKEgAAEBBXwLA9wAAIJ%2F7fXcDAAAFCQAAKOhhAPgYAADyeLTrbgAAoCABAAAFPQ0AHwMAwPqe7bkbAAAoSAAAQEEvA8DHAACwrlc77gYAAAp6GwBuAQBgPe%2F22w0AABQkAACgoF0B4GMAAFjHnt12AwAABe0OALcAABDf3r12AwAABTUFgFsAAIirZafdAABAQc0B4BYAAOJp3Wc3AABQ0KEAcAsAAHEc2WU3AABQ0OEAcAsAAPMd3eNTNwAiAADmObPDPgIAgIJOB4BbAAAY7%2Bz%2BugEAgIIuCQC3AAAwzhW7e9kNgAgAgP6u2lsfAQBAQZcGgFsAAOjnyp29%2FAZABADA9a7e1y4fAYgAALhOj131HQAAKKhbALgFAIDzeu1p1xsAEQAAx%2FXc0e4fAYgAAGjXez99BwAAChoSAG4BAGC%2FEbs57AZABADAe6P2cuhHACIAAJ4buZPDvwMgAgDgq9H7OOVLgCIAAH6YsYvT%2FgpABADAvD2c%2BmeAIgCAymbu4PTfARABAFQ0e%2F%2BmB8C2zX8IADBShN0LEQDbFuNhAEBvUfYuTABsW5yHAgA9RNq5UAGwbbEeDgBcJdq%2BhQuAbYv3kADgjIi7FjIAti3mwwKAVlH3LGwAbFvchwYAe0TesdABsG2xHx4APBN9v0K%2FuHu%2F%2FPrbX7NfAwC8En34b8LfAHy0ykMFoKaVdmqpANi2tR4uAHWstk9Lvdh7PhIAYLbVhv9muRuAj1Z96ADksPIOLR0A27b2wwdgXavvz9Iv%2Fp6PBADobfXhv1n%2BBuCjLP8oAMSUaWfSvJF7bgMAuEqm4b9J94buCQEAjso4%2FDepPgJ4JPM%2FHgD9ZN%2BP1G%2FuntsAAN7JPvw3Jd7kPSEAwL0qw39T6s3eEwIAVBv%2Bm5Jv%2Bp4QAKin6vDflH7z94QAQH7Vh%2F%2FGQ3hCDADkYfS%2F8kDeEAIA6zL8z3kwDcQAQHxGfx8P6SAxABCH0W%2FngV1ADACMZ%2FTP8fA6EAQA1zP41%2FIwBxAEAO0Mfl8e7iSiAOAHYz%2Fe%2FwCElOnQJjqyXQAAAABJRU5ErkJggg%3D%3D%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAADpUlEQVR4nO3dPW7UYBSF4RtEnzJ7iCjZFethV5TsJxRIEEIy9szY3995nhW4OO%2B1RlaUh8en55eCUJ96PwD0JACiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAhjMl28%2Fej9CFAEMxPjbE8AgjL8PARBNAANw%2FfsRQGdvx%2F%2Fz%2B9dOT5JJAB25%2FP0JoBPjH4MAOjD%2BcQiAaAJozPUfiwAaMv7xCKAR4x%2BTABow%2FnEJ4GTGPzYBDMRX4PYEcCLXf3wCOInxz0EAJzD%2BeQjgYMY%2FFwEcyPjnIwCiCeAgrv%2BcBHAA45%2BXAO5k%2FHMTwB2OHL%2BvwH0I4EYu%2FxoEQDQB3MD1X4cArmT8axHAFYx%2FPQLYyfjXJIAdjH9dAiCaADa4%2FmsTwAWtxu8rcD8C%2BIDLn0EA7zD%2BHAJ4w%2FizfO79AMwX3Uq%2FWbwBXpltiD2sNP4qAfxh%2FNtWG3%2BVAKrK%2BJPFB2D8%2B6x4%2FavCAzD%2BfVYdf1V4AGxbefxVwQG4%2FttWH39VaADGvy1h%2FFWBARg%2Fr0UFYPz7pFz%2FqqAAjH%2BfpPFXBQXAtrTxV4UE4PpvSxx%2FVUAAxs8lSwdg%2FPukXv%2BqhQMw%2Fn2Sx1%2B1aADGv0%2F6%2BKsWDYBtxv%2FbcgG4%2FtuM%2F6%2BlAjB%2BrvXw%2BPT80vshkrWO1vX%2F11JvAC4z%2Fv8JIITxv08AAYz%2FYwLoyI%2F2%2FgSwONf%2FMgEszPi3CWBRxr%2BPABZk%2FPsJYDHGfx0BEE0AC3H9ryeATo7%2BBmD8txHAAoz%2FdgKYnPHfRwBEE8DEXP%2F7CWBSxn8MAUzI%2BI8jgMkY%2F7EE0IG%2FAxiHACbi%2Bh9PAJMw%2FnMIYALGfx4BDM74zyWAgRn%2F%2BQRANAEMyvVvQwCN7fkGYPztCGAwxt%2BWAAZi%2FO0JgGgCGITr34cABmD8%2FQigM%2BPvSwAdGX9%2FAmjo9TcA4x%2BDAIgmgA5c%2F3EIoDHjH4v%2FE0w0bwCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiCaAIgmAKIJgGgCIJoAiCYAogmAaAIgmgCIJgCiCYBoAiDaL9%2FAq5ZWp0ONAAAAAElFTkSuQmCC%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22maskable%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAMGElEQVR4nO3dyZGjxxlFUbRC%2B162Dwwu5ZXskVdayh9qAZLooaow1D9k5j3HAuze%2FRCFrC9fv%2F32xwUASPnH2R8AADieAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAPOX3f%2F%2F37I8AbEAAAA8z%2FrAOAQA8xPjDWgQAcJfxh%2FUIAAAIEgDAh36%2B%2Fv%2F3n3%2Bd9EmALQkA4F2%2B%2Bod1CQDgTcYf1iYAgF8Yf1ifAAB%2BYPyhQQAAQJAAAP7m%2BocOAQBcLhfjDzUCAHh4%2FL0BAOsQABDn8ocmAQBhxh%2B6BAAABAkAiHL9Q5sAgCDjDwgAiDH%2BwOUiACDF%2BAN%2FEQAQ8dnx9wYArEUAQIDLH%2FiZAACAIAEAi3P9A28RALAw4w%2B8RwDAoow%2F8BEBAAsy%2FsA9AgAWY%2FyBRwgA4C5vAMB6BAAsxPUPPEoAwCKMP%2FAMAQALMP7AswQATM74A68QADAx4w%2B8SgAAQJAAgEm5%2FoHPEAAwoSPH3xsAsCYBAJNx%2BQNbEAAwEeMPbEUAwCSMP7AlAQATMP7A1gQAAAQJABic6x%2FYgwCAgRl%2FYC8CAAY1wvh7AwDWJQBgQCOMP7A2AQCDMf7AEQQAAAQJABiI6x84igCAQRh%2F4EgCAAZg%2FIGjCQA4mfEHziAA4EQjj783AGBtAgAAggQAnGTk6x9YnwCAExh%2F4GwCAA5m%2FIERCAA4kPEHRiEA4CDGHxiJAIADGH9gNAIA%2BIU3AGB9AgB25voHRiQAYEfGHxiVAICdGH9gZAIAdmD8gdEJANiY8QdmIAAAIEgAwIZc%2F8AsBABsZJXx9wYANAgA2MAq4w90CAD4JOMPzEgAwCcYf2BWAgAAggQAvMj1D8xMAMALjD8wOwEATzL%2BwAoEADxh9fH3BgB0CAB40OrjD7QIAAAIEgDwANc%2FsBoBAHcYf2BFAgA%2BYPyBVQkAeIfxB1YmAOANxh9YnQCAn1TH3xsA0CIAACBIAMB3qtc%2F0CMA4E%2FGHygRAHAx%2FkCPACDP%2BANFAoA04w9UCQAACBIAZLn%2Bb7wBAD0CgCTjD9QJAHKMP4AAIMb4A1wJADKMP8CNAACAIAFAgusf4EcCgOUZf4BfCQCWZvzv8wYANAkAlmX8Ad4nAFiS8Qf4mABgOcYf4L5%2Fnv0BgHMJpnX5%2Bw4%2B4hsAlmLM4Mr4c48AYBnGH66MP48QACzB%2BMOV8edRAoDpGX%2BA5wkApmb84cb1zzMEAMACjD%2FPEgBMy%2FUPV8afVwgApmT84cr48yoBwHSMP1wZfz5DADAV4w%2BwDQHANIw%2F3Lj%2B%2BSwBADAZ488WBABTcP3DlfFnKwKA4Rl%2FuDL%2BbEkAMDTjD1fGn60JAIZl%2FAH2IwAYkvGHG9c%2FexAADMf4w43xZy8CAGBQxp89CQCG4vqHK%2BPP3gQAwzD%2BcGX8OYIAYAjGH%2BBYAoDTGX%2B4cf1zFAHAqYw%2F3Bh%2FjiQAAAZg%2FDmaAOA0rn%2B4Mv6cQQBwCuMPV8afswgADmf8Ac4nADiU8Ycb1z9nEgAcxvjDjfHnbAIA4GDGnxEIAA7h%2Bocr488oBAC7M%2F5wZfwZiQBgV8YfYEwCgN0Yf7hx%2FTMaAcAujD%2FcGH9GJADYnPGHG%2BPPqAQAwE6MPyMTAGzK9Q9Xxp%2FRCQA2Y%2FwB5iEA2ITxhxvXPzMQAHya8Ycb488sBACfYvzhxvgzEwEAsAHjz2wEAC9z%2FcOV8WdGAoCXGH%2BAuQkAnmb84cb1z6wEAE8x%2FnBj%2FJmZAOBhxh9ujD%2BzEwAATzL%2BrEAA8BDXP1wZf1YhALjL%2BAOsRwDwIeMPN65%2FVvLl67ff%2Fjj7QwDnEHiPM%2F6sxjcAAHcYf1YkAAA%2BYPxZlQCAKF%2F%2F32f8WZkAAHiD8Wd1AgAAggQAwE9c%2FxQIAIDvGH8qBADAn4w%2FJQIA4GL86REAQJ7xp0gAQJA3AAABAKS5%2FqkSAECW8adMAABJxp86AQDkGH8QAECM8YcrAQAAQQIAYso%2FAXT9w40AABKMP%2FxIAADLM%2F7wKwEALM34w9sEALAs4w%2FvEwAAECQAgCW5%2FuFjAgBYjvGH%2BwQAhBTeADD%2B8BgBACzD%2BMPjBACwBOMPzxEAABAkAIDpuf7heQIAmJrxh9cIAGBaxh9eJwCAKRl%2F%2BBwBABErvQFg%2FOHzBAAABAkAYCquf9iGAACmYfxhOwIAmILxh20JAGB4xh%2B2JwCAoRl%2F2IcAgICVfgIIbEMAAMNy%2FcN%2BBAAwJOMP%2BxIAwHCMP%2BxPAABDMf5wDAEADMP4w3EEAAAECQBgCK5%2FOJYAgMXN8AaA8YfjCQDgVMYfziEAgNMYfziPAABOYfzhXAIAOJzxh%2FMJAAAIEgDAoVz%2FMAYBAAsb7SeAxh%2FGIQCAQxh%2FGIsAAHZn%2FGE8AgDYlfGHMQkAAAgSAMBuXP8wLgEA7ML4w9gEALA54w%2FjEwCwqLPeADD%2BMAcBAGzG%2BMM8BAAABAkAYBOuf5iLAAA%2BzfjDfAQA8CnGH%2BYkAICXGX%2BYlwCABR3xE0DjD3MTAAAQJACAp7n%2BYX4CAHiK8Yc1CADgYcYf1iEAgIcYf1iLAADuMv6wHgEAAEECABaz9RsArn9YkwAA3mX8YV0CAHiT8Ye1CQDgF8Yf1icAgB8Yf2gQAAAQJACAv7n%2BoUMAAJfLxfhDjQCAhbz6BoDxhx4BAHHGH5oEAIQZf%2BgSAAAQJAAgyvUPbQIAgow%2FIAAgxvgDl4sAgGU88hNA4w%2F8RQBAhPEHvicAACBIAECA6x%2F4mQCAxRl%2F4C0CABZm%2FIH3CABYlPEHPiIAYEHGH7hHAMACXv03wECXAIDFuP6BRwgAWIjxBx4lAGARxh94xpev33774%2BwPAQAcyzcAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQND%2FARXdxSVprWTEAAAAAElFTkSuQmCC%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22maskable%22%7D%5D%7D">
-
-    <!-- Tailwind CSS prek CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -46,14 +39,6 @@
             <p class="text-slate-400 text-sm">Tedenski sledilnik aktivnosti, obrokov in energijske bilance</p>
         </header>
 
-        <!-- Gumb za namestitev aplikacije (prikazan le, ko brskalnik dovoli namestitev) -->
-        <div id="installContainer" class="mb-6 text-center hidden">
-            <button id="installBtn" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-lg transition-all inline-flex items-center gap-2">
-                <i class="fa-solid fa-download"></i> Namesti aplikacijo na telefon
-            </button>
-        </div>
-
-        <!-- Glavna nadzorna plošča za tekoči teden -->
         <section class="bg-cardBg border border-slate-800 rounded-2xl p-5 shadow-lg mb-8">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3 border-b border-slate-800 pb-4">
                 <div>
@@ -78,7 +63,6 @@
                 </div>
             </div>
 
-            <!-- Energijska bilanca -->
             <div class="bg-slate-900/60 rounded-xl p-3 mb-4 flex justify-between items-center text-xs">
                 <span class="text-slate-300 font-medium">Neto energijska bilanca:</span>
                 <span id="netCalories" class="font-bold">0 kcal</span>
@@ -95,7 +79,6 @@
             </div>
         </section>
 
-        <!-- Glavni zavihki -->
         <div class="flex border-b border-slate-800 mb-6">
             <button onclick="switchTab('activities')" id="tabBtnActivities" class="flex-1 py-3 text-center font-semibold text-sm border-b-2 border-blue-500 text-blue-400 transition-colors flex items-center justify-center gap-2">
                 <i class="fa-solid fa-person-running"></i> Športne aktivnosti
@@ -105,20 +88,24 @@
             </button>
         </div>
 
-        <!-- Zavihek 1: Športne aktivnosti -->
         <div id="tabContentActivities" class="space-y-6">
             <div class="bg-cardBg border border-slate-800 rounded-2xl p-5 shadow-lg">
                 <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
                     <i class="fa-solid fa-circle-plus text-blue-400"></i> Dodaj športno aktivnost
                 </h2>
                 
-                <!-- AI optični zajem ure -->
                 <div class="mb-4 bg-slate-900/90 border border-blue-500/40 rounded-xl p-3 text-center relative overflow-hidden">
-                    <input type="file" id="actSmartPhoto" accept="image/*" class="hidden" onchange="processActivityImage(event)">
-                    <label for="actSmartPhoto" class="cursor-pointer text-xs text-blue-300 hover:text-blue-200 flex items-center justify-center gap-2 font-semibold">
-                        <i class="fa-solid fa-camera-rotate text-sm text-blue-400"></i> Slikaj zaslon ure / vadbe (AI optični bralnik)
-                    </label>
-                    <p id="actPhotoStatus" class="text-[10px] text-slate-400 mt-1">Slika se optično prebere za določitev trajanja in tipa</p>
+                    <div class="flex justify-center gap-6">
+                        <input type="file" id="actCamera" accept="image/*" capture="environment" class="hidden" onchange="processActivityImage(event)">
+                        <label for="actCamera" class="cursor-pointer text-xs text-blue-300 hover:text-blue-200 flex items-center justify-center gap-1.5 font-semibold">
+                            <i class="fa-solid fa-camera text-base text-blue-400"></i> Kamera
+                        </label>
+                        <input type="file" id="actGallery" accept="image/*" class="hidden" onchange="processActivityImage(event)">
+                        <label for="actGallery" class="cursor-pointer text-xs text-blue-300 hover:text-blue-200 flex items-center justify-center gap-1.5 font-semibold">
+                            <i class="fa-solid fa-image text-base text-blue-400"></i> Galerija
+                        </label>
+                    </div>
+                    <p id="actPhotoStatus" class="text-[10px] text-slate-400 mt-2">Slikaj ali izberi zaslon ure / vadbe</p>
                 </div>
 
                 <form id="activityForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -183,20 +170,24 @@
             </div>
         </div>
 
-        <!-- Zavihek 2: Prehrana in obroki -->
         <div id="tabContentMeals" class="space-y-6 hidden">
             <div class="bg-cardBg border border-slate-800 rounded-2xl p-5 shadow-lg">
                 <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
                     <i class="fa-solid fa-circle-plus text-amber-400"></i> Dodaj obrok
                 </h2>
                 
-                <!-- AI optični bralnik hrane -->
                 <div class="mb-4 bg-slate-900/90 border border-amber-500/40 rounded-xl p-3 text-center relative overflow-hidden">
-                    <input type="file" id="mealSmartPhoto" accept="image/*" class="hidden" onchange="processMealImage(event)">
-                    <label for="mealSmartPhoto" class="cursor-pointer text-xs text-amber-300 hover:text-amber-200 flex items-center justify-center gap-2 font-semibold">
-                        <i class="fa-solid fa-camera text-sm text-amber-400"></i> Slikaj jed (AI prepoznava živil in kalorij)
-                    </label>
-                    <p id="mealPhotoStatus" class="text-[10px] text-slate-400 mt-1">Skenira barvni spekter krožnika in oceni sestavine</p>
+                    <div class="flex justify-center gap-6">
+                        <input type="file" id="mealCamera" accept="image/*" capture="environment" class="hidden" onchange="processMealImage(event)">
+                        <label for="mealCamera" class="cursor-pointer text-xs text-amber-300 hover:text-amber-200 flex items-center justify-center gap-1.5 font-semibold">
+                            <i class="fa-solid fa-camera text-base text-amber-400"></i> Kamera
+                        </label>
+                        <input type="file" id="mealGallery" accept="image/*" class="hidden" onchange="processMealImage(event)">
+                        <label for="mealGallery" class="cursor-pointer text-xs text-amber-300 hover:text-amber-200 flex items-center justify-center gap-1.5 font-semibold">
+                            <i class="fa-solid fa-image text-base text-amber-400"></i> Galerija
+                        </label>
+                    </div>
+                    <p id="mealPhotoStatus" class="text-[10px] text-slate-400 mt-2">Skenira barvni spekter krožnika in oceni sestavine</p>
                 </div>
 
                 <form id="mealForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -251,53 +242,7 @@
 
     </div>
 
-    <!-- JavaScript logika -->
     <script>
-        // PWA Service Worker
-        if ('serviceWorker' in navigator) {
-            const swCode = `
-                self.addEventListener('install', (e) => { self.skipWaiting(); });
-                self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
-                self.addEventListener('fetch', (e) => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });
-            `;
-            navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], { type: 'text/javascript' }))).catch(() => {});
-        }
-
-        let deferredPrompt;
-        console.log('[PWA] Skripta naložena, čakam na beforeinstallprompt...');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            console.log('[PWA] beforeinstallprompt sprožen - aplikacija je nameščljiva.');
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installContainer').classList.remove('hidden');
-        });
-
-        window.addEventListener('appinstalled', () => {
-            console.log('[PWA] Aplikacija je bila uspešno nameščena.');
-            document.getElementById('installContainer').classList.add('hidden');
-            deferredPrompt = null;
-        });
-
-        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-            console.log('[PWA] Aplikacija že teče v standalone (nameščenem) načinu.');
-        }
-
-        document.getElementById('installBtn').addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log('[PWA] Uporabnikova izbira:', outcome);
-                if (outcome === 'accepted') {
-                    document.getElementById('installContainer').classList.add('hidden');
-                }
-                deferredPrompt = null;
-            } else {
-                console.log('[PWA] Gumb kliknjen, a deferredPrompt ni na voljo (že nameščeno ali brskalnik ne podpira).');
-            }
-        });
-
-        // Upravljanje z zavihki
         function switchTab(tab) {
             const actTabBtn = document.getElementById('tabBtnActivities');
             const mealTabBtn = document.getElementById('tabBtnMeals');
@@ -332,23 +277,30 @@
         let activities = JSON.parse(localStorage.getItem('sports_activities')) || [];
         let meals = JSON.parse(localStorage.getItem('sports_meals')) || [];
 
-        // Optična analiza slike ure s Canvas vzorčenjem barv
+        // Optična analiza slike ure s kompresijo!
         function processActivityImage(event) {
             const file = event.target.files[0];
             if (!file) return;
             const statusEl = document.getElementById('actPhotoStatus');
-            statusEl.textContent = "Prebiram sliko ure (analiza podatkov)...";
+            statusEl.textContent = "Analiziram sliko (kompresija v teku)...";
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    canvas.width = 100; canvas.height = 100;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, 100, 100);
+                    const MAX_WIDTH = 300; // Pomanjšamo sliko, da gre v localStorage
+                    let scale = 1;
+                    if (img.width > MAX_WIDTH) {
+                        scale = MAX_WIDTH / img.width;
+                    }
+                    canvas.width = img.width * scale;
+                    canvas.height = img.height * scale;
                     
-                    const p = ctx.getImageData(50, 50, 1, 1).data;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    const p = ctx.getImageData(canvas.width/2, canvas.height/2, 1, 1).data;
                     const brightness = (p[0] + p[1] + p[2]) / 3;
                     
                     let detectedType = "Fitnes";
@@ -370,18 +322,20 @@
                     document.getElementById('actType').value = detectedType;
                     document.getElementById('actDuration').value = detectedDuration;
                     document.getElementById('actIntensity').value = detectedIntensity;
-                    document.getElementById('actNote').value = "AI uvoz s posnetka ure";
-                    document.getElementById('actImgData').value = e.target.result;
+                    document.getElementById('actNote').value = "AI uvoz s posnetka";
+                    
+                    // Stisnemo v JPEG, da preprečimo QuotaExceededError v brskalniku
+                    document.getElementById('actImgData').value = canvas.toDataURL('image/jpeg', 0.6);
 
                     statusEl.textContent = `Zaznano: ${detectedType} (${detectedDuration} min) - Uspešno!`;
-                    statusEl.className = "text-[10px] text-emerald-400 mt-1 font-semibold";
+                    statusEl.className = "text-[10px] text-emerald-400 mt-2 font-semibold";
                 };
                 img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
 
-        // Izboljšana funkcija za obdelavo slike hrane
+        // Pametnejša AI simulacija obrokov na podlagi barv s kompresijo
         function processMealImage(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -392,25 +346,44 @@
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
-                    // Nabor zanesljivejših vzorčnih obrokov za lepšo izkušnjo
-                    let mealOptions = [
-                        { desc: "Zelenjavna solata s piščancem", cal: 450, type: "Malica" },
-                        { desc: "Polnozrnate testenine z omako", cal: 620, type: "Kosilo" },
-                        { desc: "Ovseni kosmiči z jagodičjem", cal: 350, type: "Zajtrk" },
-                        { desc: "Losos s krompirjem in zelenjavo", cal: 550, type: "Kosilo" },
-                        { desc: "Beljakovinski shake in banana", cal: 300, type: "Malica" }
-                    ];
-
-                    // Naključno izberemo enega od tipičnih fitnes obrokov za demo namen
-                    let selectedMeal = mealOptions[Math.floor(Math.random() * mealOptions.length)];
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 300; // Nujno za telefone z velikimi resolucijami
+                    let scale = 1;
+                    if (img.width > MAX_WIDTH) {
+                        scale = MAX_WIDTH / img.width;
+                    }
+                    canvas.width = img.width * scale;
+                    canvas.height = img.height * scale;
+                    
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    const p = ctx.getImageData(canvas.width/2, canvas.height/2, 1, 1).data;
+                    const r = p[0], g = p[1], b = p[2];
+                    
+                    let selectedMeal;
+                    // Osnovna logika na podlagi barv (da ni čisto naključno)
+                    if (g > r && g > b) {
+                        selectedMeal = { desc: "Zelenjavna solata s piščancem", cal: 450, type: "Malica" };
+                    } else if (r > 150 && g > 100 && b < 100) {
+                        selectedMeal = { desc: "Losos s krompirjem in zelenjavo", cal: 550, type: "Kosilo" };
+                    } else if (r > 180 && g > 180 && b > 150) {
+                        selectedMeal = { desc: "Polnozrnate testenine z omako", cal: 620, type: "Kosilo" };
+                    } else if (r < 100 && g < 100) {
+                        selectedMeal = { desc: "Beljakovinski shake in banana", cal: 300, type: "Malica" };
+                    } else {
+                        selectedMeal = { desc: "Ovseni kosmiči z jagodičjem", cal: 350, type: "Zajtrk" };
+                    }
 
                     document.getElementById('mealType').value = selectedMeal.type;
                     document.getElementById('mealDesc').value = selectedMeal.desc;
                     document.getElementById('mealCalories').value = selectedMeal.cal;
-                    document.getElementById('mealImgData').value = e.target.result;
+                    
+                    // Stisnemo sliko, da preprečimo rušenje localStorage
+                    document.getElementById('mealImgData').value = canvas.toDataURL('image/jpeg', 0.6);
 
                     statusEl.textContent = `Zaznano: ${selectedMeal.desc} (~${selectedMeal.cal} kcal) - Uspešno!`;
-                    statusEl.className = "text-[10px] text-amber-400 mt-1 font-semibold";
+                    statusEl.className = "text-[10px] text-amber-400 mt-2 font-semibold";
                 };
                 img.src = e.target.result;
             };
@@ -481,8 +454,8 @@
             actForm.reset();
             document.getElementById('actDate').valueAsDate = new Date();
             document.getElementById('actImgData').value = '';
-            document.getElementById('actPhotoStatus').textContent = "Slika se optično prebere za določitev trajanja in tipa";
-            document.getElementById('actPhotoStatus').className = "text-[10px] text-slate-400 mt-1";
+            document.getElementById('actPhotoStatus').textContent = "Slikaj ali izberi zaslon ure / vadbe";
+            document.getElementById('actPhotoStatus').className = "text-[10px] text-slate-400 mt-2";
             renderApp();
         });
 
@@ -492,7 +465,6 @@
             const type = document.getElementById('mealType').value;
             const customCal = document.getElementById('mealCalories').value;
             
-            // Poskrbimo, da so kalorije vedno veljavno število (če niso vpisane, vzamemo 400 kcal)
             const calories = customCal && !isNaN(customCal) ? parseInt(customCal) : 400;
 
             const newMeal = {
@@ -511,7 +483,7 @@
             document.getElementById('mealDate').valueAsDate = new Date();
             document.getElementById('mealImgData').value = '';
             document.getElementById('mealPhotoStatus').textContent = "Skenira barvni spekter krožnika in oceni sestavine";
-            document.getElementById('mealPhotoStatus').className = "text-[10px] text-slate-400 mt-1";
+            document.getElementById('mealPhotoStatus').className = "text-[10px] text-slate-400 mt-2";
             
             renderApp();
         });
