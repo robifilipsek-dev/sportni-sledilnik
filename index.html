@@ -39,18 +39,19 @@
 <body class="bg-darkBg text-slate-100 min-h-screen font-sans antialiased">
 
     <div class="max-w-4xl mx-auto px-4 py-8">
-        <header class="mb-8 text-center">
+        <header class="mb-6 text-center">
             <h1 class="text-3xl font-extrabold tracking-tight text-white mb-2">
                 <i class="fa-solid fa-bolt text-blue-500 mr-2"></i> Šport in prehrana
             </h1>
             <p class="text-slate-400 text-sm">Tedenski sledilnik aktivnosti, obrokov in energijske bilance</p>
         </header>
 
-        <!-- PWA gumb za namestitev -->
-        <div id="installContainer" class="hidden mb-6 text-center">
-            <button id="installBtn" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-lg transition-all inline-flex items-center gap-2">
-                <i class="fa-solid fa-download"></i> Namesti aplikacijo na telefon
+        <!-- PWA gumb za namestitev (vedno viden) -->
+        <div id="installContainer" class="mb-6 text-center">
+            <button id="installBtn" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-lg transition-all inline-flex items-center gap-2.5 border border-blue-400/30">
+                <i class="fa-solid fa-cloud-arrow-down text-base"></i> Namesti aplikacijo na telefon / napravo
             </button>
+            <p id="installTip" class="text-[11px] text-slate-400 mt-1.5">Deluje kot samostojna aplikacija (PWA) na Androidu in iOS.</p>
         </div>
 
         <!-- Glavna nadzorna plošča za tekoči teden -->
@@ -253,7 +254,7 @@
 
     <!-- JavaScript logika -->
     <script>
-        // PWA Service Worker
+        // PWA Service Worker registracija
         if ('serviceWorker' in navigator) {
             const swCode = `
                 self.addEventListener('install', (e) => { self.skipWaiting(); });
@@ -263,11 +264,10 @@
             navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], { type: 'text/javascript' }))).catch(() => {});
         }
 
-        let deferredPrompt;
+        let deferredPrompt = null;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            document.getElementById('installContainer').classList.remove('hidden');
         });
         
         document.getElementById('installBtn').addEventListener('click', async () => {
@@ -275,9 +275,17 @@
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
                 if (outcome === 'accepted') {
-                    document.getElementById('installContainer').classList.add('hidden');
+                    document.getElementById('installContainer').style.display = 'none';
                 }
                 deferredPrompt = null;
+            } else {
+                // Namestitveni vodnik, če brskalnik samodejno ne sproži poziva
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                if (isIOS) {
+                    alert("Za namestitev na iOS:\n1. Pritisnite gumb 'Share' (puščica navzgor)\n2. Izberite 'Add to Home Screen' (Na domači zaslon).");
+                } else {
+                    alert("Če samodejna namestitev ni na voljo:\n- V brskalniku Chrome/Edge odprite meni (3 pike zgoraj desno) in izberite 'Namesti aplikacijo' ali 'Dodaj na domači zaslon'.");
+                }
             }
         });
 
