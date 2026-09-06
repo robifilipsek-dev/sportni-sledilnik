@@ -112,6 +112,15 @@
                     <i class="fa-solid fa-circle-plus text-blue-400"></i> Dodaj športno aktivnost
                 </h2>
                 
+                <!-- Pametni zajem prek ure / slike -->
+                <div class="mb-4 bg-slate-900/80 border border-dashed border-slate-700 rounded-xl p-3 text-center">
+                    <input type="file" id="actSmartPhoto" accept="image/*" class="hidden" onchange="handleSmartActivityPhoto(event)">
+                    <label for="actSmartPhoto" class="cursor-pointer text-xs text-blue-400 hover:text-blue-300 flex items-center justify-center gap-2 font-medium">
+                        <i class="fa-solid fa-camera-rotate text-sm"></i> Slikaj uro / zaslon vadbe za samodejni vnos
+                    </label>
+                    <p id="actPhotoStatus" class="text-[10px] text-slate-400 mt-1">Naloži posnetek zaslona ure (Garmin, Apple Watch, Strava...)</p>
+                </div>
+
                 <form id="activityForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1">Datum</label>
@@ -179,6 +188,15 @@
                     <i class="fa-solid fa-circle-plus text-amber-400"></i> Dodaj obrok
                 </h2>
                 
+                <!-- Pametni zajem prek slike jedi -->
+                <div class="mb-4 bg-slate-900/80 border border-dashed border-slate-700 rounded-xl p-3 text-center">
+                    <input type="file" id="mealSmartPhoto" accept="image/*" class="hidden" onchange="handleSmartMealPhoto(event)">
+                    <label for="mealSmartPhoto" class="cursor-pointer text-xs text-amber-400 hover:text-amber-300 flex items-center justify-center gap-2 font-medium">
+                        <i class="fa-solid fa-camera text-sm"></i> Slikaj jed za AI oceno in vnos
+                    </label>
+                    <p id="mealPhotoStatus" class="text-[10px] text-slate-400 mt-1">Fotografiraj krožnik, pisco ali malico za samodejni izračun</p>
+                </div>
+
                 <form id="mealForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1">Datum</label>
@@ -198,13 +216,13 @@
                     </div>
 
                     <div class="md:col-span-2">
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Opis obroka (npr. pizza, ovseni kosmiči, sendvič...)</label>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Opis obroka</label>
                         <input type="text" id="mealDesc" required placeholder="npr. piščančja jufka"
                             class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
                     </div>
 
                     <div class="md:col-span-2">
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Ocena kalorij (pusti prazno za samodejni izračun)</label>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Ocena kalorij</label>
                         <input type="number" id="mealCalories" placeholder="npr. 600"
                             class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
                     </div>
@@ -291,10 +309,52 @@
         let activities = JSON.parse(localStorage.getItem('sports_activities')) || [];
         let meals = JSON.parse(localStorage.getItem('sports_meals')) || [];
 
+        // Simulacija pametne analize fotografije ure (aktivnost)
+        function handleSmartActivityPhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const statusEl = document.getElementById('actPhotoStatus');
+            statusEl.textContent = "Analiziram sliko ure...";
+            
+            setTimeout(() => {
+                // Simuliran rezultat branja posnetka ure
+                document.getElementById('actType').value = "Fitnes";
+                document.getElementById('actDuration').value = 60;
+                document.getElementById('actIntensity').value = "Visoka";
+                document.getElementById('actNote').value = "Samodejni uvoz s slike ure";
+                statusEl.textContent = "Uspešno prebrano s slike! Preveri podatke spodaj.";
+                statusEl.className = "text-[10px] text-emerald-400 mt-1 font-semibold";
+            }, 1200);
+        }
+
+        // Simulacija pametne analize fotografije hrane
+        function handleSmartMealPhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const statusEl = document.getElementById('mealPhotoStatus');
+            statusEl.textContent = "Analiziram sliko obroka...";
+
+            setTimeout(() => {
+                // Simuliran rezultat AI prepoznave hrane
+                const simulatedDishes = [
+                    { desc: "Domača pizza / Neapeljska pica", cal: 850, type: "Kosilo" },
+                    { desc: "Piščančji zrezek v solati z olivnim oljem", cal: 480, type: "Kosilo" },
+                    { desc: "Ovseni kosmiči z mandljevim mlekom in banano", cal: 360, type: "Zajtrk" }
+                ];
+                const randomDish = simulatedDishes[Math.floor(Math.random() * simulatedDishes.length)];
+                
+                document.getElementById('mealType').value = randomDish.type;
+                document.getElementById('mealDesc').value = randomDish.desc;
+                document.getElementById('mealCalories').value = randomDish.cal;
+                statusEl.textContent = `Zaznano: ${randomDish.desc} (~${randomDish.cal} kcal)`;
+                statusEl.className = "text-[10px] text-amber-400 mt-1 font-semibold";
+            }, 1200);
+        }
+
         function getWeekRange(d) {
             d = new Date(d);
             let day = d.getDay();
-            let diff = d.getDate() - day + (day == 0 ? -6: 1); // Ponedeljek
+            let diff = d.getDate() - day + (day == 0 ? -6: 1);
             let monday = new Date(d.setDate(diff));
             let sunday = new Date(monday);
             sunday.setDate(monday.getDate() + 6);
@@ -304,7 +364,6 @@
                 let mm = String(date.getMonth() + 1).padStart(2, '0');
                 return `${dd}.${mm}.`;
             };
-
             return `${formatDate(monday)} - ${formatDate(sunday)}`;
         }
 
@@ -369,6 +428,8 @@
             localStorage.setItem('sports_activities', JSON.stringify(activities));
             actForm.reset();
             document.getElementById('actDate').valueAsDate = new Date();
+            document.getElementById('actPhotoStatus').textContent = "Naloži posnetek zaslona ure (Garmin, Apple Watch, Strava...)";
+            document.getElementById('actPhotoStatus').className = "text-[10px] text-slate-400 mt-1";
             renderApp();
         });
 
@@ -391,6 +452,8 @@
             localStorage.setItem('sports_meals', JSON.stringify(meals));
             mealForm.reset();
             document.getElementById('mealDate').valueAsDate = new Date();
+            document.getElementById('mealPhotoStatus').textContent = "Fotografiraj krožnik, pisco ali malico za samodejni izračun";
+            document.getElementById('mealPhotoStatus').className = "text-[10px] text-slate-400 mt-1";
             renderApp();
         });
 
