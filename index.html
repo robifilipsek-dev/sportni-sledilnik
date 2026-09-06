@@ -269,11 +269,14 @@
             deferredPrompt = e;
             document.getElementById('installContainer').classList.remove('hidden');
         });
+        
         document.getElementById('installBtn').addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') document.getElementById('installContainer').classList.add('hidden');
+                if (outcome === 'accepted') {
+                    document.getElementById('installContainer').classList.add('hidden');
+                }
                 deferredPrompt = null;
             }
         });
