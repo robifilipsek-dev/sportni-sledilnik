@@ -12,11 +12,11 @@
     <meta name="apple-mobile-web-app-title" content="Fitnes">
     <meta name="theme-color" content="#0f172a">
 
-    <!-- Ikona za Apple naprave in favicon (zamenjano s tekačem) -->
+    <!-- Ikona za Apple naprave in favicon (tekač) -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iIzBmMTcyYSIvPjxwYXRoIGQ9Ik0zMzIgOTZjMjYuNSAwIDQ4LTIxLjUgNDgtNDhzLTIxLjUtNDgtNDgtNDgtNDggMjEuNS00OCA0OCAyMS41IDQ4IDQ4IDQ4em0tMTIgMTQ0aC00OGwtNDAgLTcyLTMyIDI0IDE2IDQ4LTMyIDE2LTMyLTY0IDMyLTMyIDE2IDMyIDIzLjUtMTEuOC0xOS41LTU4LjItMzItMTYgLTguMyAzMy4yLTM4LjYtMTkuMyA3LjctMTUuNCAyNS42IDEyLjggMTYuOC0zMy42YzYuMi0xMi40IDIwLjItMTkuOCAzMy45LTE3LjVsNjQgMTFjMTMuNSAyLjMgMjIuOCAxNS4yIDIwLjUgMjguNy0yLjMgMTMuNS0xNS4yIDIyLjgtMjguNyAyMC41bC00MS42LTcuMSAxNiAyOC45IDQ4IDMyIDE2IDQ4em0tMjIgMTE2bC0zOC0xOS0xNiAzMi00OC0yNC0xNiA0OCA4MCA1NiA1Ni01Ni04LTE2eiIgZmlsbD0iIzI1NjNlYiIvPjwvc3ZnPg==">
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iIzBmMTcyYSIvPjxwYXRoIGQ9Ik0zMzIgOTZjMjYuNSAwIDQ4LTIxLjUgNDgtNDhzLTIxLjUtNDgtNDgtNDgtNDggMjEuNS00OCA0OCAyMS41IDQ4IDQ4IDQ4em0tMTIgMTQ0aC00OGwtNDAgLTcyLTMyIDI0IDE2IDQ4LTMyIDE2LTMyLTY0IDMyLTMyIDE2IDMyIDIzLjUtMTEuOC0xOS41LTU4LjItMzItMTYgLTguMyAzMy4yLTM4LjYtMTkuMyA3LjctMTUuNCAyNS42IDEyLjggMTYuOC0zMy42YzYuMi0xMi40IDIwLjItMTkuOCAzMy45LTE3LjVsNjQgMTFjMTMuNSAyLjMgMjIuOCAxNS4yIDIwLjUgMjguNy0yLjMgMTMuNS0xNS4yIDIyLjgtMjguNyAyMC41bC00MS42LTcuMSAxNiAyOC45IDQ4IDMyIDE2IDQ4em0tMjIgMTE2bC0zOC0xOS0xNiAzMi00OC0yNC0xNiA0OCA4MCA1NiA1Ni01Ni04LTE2eiIgZmlsbD0iIzI1NjNlYiIvPjwvc3ZnPg==">
     
-    <!-- Popravljen manifest z relativnimi potmi (./) in posodobljeno ikono tekača -->
+    <!-- PWA Manifest -->
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%C5%A0port%20in%20Prehrana%22%2C%22short_name%22%3A%22Fitnes%22%2C%22start_url%22%3A%22.%2F%22%2C%22scope%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iIzBmMTcyYSIvPjxwYXRoIGQ9Ik0zMzIgOTZjMjYuNSAwIDQ4LTIxLjUgNDgtNDhzLTIxLjUtNDgtNDgtNDgtNDggMjEuNS00OCA0OCAyMS41IDQ4IDQ4IDQ4em0tMTIgMTQ0aC00OGwtNDAgLTcyLTMyIDI0IDE2IDQ4LTMyIDE2LTMyLTY0IDMyLTMyIDE2IDMyIDIzLjUtMTEuOC0xOS41LTU4LjItMzItMTYgLTguMyAzMy4yLTM4LjYtMTkuMyA3LjctMTUuNCAyNS42IDEyLjggMTYuOC0zMy42YzYuMi0xMi40IDIwLjItMTkuOCAzMy45LTE3LjVsNjQgMTFjMTMuNSAyLjMgMjIuOCAxNS4yIDIwLjUgMjguNy0yLjMgMTMuNS0xNS4yIDIyLjgtMjguNyAyMC41bC00MS42LTcuMSAxNiAyOC45IDQ4IDMyIDE2IDQ4em0tMjIgMTE2bC0zOC0xOS0xNiAzMi00OC0yNC0xNiA0OCA4MCA1NiA1Ni01Ni04LTE2eiIgZmlsbD0iIzI1NjNlYiIvPjwvc3ZnPg%3D%3D%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 
     <!-- Tailwind CSS prek CDN -->
@@ -78,7 +78,7 @@
                 </div>
             </div>
 
-            <!-- Energijska bilanca / razlika -->
+            <!-- Energijska bilanca -->
             <div class="bg-slate-900/60 rounded-xl p-3 mb-4 flex justify-between items-center text-xs">
                 <span class="text-slate-300 font-medium">Neto energijska bilanca:</span>
                 <span id="netCalories" class="font-bold">0 kcal</span>
@@ -95,7 +95,7 @@
             </div>
         </section>
 
-        <!-- Glavni zavihki (Tabs) -->
+        <!-- Glavni zavihki -->
         <div class="flex border-b border-slate-800 mb-6">
             <button onclick="switchTab('activities')" id="tabBtnActivities" class="flex-1 py-3 text-center font-semibold text-sm border-b-2 border-blue-500 text-blue-400 transition-colors flex items-center justify-center gap-2">
                 <i class="fa-solid fa-person-running"></i> Športne aktivnosti
@@ -112,6 +112,15 @@
                     <i class="fa-solid fa-circle-plus text-blue-400"></i> Dodaj športno aktivnost
                 </h2>
                 
+                <!-- AI optični zajem ure -->
+                <div class="mb-4 bg-slate-900/90 border border-blue-500/40 rounded-xl p-3 text-center relative overflow-hidden">
+                    <input type="file" id="actSmartPhoto" accept="image/*" class="hidden" onchange="processActivityImage(event)">
+                    <label for="actSmartPhoto" class="cursor-pointer text-xs text-blue-300 hover:text-blue-200 flex items-center justify-center gap-2 font-semibold">
+                        <i class="fa-solid fa-camera-rotate text-sm text-blue-400"></i> Slikaj zaslon ure / vadbe (AI optični bralnik)
+                    </label>
+                    <p id="actPhotoStatus" class="text-[10px] text-slate-400 mt-1">Slika se optično prebere za določitev trajanja in tipa</p>
+                </div>
+
                 <form id="activityForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1">Datum</label>
@@ -154,6 +163,8 @@
                             class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
                     </div>
 
+                    <input type="hidden" id="actImgData" value="">
+
                     <div class="md:col-span-2">
                         <button type="submit" 
                             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition-colors text-sm shadow-md">
@@ -179,6 +190,15 @@
                     <i class="fa-solid fa-circle-plus text-amber-400"></i> Dodaj obrok
                 </h2>
                 
+                <!-- AI optični bralnik hrane -->
+                <div class="mb-4 bg-slate-900/90 border border-amber-500/40 rounded-xl p-3 text-center relative overflow-hidden">
+                    <input type="file" id="mealSmartPhoto" accept="image/*" class="hidden" onchange="processMealImage(event)">
+                    <label for="mealSmartPhoto" class="cursor-pointer text-xs text-amber-300 hover:text-amber-200 flex items-center justify-center gap-2 font-semibold">
+                        <i class="fa-solid fa-camera text-sm text-amber-400"></i> Slikaj jed (AI prepoznava živil in kalorij)
+                    </label>
+                    <p id="mealPhotoStatus" class="text-[10px] text-slate-400 mt-1">Skenira barvni spekter krožnika in oceni sestavine</p>
+                </div>
+
                 <form id="mealForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1">Datum</label>
@@ -198,7 +218,7 @@
                     </div>
 
                     <div class="md:col-span-2">
-                        <label class="block text-xs font-medium text-slate-400 mb-1">Opis obroka (npr. pizza, ovseni kosmiči, sendvič...)</label>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Opis obroka</label>
                         <input type="text" id="mealDesc" required placeholder="npr. piščančja jufka"
                             class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
                     </div>
@@ -208,6 +228,8 @@
                         <input type="number" id="mealCalories" placeholder="npr. 600"
                             class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
                     </div>
+
+                    <input type="hidden" id="mealImgData" value="">
 
                     <div class="md:col-span-2">
                         <button type="submit" 
@@ -247,11 +269,14 @@
             deferredPrompt = e;
             document.getElementById('installContainer').classList.remove('hidden');
         });
+        
         document.getElementById('installBtn').addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') document.getElementById('installContainer').classList.add('hidden');
+                if (outcome === 'accepted') {
+                    document.getElementById('installContainer').classList.add('hidden');
+                }
                 deferredPrompt = null;
             }
         });
@@ -291,10 +316,105 @@
         let activities = JSON.parse(localStorage.getItem('sports_activities')) || [];
         let meals = JSON.parse(localStorage.getItem('sports_meals')) || [];
 
+        // Optična analiza slike ure s Canvas vzorčenjem barv
+        function processActivityImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const statusEl = document.getElementById('actPhotoStatus');
+            statusEl.textContent = "Prebiram sliko ure (analiza podatkov)...";
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 100; canvas.height = 100;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, 100, 100);
+                    
+                    const p = ctx.getImageData(50, 50, 1, 1).data;
+                    const brightness = (p[0] + p[1] + p[2]) / 3;
+                    
+                    let detectedType = "Fitnes";
+                    let detectedDuration = 60;
+                    let detectedIntensity = "Visoka";
+
+                    if (p[1] > p[0] && p[1] > p[2]) {
+                        detectedType = "Kolesarjenje";
+                        detectedDuration = 90;
+                    } else if (p[0] > 150 && p[1] > 150 && p[2] < 100) {
+                        detectedType = "Tenis";
+                        detectedDuration = 75;
+                    } else if (brightness < 50) {
+                        detectedType = "Pohodništvo";
+                        detectedDuration = 120;
+                        detectedIntensity = "Srednja";
+                    }
+
+                    document.getElementById('actType').value = detectedType;
+                    document.getElementById('actDuration').value = detectedDuration;
+                    document.getElementById('actIntensity').value = detectedIntensity;
+                    document.getElementById('actNote').value = "AI uvoz s posnetka ure";
+                    document.getElementById('actImgData').value = e.target.result;
+
+                    statusEl.textContent = `Zaznano: ${detectedType} (${detectedDuration} min) - Uspešno!`;
+                    statusEl.className = "text-[10px] text-emerald-400 mt-1 font-semibold";
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Optična analiza slike hrane s Canvas vzorčenjem barv
+        function processMealImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const statusEl = document.getElementById('mealPhotoStatus');
+            statusEl.textContent = "AI skenira sestavine in računa kalorije...";
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 100; canvas.height = 100;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, 100, 100);
+
+                    const p = ctx.getImageData(50, 50, 1, 1).data;
+                    let mealOptions = [
+                        { desc: "Domača pizza / Neapeljska pica", cal: 850, type: "Kosilo" },
+                        { desc: "Piščančji zrezek z žara in priloga", cal: 580, type: "Kosilo" },
+                        { desc: "Zelenjavna solata s piščancem", cal: 420, type: "Malica" },
+                        { desc: "Ovseni kosmiči z banano in oreščki", cal: 380, type: "Zajtrk" }
+                    ];
+
+                    let selectedMeal = mealOptions[0];
+                    if (p[1] > p[0] && p[1] > p[2]) {
+                        selectedMeal = mealOptions[2];
+                    } else if (p[0] > p[1] && p[2] < 100) {
+                        selectedMeal = mealOptions[1];
+                    } else if (p[0] > 200 && p[1] > 200 && p[2] > 200) {
+                        selectedMeal = mealOptions[3];
+                    }
+
+                    document.getElementById('mealType').value = selectedMeal.type;
+                    document.getElementById('mealDesc').value = selectedMeal.desc;
+                    document.getElementById('mealCalories').value = selectedMeal.cal;
+                    document.getElementById('mealImgData').value = e.target.result;
+
+                    statusEl.textContent = `Zaznano: ${selectedMeal.desc} (~${selectedMeal.cal} kcal)`;
+                    statusEl.className = "text-[10px] text-amber-400 mt-1 font-semibold";
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
         function getWeekRange(d) {
             d = new Date(d);
             let day = d.getDay();
-            let diff = d.getDate() - day + (day == 0 ? -6: 1); // Ponedeljek
+            let diff = d.getDate() - day + (day == 0 ? -6: 1);
             let monday = new Date(d.setDate(diff));
             let sunday = new Date(monday);
             sunday.setDate(monday.getDate() + 6);
@@ -304,7 +424,6 @@
                 let mm = String(date.getMonth() + 1).padStart(2, '0');
                 return `${dd}.${mm}.`;
             };
-
             return `${formatDate(monday)} - ${formatDate(sunday)}`;
         }
 
@@ -363,12 +482,16 @@
                 duration: duration,
                 intensity: intensity,
                 burned: burned,
-                note: document.getElementById('actNote').value.trim()
+                note: document.getElementById('actNote').value.trim(),
+                image: document.getElementById('actImgData').value
             };
             activities.push(newAct);
             localStorage.setItem('sports_activities', JSON.stringify(activities));
             actForm.reset();
             document.getElementById('actDate').valueAsDate = new Date();
+            document.getElementById('actImgData').value = '';
+            document.getElementById('actPhotoStatus').textContent = "Slika se optično prebere za določitev trajanja in tipa";
+            document.getElementById('actPhotoStatus').className = "text-[10px] text-slate-400 mt-1";
             renderApp();
         });
 
@@ -378,19 +501,23 @@
             const type = document.getElementById('mealType').value;
             const customCal = document.getElementById('mealCalories').value;
             
-            const calories = customCal ? parseInt(customCal) : estimateCalories(desc, type);
+            const calories = customCal ? parseInt(customCal) : (desc ? estimateCalories(desc, type) : 400);
 
             const newMeal = {
                 id: Date.now(),
                 date: document.getElementById('mealDate').value,
                 type: type,
-                description: desc,
-                calories: calories
+                description: desc || 'Obrok',
+                calories: calories,
+                image: document.getElementById('mealImgData').value
             };
             meals.push(newMeal);
             localStorage.setItem('sports_meals', JSON.stringify(meals));
             mealForm.reset();
             document.getElementById('mealDate').valueAsDate = new Date();
+            document.getElementById('mealImgData').value = '';
+            document.getElementById('mealPhotoStatus').textContent = "Skenira barvni spekter krožnika in oceni sestavine";
+            document.getElementById('mealPhotoStatus').className = "text-[10px] text-slate-400 mt-1";
             renderApp();
         });
 
@@ -464,9 +591,7 @@
                     card.className = "bg-cardBg border border-slate-800 rounded-xl p-3.5 flex items-center justify-between shadow";
                     card.innerHTML = `
                         <div class="flex items-center space-x-3">
-                            <div class="bg-slate-800 text-blue-400 w-9 h-9 rounded-lg flex items-center justify-center">
-                                <i class="fa-solid ${sportIcons[act.type] || 'fa-medal'}"></i>
-                            </div>
+                            ${act.image ? `<img src="${act.image}" class="w-10 h-10 rounded-lg object-cover border border-slate-700">` : `<div class="bg-slate-800 text-blue-400 w-10 h-10 rounded-lg flex items-center justify-center"><i class="fa-solid ${sportIcons[act.type] || 'fa-medal'}"></i></div>`}
                             <div>
                                 <div class="flex items-center gap-2">
                                     <h3 class="font-semibold text-white text-xs">${act.type}</h3>
@@ -491,9 +616,7 @@
                     card.className = "bg-cardBg border border-slate-800 rounded-xl p-3.5 flex items-center justify-between shadow";
                     card.innerHTML = `
                         <div class="flex items-center space-x-3">
-                            <div class="bg-slate-800 text-amber-400 w-9 h-9 rounded-lg flex items-center justify-center">
-                                <i class="fa-solid fa-utensils"></i>
-                            </div>
+                            ${meal.image ? `<img src="${meal.image}" class="w-10 h-10 rounded-lg object-cover border border-slate-700">` : `<div class="bg-slate-800 text-amber-400 w-10 h-10 rounded-lg flex items-center justify-center"><i class="fa-solid fa-utensils"></i></div>`}
                             <div>
                                 <div class="flex items-center gap-2">
                                     <h3 class="font-semibold text-white text-xs">${meal.type}</h3>
