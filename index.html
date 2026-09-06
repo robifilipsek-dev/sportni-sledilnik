@@ -17,7 +17,7 @@
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%233b82f6%22><path d=%22M13 2L3 14h9l-1 8 10-12h-9l1-8z%22/></svg>">
     
     <!-- PWA Manifest -->
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%C5%A0port%20in%20Prehrana%22%2C%22short_name%22%3A%22Fitnes%22%2C%22start_url%22%3A%22.%2F%22%2C%22scope%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27%233b82f6%27%3E%3Cpath%20d%3D%27M13%202L3%2014h9l-1%208%2010-12h-9l1-8z%27%2F%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%C5%A0port%20in%20Prehrana%22%2C%22short_name%22%3A%22Fitnes%22%2C%22start_url%22%3A%22.%2F%22%2C%22scope%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27%233b82f6%27%3E%3Cpath%20d%3D%27M13%202L3%2014h9l-1%208%2010-12h-9l1-8z%27%2F%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27%233b82f6%27%3E%3Cpath%20d%3D%27M13%202L3%2014h9l-1%208%2010-12h-9l1-8z%27%2F%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%22%7D%5D%7D">
 
     <!-- Tailwind CSS prek CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -46,9 +46,9 @@
             <p class="text-slate-400 text-sm">Tedenski sledilnik aktivnosti, obrokov in energijske bilance</p>
         </header>
 
-        <!-- PWA gumb za namestitev (odstranjen 'hidden' za takojšen prikaz) -->
-        <div id="installContainer" class="mb-6 text-center">
-            <button id="installBtn" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-lg transition-all inline-flex items-center gap-2">
+        <!-- Gumb za namestitev aplikacije (prikazan le, ko brskalnik dovoli namestitev) -->
+        <div id="installContainer" class="mb-6 text-center hidden">
+            <button id="installBtn" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-lg transition-all inline-flex items-center gap-2">
                 <i class="fa-solid fa-download"></i> Namesti aplikacijo na telefon
             </button>
         </div>
@@ -264,23 +264,36 @@
         }
 
         let deferredPrompt;
+        console.log('[PWA] Skripta naložena, čakam na beforeinstallprompt...');
+
         window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('[PWA] beforeinstallprompt sprožen - aplikacija je nameščljiva.');
             e.preventDefault();
             deferredPrompt = e;
-            // Ker smo odstranili razred 'hidden', bo gumb ostal viden, 
-            // tukaj pa lahko po potrebi dodamo logiko ali pustimo, da omogoča klik.
+            document.getElementById('installContainer').classList.remove('hidden');
         });
-        
+
+        window.addEventListener('appinstalled', () => {
+            console.log('[PWA] Aplikacija je bila uspešno nameščena.');
+            document.getElementById('installContainer').classList.add('hidden');
+            deferredPrompt = null;
+        });
+
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            console.log('[PWA] Aplikacija že teče v standalone (nameščenem) načinu.');
+        }
+
         document.getElementById('installBtn').addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
+                console.log('[PWA] Uporabnikova izbira:', outcome);
                 if (outcome === 'accepted') {
                     document.getElementById('installContainer').classList.add('hidden');
                 }
                 deferredPrompt = null;
             } else {
-                alert("Namestitev preko brskalnika v tem načinu ni na voljo (običajno deluje, ko aplikacijo odprete kot lokalni strežnik ali preko HTTPS povezave).");
+                console.log('[PWA] Gumb kliknjen, a deferredPrompt ni na voljo (že nameščeno ali brskalnik ne podpira).');
             }
         });
 
