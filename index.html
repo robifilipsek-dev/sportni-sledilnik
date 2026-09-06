@@ -40,8 +40,8 @@
                 <h1 class="text-3xl font-extrabold tracking-tight text-white">
                     <i class="fa-solid fa-bolt text-blue-500 mr-2"></i> Šport in prehrana
                 </h1>
-                <button onclick="downloadApp()" title="Prenesi aplikacijo" class="bg-slate-800 hover:bg-slate-700 text-blue-400 p-2.5 rounded-xl border border-slate-700 transition-colors shadow-sm">
-                    <i class="fa-solid fa-download text-sm"></i>
+                <button id="installAppBtn" onclick="installPWA()" title="Namesti aplikacijo" class="hidden bg-slate-800 hover:bg-slate-700 text-blue-400 p-2.5 rounded-xl border border-slate-700 transition-colors shadow-sm">
+                    <i class="fa-solid fa-mobile-screen-button text-sm"></i>
                 </button>
             </div>
             <p class="text-slate-400 text-sm mb-4">Tedenski sledilnik aktivnosti, obrokov in energijske bilance</p>
@@ -284,18 +284,36 @@
             }
         }
 
-        function downloadApp() {
-            const htmlContent = document.documentElement.outerHTML;
-            const blob = new Blob([htmlContent], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'sport_prehrana_app.html';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+        // --- PWA LOGIKA ZA NAMESTITEV ---
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const btn = document.getElementById('installAppBtn');
+            if (btn) btn.classList.remove('hidden');
+        });
+
+        async function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('Aplikacija uspešno nameščena!');
+                }
+                deferredPrompt = null;
+                const btn = document.getElementById('installAppBtn');
+                if (btn) btn.classList.add('hidden');
+            }
         }
+
+        window.addEventListener('appinstalled', () => {
+            const btn = document.getElementById('installAppBtn');
+            if (btn) btn.classList.add('hidden');
+            deferredPrompt = null;
+            console.log('PWA namestitev zaključena.');
+        });
+        // --------------------------------
 
         function switchTab(tab) {
             const actTabBtn = document.getElementById('tabBtnActivities');
