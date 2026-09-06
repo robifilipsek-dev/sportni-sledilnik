@@ -12,6 +12,7 @@
     <meta name="theme-color" content="#0f172a">
 
     <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAE9klEQVR4nO3du3EbSRSG0QsmIFM5qNbcrBTPZrXmFnOgyQgkY4sSSeEx09PTr3tOACSM/+seACrxEoP58vXbj96vgXO9vjxfer+GN11fiLHzplcUzX+p0fNIyxia/SLDZ68WIZz+Cwyfo84M4bQfbPjUdkYI1X+g4XO2miE81fpBEcZPGzV3VqUkw6eXo7fB4RvA+Onp6P4OBWD8jODIDosDMH5GUrrHogCMnxGV7HJ3AMbPyPbuc1cAxs8M9ux0cwDGz0y27nVTAMbPjLbs9mEAxs/MHu236j+FgNncDcDirPatho/rnfc9GEAPbO77Vz4LQBw+5fAWq9l3u9wOgfW8DYO3s4P3t3nQAnPqu4N779wN3A5Cbn7Qc/n0HQNq/AJz+37oH2Ld33+8A9vDsv9cPIFq+b9vvZz4A7eEAP387d4IAP7uT+X8HQO7t+/n6A4D9A0B+789/APZvcwCA/x//8wE=">
+    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAE9klEQVR4nO3du3EbSRSG0QsmIFM5qNbcrBTPZrXmFnOgyQgkY4sSSeEx09PTr3tOACSM/+seACrxEoP58vXbj96vgXO9vjxfer+GN11fiLHzplcUzX+p0fNIyxia/SLDZ68WIZz+Cwyfo84M4bQfbPjUdkYI1X+g4XO2miE81fpBEcZPGzV3VqUkw6eXo7fB4RvA+Onp6P4OBWD8jODIDosDMH5GUrrHogCMnxGV7HJ3AMbPyPbuc1cAxs8M9ux0cwDGz0y27nVTAMbPjLbs9mEAxs/MHu236j+FgNncDcDirPatho/rnfc9GEAPbO77Vz4LQBw+5fAWq9l3u9wOgfW8DYO3s4P3t3nQAnPqu4N779wN3A5Cbn7Qc/n0HQNq/AJz+37oH2Ld33+8A9vDsv9cPIFq+b9vvZz4A7eEAP387d4IAP7uT+X8HQO7t+/n6A4D9A0B+789/APZvcwCA/x//8wE=">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -264,12 +265,9 @@
 
     <script>
         const apiKeyInput = document.getElementById('geminiApiKey');
-        const defaultApiKey = 'AQ.Ab8RN6Ilur7kPttqmIHcydtBSD2ERJz7dgrIbZ-YW3RNFsu7eg';
-
-        if (!localStorage.getItem('gemini_api_key')) {
-            localStorage.setItem('gemini_api_key', defaultApiKey);
+        if (localStorage.getItem('gemini_api_key')) {
+            apiKeyInput.value = localStorage.getItem('gemini_api_key');
         }
-        apiKeyInput.value = localStorage.getItem('gemini_api_key');
 
         function saveApiKey() {
             const key = apiKeyInput.value.trim();
@@ -337,11 +335,11 @@
         let meals = JSON.parse(localStorage.getItem('sports_meals')) || [];
 
         async function analyzeWithGemini(base64Image, promptText) {
-            const apiKey = localStorage.getItem('gemini_api_key') || defaultApiKey;
+            const apiKey = localStorage.getItem('gemini_api_key');
             if (!apiKey) return null;
 
             const base64Data = base64Image.split(',')[1];
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
             const payload = {
                 contents: [{
@@ -432,7 +430,7 @@
                         statusEl.textContent = `Gemini AI: Zaznano ${aiResult.type} (${aiResult.duration || 0} min)!`;
                         statusEl.className = "text-[10px] text-emerald-400 mt-2 font-semibold";
                     } else {
-                        statusEl.textContent = "API ključ ni nastavljen ali napaka v ključu.";
+                        statusEl.textContent = "API ključ ni nastavljen v lokalnem shrambi ali napaka.";
                         statusEl.className = "text-[10px] text-amber-400 mt-2 font-semibold";
                     }
                 };
@@ -482,7 +480,7 @@
                         statusEl.textContent = `Gemini AI: ${aiResult.description} (~${aiResult.calories} kcal)`;
                         statusEl.className = "text-[10px] text-amber-400 mt-2 font-semibold";
                     } else {
-                        statusEl.textContent = "API ključ ni nastavljen ali napaka v ključu.";
+                        statusEl.textContent = "API ključ ni nastavljen v lokalnem shrambi ali napaka.";
                         statusEl.className = "text-[10px] text-amber-400 mt-2 font-semibold";
                     }
                 };
