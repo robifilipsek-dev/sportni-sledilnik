@@ -335,7 +335,7 @@
         let activities = JSON.parse(localStorage.getItem('sports_activities')) || [];
         let meals = JSON.parse(localStorage.getItem('sports_meals')) || [];
 
-        // Zanesljiva funkcija z vgrajenim forced JSON mime-type in varnim pošiljanjem preko glave (x-goog-api-key)
+        // Popravljena avtentikacija: API ključ se sedaj pravilno posreduje kot query parameter (?key=...)
         async function analyzeWithGemini(base64Image, promptText) {
             const apiKey = localStorage.getItem('gemini_api_key');
             if (!apiKey) {
@@ -344,7 +344,7 @@
             }
 
             const base64Data = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
             const payload = {
                 contents: [{
@@ -367,8 +367,7 @@
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'x-goog-api-key': apiKey
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(payload)
                 });
