@@ -563,7 +563,6 @@
                 saveWater();
             }
 
-            // Preveri nastavitve za prikaz vodnika (privzeto vklopljeno, razen če je izrecno izklopljeno)
             const showGuide = localStorage.getItem('sport_show_guide') !== 'false';
             if (!showGuide) {
                 const banner = document.getElementById('guideBanner');
@@ -617,7 +616,6 @@
             localStorage.setItem('user_activity', document.getElementById('userActivityLevel').value);
             localStorage.setItem('user_goal', document.getElementById('userGoal').value);
 
-            // Takoj odstrani ali prikaži pasico glede na novo nastavitev
             const banner = document.getElementById('guideBanner');
             if (!showGuideSetting && banner) {
                 banner.remove();
@@ -645,6 +643,31 @@
             if (tab === 'history') renderHistory();
         }
 
+        // --- POMOŽNA FUNKCIJA ZA KOMPRESIJO SLIK ---
+        function compressImage(file, maxWidth = 800, quality = 0.7, callback) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                    callback(dataUrl.split(',')[1]);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
         // --- GEMINI API & IMAGE PROCESSING ---
         async function askGemini(promptText) {
             const apiKey = localStorage.getItem('gemini_api_key');
@@ -669,8 +692,7 @@
                 const data = await response.json();
                 
                 if (data.error) {
-                    alert(`API napaka: ${data.error.message}`);
-                    return null;
+                    throw new Error(data.error.message || 'Neznana napaka API-ja');
                 }
 
                 if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
@@ -684,25 +706,24 @@
                         return JSON.parse(cleanJson);
                     }
                 }
-                return null;
+                throw new Error("Model ni vrnil veljavnega odgovora.");
             } catch (err) {
-                alert("Napaka pri povezavi z Gemini API-jem.");
-                return null;
+                console.error("Gemini API Error:", err);
+                throw err;
             }
         }
 
         function processActivityImage(e) {
             const file = e.target.files[0];
             if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const base64Data = event.target.result.split(',')[1];
+            document.getElementById('actPhotoStatus').textContent = "Obdelujem sliko...";
+            document.getElementById('actPhotoStatus').className = "text-[10px] text-blue-400 mt-2 font-semibold animate-pulse";
+            
+            compressImage(file, 800, 0.7, (base64Data) => {
                 document.getElementById('actImgData').value = base64Data;
                 document.getElementById('actPhotoStatus').textContent = "Slika naložena! Analiziram z Gemini AI...";
-                document.getElementById('actPhotoStatus').className = "text-[10px] text-blue-400 mt-2 font-semibold animate-pulse";
                 analyzeActivityImage(base64Data);
-            };
-            reader.readAsDataURL(file);
+            });
         }
 
         async function analyzeActivityImage(base64Data) {
@@ -731,6 +752,11 @@
                     body: JSON.stringify(payload)
                 });
                 const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
+
                 if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
                     let textResponse = data.candidates[0].content.parts[0].text;
                     let resJson;
@@ -748,11 +774,10 @@
                     document.getElementById('actPhotoStatus').textContent = "Aktivnost uspešno prepoznana s slike!";
                     document.getElementById('actPhotoStatus').className = "text-[10px] text-emerald-400 mt-2 font-semibold";
                 } else {
-                    document.getElementById('actPhotoStatus').textContent = "Analiza slike ni uspela.";
-                    document.getElementById('actPhotoStatus').className = "text-[10px] text-rose-400 mt-2 font-semibold";
+                    throw new Error("AI ni mogel prepoznati podatkov s slike. Poskusi z bolj jasno fotografijo.");
                 }
             } catch (err) {
-                document.getElementById('actPhotoStatus').textContent = "Napaka pri povezavi z AI.";
+                document.getElementById('actPhotoStatus').textContent = `Analiza ni uspela: ${err.message || 'Preveri internetno povezavo ali API ključ'}`;
                 document.getElementById('actPhotoStatus').className = "text-[10px] text-rose-400 mt-2 font-semibold";
             }
         }
@@ -760,15 +785,14 @@
         function processMealImage(e) {
             const file = e.target.files[0];
             if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const base64Data = event.target.result.split(',')[1];
+            document.getElementById('mealPhotoStatus').textContent = "Obdelujem sliko obroka...";
+            document.getElementById('mealPhotoStatus').className = "text-[10px] text-amber-400 mt-2 font-semibold animate-pulse";
+            
+            compressImage(file, 800, 0.7, (base64Data) => {
                 document.getElementById('mealImgData').value = base64Data;
-                document.getElementById('mealPhotoStatus').textContent = "Slika obroka naložena! Analiziram z Gemini AI...";
-                document.getElementById('mealPhotoStatus').className = "text-[10px] text-amber-400 mt-2 font-semibold animate-pulse";
+                document.getElementById('mealPhotoStatus').textContent = "Slika naložena! Analiziram z Gemini AI...";
                 analyzeMealImage(base64Data);
-            };
-            reader.readAsDataURL(file);
+            });
         }
 
         async function analyzeMealImage(base64Data) {
@@ -797,6 +821,11 @@
                     body: JSON.stringify(payload)
                 });
                 const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
+
                 if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
                     let textResponse = data.candidates[0].content.parts[0].text;
                     let resJson;
@@ -816,11 +845,10 @@
                     document.getElementById('mealPhotoStatus').textContent = `Obrok uspešno ocenjen (~${resJson.calories} kcal)!`;
                     document.getElementById('mealPhotoStatus').className = "text-[10px] text-emerald-400 mt-2 font-semibold";
                 } else {
-                    document.getElementById('mealPhotoStatus').textContent = "Analiza slike obroka ni uspela.";
-                    document.getElementById('mealPhotoStatus').className = "text-[10px] text-rose-400 mt-2 font-semibold";
+                    throw new Error("Slika ne vsebuje prepoznatljivega obroka ali pa je osvetlitev slaba.");
                 }
             } catch (err) {
-                document.getElementById('mealPhotoStatus').textContent = "Napaka pri povezavi z AI.";
+                document.getElementById('mealPhotoStatus').textContent = `Analiza slike ni uspela: ${err.message || 'Preveri API ključ ali povezavo'}`;
                 document.getElementById('mealPhotoStatus').className = "text-[10px] text-rose-400 mt-2 font-semibold";
             }
         }
@@ -837,20 +865,22 @@
             statusEl.className = "text-[10px] text-amber-400 font-semibold animate-pulse";
 
             const prompt = `Oceni hranilne vrednosti za obrok: "${desc}". Vrni strogo JSON obliko: {"description": "...", "calories": številka, "protein": številka_gramov, "carbs": številka_gramov, "fat": številka_gramov, "type": "Zajtrk/Malica/Kosilo/Večerja"}`;
-            const aiResult = await askGemini(prompt);
-
-            if (aiResult) {
-                if (aiResult.description) document.getElementById('mealDesc').value = aiResult.description;
-                if (aiResult.calories) document.getElementById('mealCalories').value = aiResult.calories;
-                if (aiResult.protein !== undefined) document.getElementById('mealProtein').value = aiResult.protein;
-                if (aiResult.carbs !== undefined) document.getElementById('mealCarbs').value = aiResult.carbs;
-                if (aiResult.fat !== undefined) document.getElementById('mealFat').value = aiResult.fat;
-                if (aiResult.type) document.getElementById('mealType').value = aiResult.type;
-                
-                statusEl.textContent = `AI ocena uspešna (~${aiResult.calories} kcal)`;
-                statusEl.className = "text-[10px] text-emerald-400 font-semibold";
-            } else {
-                statusEl.textContent = "AI ocena ni uspela.";
+            
+            try {
+                const aiResult = await askGemini(prompt);
+                if (aiResult) {
+                    if (aiResult.description) document.getElementById('mealDesc').value = aiResult.description;
+                    if (aiResult.calories) document.getElementById('mealCalories').value = aiResult.calories;
+                    if (aiResult.protein !== undefined) document.getElementById('mealProtein').value = aiResult.protein;
+                    if (aiResult.carbs !== undefined) document.getElementById('mealCarbs').value = aiResult.carbs;
+                    if (aiResult.fat !== undefined) document.getElementById('mealFat').value = aiResult.fat;
+                    if (aiResult.type) document.getElementById('mealType').value = aiResult.type;
+                    
+                    statusEl.textContent = `AI ocena uspešna (~${aiResult.calories} kcal)`;
+                    statusEl.className = "text-[10px] text-emerald-400 font-semibold";
+                }
+            } catch (err) {
+                statusEl.textContent = `AI ocena ni uspela: ${err.message}`;
                 statusEl.className = "text-[10px] text-rose-400 font-semibold";
             }
         }
@@ -890,7 +920,9 @@
         function saveWater() {
             const today = new Date().toISOString().split('T')[0];
             waterData.date = today;
-            localStorage.setItem('sport_water', JSON.stringify(waterData));
+            try {
+                localStorage.setItem('sport_water', JSON.stringify(waterData));
+            } catch(e) { console.error(e); }
         }
 
         // --- PRESETS ---
@@ -931,7 +963,9 @@
             }
 
             presets.push({ type, desc, cal, p, c, f });
-            localStorage.setItem('sport_presets', JSON.stringify(presets));
+            try {
+                localStorage.setItem('sport_presets', JSON.stringify(presets));
+            } catch(e) { console.error(e); }
             renderPresets();
             alert("Obrok shranjen med hitre prednastavitve!");
         }
@@ -972,7 +1006,12 @@
                 activities.push(actData);
             }
 
-            localStorage.setItem('sport_activities', JSON.stringify(activities));
+            try {
+                localStorage.setItem('sport_activities', JSON.stringify(activities));
+            } catch (err) {
+                alert("Opozorilo: Pomnilnik brskalnika je poln. Nekatere slike morda niso shranjene.");
+            }
+
             document.getElementById('activityForm').reset();
             document.getElementById('actDate').value = new Date().toISOString().split('T')[0];
             document.getElementById('actImgData').value = '';
@@ -1004,7 +1043,20 @@
                 meals.push(mealData);
             }
 
-            localStorage.setItem('sport_meals', JSON.stringify(meals));
+            // Varno shranjevanje z obravnavo prekoračitve kvote (LocalStorage Quota)
+            try {
+                localStorage.setItem('sport_meals', JSON.stringify(meals));
+            } catch (err) {
+                console.warn('LocalStorage quota exceeded. Removing old image data to free space...');
+                meals.forEach(m => { if (m.imgData && m.imgData.length > 500) m.imgData = ''; });
+                try {
+                    localStorage.setItem('sport_meals', JSON.stringify(meals));
+                } catch (innerErr) {
+                    alert("Napaka pri shranjevanju: Pomnilnik brskalnika je poln.");
+                    return;
+                }
+            }
+
             document.getElementById('mealForm').reset();
             document.getElementById('mealDate').value = new Date().toISOString().split('T')[0];
             document.getElementById('mealImgData').value = '';
@@ -1016,13 +1068,13 @@
 
         window.deleteActivity = function(id) {
             activities = activities.filter(a => a.id !== id);
-            localStorage.setItem('sport_activities', JSON.stringify(activities));
+            try { localStorage.setItem('sport_activities', JSON.stringify(activities)); } catch(e){}
             renderApp();
         }
 
         window.deleteMeal = function(id) {
             meals = meals.filter(m => m.id !== id);
-            localStorage.setItem('sport_meals', JSON.stringify(meals));
+            try { localStorage.setItem('sport_meals', JSON.stringify(meals)); } catch(e){}
             renderApp();
         }
 
@@ -1098,7 +1150,7 @@
             weightHistory = weightHistory.filter(w => w.date !== date);
             weightHistory.push({ date, weight: val });
             weightHistory.sort((a, b) => new Date(a.date) - new Date(b.date));
-            localStorage.setItem('sport_weights', JSON.stringify(weightHistory));
+            try { localStorage.setItem('sport_weights', JSON.stringify(weightHistory)); } catch(e){}
             
             document.getElementById('weightValueInput').value = '';
             updateChart();
@@ -1217,7 +1269,6 @@
             const todayObj = new Date();
             const currentW = getWeekNumber(todayObj);
 
-            // Nastavitve uporabnika
             const gender = localStorage.getItem('user_gender') || 'male';
             const age = parseFloat(localStorage.getItem('user_age')) || 30;
             const weight = parseFloat(localStorage.getItem('user_weight')) || 75;
@@ -1256,7 +1307,6 @@
             document.getElementById('userGoalBadge').textContent = goalBadgeText;
             document.getElementById('todayCalTarget').textContent = `Cilj vnos: ~${targetCalories} kcal`;
 
-            // Današnji seštevki vnosov
             let todayCal = 0, todayProt = 0, todayCarb = 0, todayFat = 0;
             
             meals.forEach(m => {
@@ -1277,10 +1327,8 @@
             document.getElementById('todayCarbs').textContent = `${Math.round(todayCarb * 10) / 10}g`;
             document.getElementById('todayFat').textContent = `${Math.round(todayFat * 10) / 10}g`;
 
-            // Voda
             document.getElementById('todayWaterText').textContent = `${waterData.amount} / ${WATER_GOAL} ml`;
 
-            // Seznam današnjih obrokov in aktivnosti v zavihkih
             const todayMealListEl = document.getElementById('todayMealList');
             const todayActivityListEl = document.getElementById('todayActivityList');
             todayMealListEl.innerHTML = '';
@@ -1331,7 +1379,6 @@
                 });
             }
 
-            // Tedenski izračuni in cilji
             let weeklyMinutes = 0, weeklyBurned = 0, weeklyCalories = 0;
             activities.forEach(act => {
                 const w = getWeekNumber(new Date(act.date));
@@ -1361,7 +1408,6 @@
             document.getElementById('progressBar').style.width = `${goalPercent}%`;
             document.getElementById('goalPercentage').textContent = `${goalPercent}%`;
 
-            // Tedenski cilj porabe kalorij z aktivnostjo (npr. cilj 1500 kcal na teden)
             const weeklyBurnGoal = 1500;
             let weeklyBurnPercent = Math.min(Math.round((weeklyBurned / weeklyBurnGoal) * 100), 100);
             document.getElementById('weeklyBurnGoalText').textContent = `${weeklyBurned} / ${weeklyBurnGoal} kcal (${weeklyBurnPercent}%)`;
