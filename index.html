@@ -59,12 +59,11 @@
                 <i class="fa-solid fa-circle-info"></i> Obsežen vodnik za uporabo aplikacije:
             </div>
             <ul class="list-disc list-inside space-y-1.5 text-slate-300">
-                <li><strong>Nastavitve profila in AI:</strong> Spodaj v nogi klikni na gumb za nastavitve. Vnesi svoj Gemini API ključ (za AI funkcije), spol, starost, višino, težo, raven aktivnosti in svoj cilj (hujšanje, ohranjanje ali masa). Aplikacija bo na tej podlagi izračunala tvoj BMR in dnevni cilj kalorij.</li>
-                <li><strong>Spremljanje dneva (Voda & Poraba):</strong> Na vrhu spremljaš skupno energijsko porabo (BMR + šport) ter vnos kalorij in makrohranil (beljakovine, OH, maščobe). S hitrimi gumbi (+2.5dl / +5dl) beležiš vnos vode.</li>
-                <li><strong>Športne aktivnosti:</strong> V zavihku "Šport" lahko ročno vpišeš trening ali pa uporabiš <em>Kamero / Galerijo</em>, kjer Gemini AI samodejno prepozna vrsto vadbe, trajanje in intenzivnost s slike tvoje ure ali zaslona naprave.</li>
-                <li><strong>Prehrana in AI ocena:</strong> V zavihku "Prehrana" beležiš obroke. Uporabiš lahko hitre prednastavitve, sliko obroka za AI prepoznavo ali pa vpišeš opis (npr. "200g piščanca in riž") in klikneš <em>AI samodejna ocena</em>, ki izračuna kalorije in makroje.</li>
-                <li><strong>Telesna teža in zgodovina:</strong> V zavihku "Teža" beležiš napredek, ki se izrisuje v interaktivnem grafu. Zavihek "Zgodovina" ti omogoča pregled in urejanje vseh preteklih vnosov po dnevih.</li>
-                <li>*Prikaz tega vodnika lahko trajno izklopiš v spodnjih nastavitvah.*</li>
+                <li><strong>Nastavitve profila in AI:</strong> Spodaj v nogi klikni na gumb za nastavitve. Vnesi svoj Gemini API ključ (za AI funkcije), spol, starost, višino, težo, povprečne dnevne korake in cilj. Aplikacija bo na tej podlagi izračunala porabo.</li>
+                <li><strong>Spremljanje dneva (Voda & Poraba):</strong> Na vrhu spremljaš pasivno in aktivno energijsko porabo ter vnos kalorij in makrohranil. S hitrimi gumbi beležiš vnos vode.</li>
+                <li><strong>Športne aktivnosti:</strong> V zavihku "Šport" lahko ročno vpišeš trening ali uporabiš <em>Kamero / Galerijo</em> za samodejno AI prepoznavo s slike.</li>
+                <li><strong>Prehrana in AI ocena:</strong> V zavihku "Prehrana" beležiš obroke, uporabljaš hitre prednastavitve ali AI oceno iz opisa/slike.</li>
+                <li><strong>Telesna teža in zgodovina:</strong> Spremljaj napredek teže v grafu in pregleduj pretekle vnose.</li>
             </ul>
         </div>
 
@@ -74,19 +73,30 @@
                 Pregled za danes
             </div>
             
-            <div class="bg-slate-900/80 rounded-xl p-3 mb-4 border border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 mt-2">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
-                        <i class="fa-solid fa-fire text-sm"></i>
+            <div class="bg-slate-900/80 rounded-xl p-3 mb-4 border border-slate-800/80 space-y-2.5 mt-2">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+                            <i class="fa-solid fa-fire text-xs"></i>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-200">Energijska poraba danes</span>
                     </div>
-                    <div>
-                        <span class="block text-xs font-semibold text-slate-200">Skupna energijska poraba</span>
-                        <span class="text-[10px] text-slate-400">Osnovna presnova + Šport</span>
-                    </div>
+                    <span id="userGoalBadge" class="text-[10px] text-emerald-400 font-medium bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">Cilj: Ohranjanje</span>
                 </div>
-                <div class="text-left sm:text-right">
-                    <span id="todayTotalBurn" class="text-sm font-bold text-blue-400">0 kcal/dan</span>
-                    <span id="userGoalBadge" class="block text-[10px] text-emerald-400 font-medium">Cilj: Ohranjanje</span>
+                
+                <div class="grid grid-cols-3 gap-2 text-center">
+                    <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-800/60">
+                        <span class="block text-[10px] text-slate-400">Pasivna (BMR + Koraki)</span>
+                        <span id="todayPassiveBurn" class="text-xs font-bold text-slate-200">0 kcal</span>
+                    </div>
+                    <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-800/60">
+                        <span class="block text-[10px] text-slate-400">Aktivna (Šport)</span>
+                        <span id="todaySportBurn" class="text-xs font-bold text-emerald-400">0 kcal</span>
+                    </div>
+                    <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-800/60">
+                        <span class="block text-[10px] text-slate-400">Skupna poraba</span>
+                        <span id="todayTotalBurn" class="text-xs font-bold text-blue-400">0 kcal</span>
+                    </div>
                 </div>
             </div>
 
@@ -95,7 +105,7 @@
                 <div class="bg-slate-900/70 rounded-xl p-3 border border-slate-800">
                     <div class="flex justify-between items-center mb-1">
                         <span class="text-xs font-medium text-slate-300">Zaužito (vnos kcal)</span>
-                        <span id="todayCalTarget" class="text-[10px] text-slate-400">Cilj: ~0 kcal</span>
+                        <span id="todayCalTarget" class="text-[10px] text-slate-400">Cilj vnos: ~0 kcal</span>
                     </div>
                     <div class="flex items-baseline justify-between">
                         <span id="todayCalories" class="text-lg font-bold text-amber-400">0 kcal</span>
@@ -121,18 +131,9 @@
                     </div>
                 </div>
 
-                <!-- ŠPORT IN VODA -->
+                <!-- VODA -->
                 <div class="flex flex-col gap-3">
-                    <div class="bg-slate-900/70 rounded-xl p-3 border border-slate-800 flex-1">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-xs font-medium text-slate-300">Aktivna poraba (Šport)</span>
-                        </div>
-                        <div class="flex items-baseline justify-between">
-                            <span id="todaySportBurn" class="text-lg font-bold text-emerald-400">0 kcal</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-900/70 rounded-xl p-3 border border-slate-800 flex items-center justify-between">
+                    <div class="bg-slate-900/70 rounded-xl p-3 border border-slate-800 flex items-center justify-between flex-1">
                         <div>
                             <span class="block text-xs font-medium text-slate-300">Vnos vode</span>
                             <span id="todayWaterText" class="text-sm font-bold text-cyan-400">0 / 2500 ml</span>
@@ -152,13 +153,13 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3 border-b border-slate-800 pb-4">
                 <div>
                     <h2 class="text-sm font-semibold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-week text-purple-400"></i> Tedenski povzetek
+                        <i class="fa-solid fa-calendar-week text-purple-400"></i> Tedenski povzetek in cilji
                     </h2>
                     <p id="currentWeekRange" class="text-xs text-purple-400 font-medium mt-0.5">...</p>
                 </div>
                 <div class="grid grid-cols-3 gap-3 text-center sm:text-right w-full sm:w-auto">
                     <div class="bg-slate-900/50 sm:bg-transparent p-2 sm:p-0 rounded-lg">
-                        <span class="block text-[10px] text-slate-400">Aktivnost</span>
+                        <span class="block text-[10px] text-slate-400">Aktivnost (min)</span>
                         <span id="weeklyMinutes" class="text-sm font-bold text-blue-400">0 min</span>
                     </div>
                     <div class="bg-slate-900/50 sm:bg-transparent p-2 sm:p-0 rounded-lg">
@@ -177,13 +178,24 @@
                 <span id="netCalories" class="font-bold">0 kcal</span>
             </div>
 
-            <div>
-                <div class="flex justify-between items-center mb-1.5">
-                    <span class="text-xs font-medium text-slate-300">Cilj aktivnosti (Smernice WHO: 150 min/teden)</span>
-                    <span id="goalPercentage" class="text-xs font-bold text-blue-400">0%</span>
+            <div class="space-y-3">
+                <div>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <span class="text-xs font-medium text-slate-300">Cilj aktivnosti (Smernice WHO: 150 min/teden)</span>
+                        <span id="goalPercentage" class="text-xs font-bold text-blue-400">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-700 rounded-full h-2.5 overflow-hidden">
+                        <div id="progressBar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
                 </div>
-                <div class="w-full bg-slate-700 rounded-full h-2.5 overflow-hidden">
-                    <div id="progressBar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                <div>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <span class="text-xs font-medium text-slate-300">Cilj porabe kalorij z aktivnostjo (tedensko)</span>
+                        <span id="weeklyBurnGoalText" class="text-xs font-bold text-emerald-400">0 / 1500 kcal (0%)</span>
+                    </div>
+                    <div class="w-full bg-slate-700 rounded-full h-2.5 overflow-hidden">
+                        <div id="weeklyBurnProgressBar" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -452,11 +464,11 @@
 
                 <div class="flex items-center justify-between bg-slate-900 p-3 rounded-lg border border-slate-800">
                     <div>
-                        <span class="block text-xs font-semibold text-slate-300">Prikaz hitrega vodnika ob zagonu</span>
+                        <span class="block text-xs font-semibold text-slate-300">Prikaži hitri vodnik ob zagonu</span>
                         <span class="text-[10px] text-slate-400">Prikaži informativno pasico na vrhu</span>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="settingHideGuide" class="sr-only peer">
+                        <input type="checkbox" id="settingShowGuide" class="sr-only peer">
                         <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
                 </div>
@@ -484,6 +496,11 @@
                         <label class="block text-xs font-medium text-slate-300 mb-1">Višina (cm)</label>
                         <input type="number" id="userHeight" placeholder="npr. 180" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
                     </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Povprečni dnevni koraki</label>
+                    <input type="number" id="userSteps" placeholder="npr. 6000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
                 </div>
 
                 <div class="grid grid-cols-1 gap-3">
@@ -546,9 +563,9 @@
                 saveWater();
             }
 
-            // Preveri nastavitve za prikaz vodnika
-            const hideGuide = localStorage.getItem('sport_hide_guide') === 'true';
-            if (hideGuide) {
+            // Preveri nastavitve za prikaz vodnika (privzeto vklopljeno, razen če je izrecno izklopljeno)
+            const showGuide = localStorage.getItem('sport_show_guide') !== 'false';
+            if (!showGuide) {
                 const banner = document.getElementById('guideBanner');
                 if (banner) banner.remove();
             }
@@ -561,16 +578,17 @@
         function dismissGuide() {
             const banner = document.getElementById('guideBanner');
             if (banner) banner.remove();
-            localStorage.setItem('sport_hide_guide', 'true');
+            localStorage.setItem('sport_show_guide', 'false');
         }
 
         function loadSettingsToModal() {
             document.getElementById('geminiApiKey').value = localStorage.getItem('gemini_api_key') || '';
-            document.getElementById('settingHideGuide').checked = localStorage.getItem('sport_hide_guide') === 'true';
+            document.getElementById('settingShowGuide').checked = localStorage.getItem('sport_show_guide') !== 'false';
             document.getElementById('userGender').value = localStorage.getItem('user_gender') || 'male';
             document.getElementById('userAge').value = localStorage.getItem('user_age') || '30';
             document.getElementById('userWeight').value = localStorage.getItem('user_weight') || '75';
             document.getElementById('userHeight').value = localStorage.getItem('user_height') || '180';
+            document.getElementById('userSteps').value = localStorage.getItem('user_steps') || '6000';
             document.getElementById('userActivityLevel').value = localStorage.getItem('user_activity') || '1.55';
             document.getElementById('userGoal').value = localStorage.getItem('user_goal') || 'maintain';
         }
@@ -588,22 +606,23 @@
             if (key) localStorage.setItem('gemini_api_key', key);
             else localStorage.removeItem('gemini_api_key');
 
-            const hideGuideSetting = document.getElementById('settingHideGuide').checked;
-            localStorage.setItem('sport_hide_guide', hideGuideSetting);
+            const showGuideSetting = document.getElementById('settingShowGuide').checked;
+            localStorage.setItem('sport_show_guide', showGuideSetting);
 
             localStorage.setItem('user_gender', document.getElementById('userGender').value);
             localStorage.setItem('user_age', document.getElementById('userAge').value);
             localStorage.setItem('user_weight', document.getElementById('userWeight').value);
             localStorage.setItem('user_height', document.getElementById('userHeight').value);
+            localStorage.setItem('user_steps', document.getElementById('userSteps').value);
             localStorage.setItem('user_activity', document.getElementById('userActivityLevel').value);
             localStorage.setItem('user_goal', document.getElementById('userGoal').value);
 
             // Takoj odstrani ali prikaži pasico glede na novo nastavitev
             const banner = document.getElementById('guideBanner');
-            if (hideGuideSetting) {
-                if (banner) banner.remove();
-            } else {
-                location.reload(); // Osveži stran, če želi uporabnik ponovno videti vodnik
+            if (!showGuideSetting && banner) {
+                banner.remove();
+            } else if (showGuideSetting && !banner) {
+                location.reload();
             }
 
             alert('Nastavitve in osebni podatki uspešno shranjeni!');
@@ -626,7 +645,7 @@
             if (tab === 'history') renderHistory();
         }
 
-        // --- GEMINI 3.6 API & IMAGE PROCESSING ---
+        // --- GEMINI API & IMAGE PROCESSING ---
         async function askGemini(promptText) {
             const apiKey = localStorage.getItem('gemini_api_key');
             if (!apiKey) {
@@ -635,7 +654,7 @@
                 return null;
             }
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: promptText }] }],
                 generationConfig: { responseMimeType: "application/json" }
@@ -694,7 +713,7 @@
                 return;
             }
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{
                     parts: [
@@ -760,7 +779,7 @@
                 return;
             }
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{
                     parts: [
@@ -814,7 +833,7 @@
             }
 
             const statusEl = document.getElementById('aiStatusText');
-            statusEl.textContent = "Gemini 3.6 AI ocenjuje hranilne vrednosti...";
+            statusEl.textContent = "Gemini AI ocenjuje hranilne vrednosti...";
             statusEl.className = "text-[10px] text-amber-400 font-semibold animate-pulse";
 
             const prompt = `Oceni hranilne vrednosti za obrok: "${desc}". Vrni strogo JSON obliko: {"description": "...", "calories": številka, "protein": številka_gramov, "carbs": številka_gramov, "fat": številka_gramov, "type": "Zajtrk/Malica/Kosilo/Večerja"}`;
@@ -855,7 +874,7 @@
             }
         }
 
-        // --- LOGIKA ZA VODO ---
+        // --- VODA ---
         function addWater(amount) {
             waterData.amount += amount;
             saveWater();
@@ -1203,28 +1222,42 @@
             const age = parseFloat(localStorage.getItem('user_age')) || 30;
             const weight = parseFloat(localStorage.getItem('user_weight')) || 75;
             const height = parseFloat(localStorage.getItem('user_height')) || 180;
+            const steps = parseFloat(localStorage.getItem('user_steps')) || 6000;
             const activityMultiplier = parseFloat(localStorage.getItem('user_activity')) || 1.55;
             const goal = localStorage.getItem('user_goal') || 'maintain';
 
             let bmr = (10 * weight) + (6.25 * height) - (5 * age) + (gender === 'male' ? 5 : -161);
-            let tdee = Math.round(bmr * activityMultiplier);
+            let stepCalories = Math.round(steps * 0.04);
+            let passiveBurn = Math.round(bmr + stepCalories);
 
+            let todaySportBurn = 0;
+            activities.forEach(a => {
+                if (a.date === todayStr) {
+                    todaySportBurn += Number(a.burned);
+                }
+            });
+
+            let totalDailyBurn = passiveBurn + todaySportBurn;
+
+            let tdee = Math.round(bmr * activityMultiplier);
             let targetCalories = tdee;
-            let goalBadgeText = "Cilj: Ohranjanje teže";
+            let goalBadgeText = "Cilj: Ohranjanje";
             if (goal === 'lose') {
                 targetCalories -= 500;
                 goalBadgeText = "Cilj: Hujšanje (-500 kcal)";
             } else if (goal === 'gain') {
                 targetCalories += 300;
-                goalBadgeText = "Cilj: Pridobivanje mase (+300 kcal)";
+                goalBadgeText = "Cilj: Pridobivanje (+300 kcal)";
             }
 
-            document.getElementById('todayTotalBurn').textContent = `${tdee} kcal/dan`;
+            document.getElementById('todayPassiveBurn').textContent = `${passiveBurn} kcal`;
+            document.getElementById('todaySportBurn').textContent = `${todaySportBurn} kcal`;
+            document.getElementById('todayTotalBurn').textContent = `${totalDailyBurn} kcal`;
             document.getElementById('userGoalBadge').textContent = goalBadgeText;
-            document.getElementById('todayCalTarget').textContent = `Cilj: ~${targetCalories} kcal`;
+            document.getElementById('todayCalTarget').textContent = `Cilj vnos: ~${targetCalories} kcal`;
 
-            // Današnji seštevki
-            let todayCal = 0, todayProt = 0, todayCarb = 0, todayFat = 0, todaySportBurn = 0;
+            // Današnji seštevki vnosov
+            let todayCal = 0, todayProt = 0, todayCarb = 0, todayFat = 0;
             
             meals.forEach(m => {
                 if (m.date === todayStr) {
@@ -1232,12 +1265,6 @@
                     todayProt += Number(m.protein || 0);
                     todayCarb += Number(m.carbs || 0);
                     todayFat += Number(m.fat || 0);
-                }
-            });
-
-            activities.forEach(a => {
-                if (a.date === todayStr) {
-                    todaySportBurn += Number(a.burned);
                 }
             });
 
@@ -1249,7 +1276,6 @@
             document.getElementById('todayProtein').textContent = `${todayProt}g`;
             document.getElementById('todayCarbs').textContent = `${todayCarb}g`;
             document.getElementById('todayFat').textContent = `${todayFat}g`;
-            document.getElementById('todaySportBurn').textContent = `${todaySportBurn} kcal`;
 
             // Voda
             document.getElementById('todayWaterText').textContent = `${waterData.amount} / ${WATER_GOAL} ml`;
@@ -1305,7 +1331,7 @@
                 });
             }
 
-            // Tedenski izračuni
+            // Tedenski izračuni in cilji
             let weeklyMinutes = 0, weeklyBurned = 0, weeklyCalories = 0;
             activities.forEach(act => {
                 const w = getWeekNumber(new Date(act.date));
@@ -1334,6 +1360,12 @@
             let goalPercent = Math.min(Math.round((weeklyMinutes / 150) * 100), 100);
             document.getElementById('progressBar').style.width = `${goalPercent}%`;
             document.getElementById('goalPercentage').textContent = `${goalPercent}%`;
+
+            // Tedenski cilj porabe kalorij z aktivnostjo (npr. cilj 1500 kcal na teden)
+            const weeklyBurnGoal = 1500;
+            let weeklyBurnPercent = Math.min(Math.round((weeklyBurned / weeklyBurnGoal) * 100), 100);
+            document.getElementById('weeklyBurnGoalText').textContent = `${weeklyBurned} / ${weeklyBurnGoal} kcal (${weeklyBurnPercent}%)`;
+            document.getElementById('weeklyBurnProgressBar').style.width = `${weeklyBurnPercent}%`;
         }
     </script>
 </body>
