@@ -344,21 +344,21 @@
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-300 mb-1">Kalorije (kcal)</label>
-                        <input type="number" id="mealCalories" placeholder="Skupne kalorije" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                        <input type="number" step="any" id="mealCalories" placeholder="Skupne kalorije" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
                     </div>
                     
                     <div class="grid grid-cols-3 gap-2">
                         <div>
                             <label class="block text-[10px] font-medium text-rose-400 mb-1">Beljakovine (g)</label>
-                            <input type="number" id="mealProtein" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
+                            <input type="number" step="any" id="mealProtein" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
                         </div>
                         <div>
                             <label class="block text-[10px] font-medium text-sky-400 mb-1">OH (g)</label>
-                            <input type="number" id="mealCarbs" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                            <input type="number" step="any" id="mealCarbs" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
                         </div>
                         <div>
                             <label class="block text-[10px] font-medium text-yellow-500 mb-1">Maščobe (g)</label>
-                            <input type="number" id="mealFat" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-yellow-500">
+                            <input type="number" step="any" id="mealFat" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-yellow-500">
                         </div>
                     </div>
 
@@ -920,10 +920,10 @@
         function saveCurrentAsPreset() {
             const type = document.getElementById('mealType').value;
             const desc = document.getElementById('mealDesc').value.trim();
-            const cal = parseInt(document.getElementById('mealCalories').value) || 0;
-            const p = parseInt(document.getElementById('mealProtein').value) || 0;
-            const c = parseInt(document.getElementById('mealCarbs').value) || 0;
-            const f = parseInt(document.getElementById('mealFat').value) || 0;
+            const cal = parseFloat(document.getElementById('mealCalories').value) || 0;
+            const p = parseFloat(document.getElementById('mealProtein').value) || 0;
+            const c = parseFloat(document.getElementById('mealCarbs').value) || 0;
+            const f = parseFloat(document.getElementById('mealFat').value) || 0;
 
             if (!desc || !cal) {
                 alert("Vpiši opis in kalorije pred shranjevanjem prednastavitve!");
@@ -990,10 +990,10 @@
                 date: document.getElementById('mealDate').value,
                 type: document.getElementById('mealType').value,
                 description: document.getElementById('mealDesc').value.trim(),
-                calories: parseInt(document.getElementById('mealCalories').value) || 0,
-                protein: parseInt(document.getElementById('mealProtein').value) || 0,
-                carbs: parseInt(document.getElementById('mealCarbs').value) || 0,
-                fat: parseInt(document.getElementById('mealFat').value) || 0,
+                calories: parseFloat(document.getElementById('mealCalories').value) || 0,
+                protein: parseFloat(document.getElementById('mealProtein').value) || 0,
+                carbs: parseFloat(document.getElementById('mealCarbs').value) || 0,
+                fat: parseFloat(document.getElementById('mealFat').value) || 0,
                 imgData: document.getElementById('mealImgData').value || ''
             };
 
@@ -1268,14 +1268,14 @@
                 }
             });
 
-            document.getElementById('todayCalories').textContent = `${todayCal} kcal`;
+            document.getElementById('todayCalories').textContent = `${Math.round(todayCal)} kcal`;
             let calPercent = Math.min(Math.round((todayCal / targetCalories) * 100), 100);
             document.getElementById('todayCalProgress').style.width = `${calPercent}%`;
             document.getElementById('calStatusText').textContent = `${calPercent}% cilja`;
 
-            document.getElementById('todayProtein').textContent = `${todayProt}g`;
-            document.getElementById('todayCarbs').textContent = `${todayCarb}g`;
-            document.getElementById('todayFat').textContent = `${todayFat}g`;
+            document.getElementById('todayProtein').textContent = `${Math.round(todayProt * 10) / 10}g`;
+            document.getElementById('todayCarbs').textContent = `${Math.round(todayCarb * 10) / 10}g`;
+            document.getElementById('todayFat').textContent = `${Math.round(todayFat * 10) / 10}g`;
 
             // Voda
             document.getElementById('todayWaterText').textContent = `${waterData.amount} / ${WATER_GOAL} ml`;
@@ -1349,12 +1349,12 @@
 
             document.getElementById('weeklyMinutes').textContent = `${weeklyMinutes} min`;
             document.getElementById('weeklyBurned').textContent = `${weeklyBurned} kcal`;
-            document.getElementById('weeklyCalories').textContent = `${weeklyCalories} kcal`;
+            document.getElementById('weeklyCalories').textContent = `${Math.round(weeklyCalories)} kcal`;
             document.getElementById('currentWeekRange').textContent = `Teden ${currentW.week} (${getWeekRange(todayObj)})`;
 
             const net = weeklyBurned - weeklyCalories;
             const netEl = document.getElementById('netCalories');
-            netEl.textContent = `${net > 0 ? '+' : ''}${net} kcal`;
+            netEl.textContent = `${net > 0 ? '+' : ''}${Math.round(net)} kcal`;
             netEl.className = `font-bold ${net >= 0 ? 'text-emerald-400' : 'text-amber-400'}`;
 
             let goalPercent = Math.min(Math.round((weeklyMinutes / 150) * 100), 100);
