@@ -60,7 +60,7 @@
             </div>
             <ol class="list-decimal list-inside space-y-1 text-slate-300">
                 <li>Klikni na <strong>Nastavitve</strong> spodaj in vnesi svoje podatke, cilj ter Gemini API ključ.</li>
-                <li>V zavihkih dodajaj svoje dnevne obroke (z AI oceno) ali športne aktivnosti.</li>
+                <li>V zavihkih dodajaj svoje dnevne obroke (z AI oceno ali kamero) ali športne aktivnosti.</li>
                 <li>Spremljaj svoj napredek in vnos vode v živo!</li>
             </ol>
         </div>
@@ -208,8 +208,23 @@
                     <i class="fa-solid fa-circle-plus text-blue-400"></i> Dodaj športno aktivnost
                 </h2>
                 
+                <div class="mb-4 bg-slate-900/90 border border-blue-500/40 rounded-xl p-3 text-center relative overflow-hidden">
+                    <div class="flex justify-center gap-6">
+                        <input type="file" id="actCamera" accept="image/*" capture="environment" class="hidden" onchange="processActivityImage(event)">
+                        <label for="actCamera" class="cursor-pointer text-xs text-blue-300 hover:text-blue-200 flex items-center justify-center gap-1.5 font-semibold">
+                            <i class="fa-solid fa-camera text-base text-blue-400"></i> Kamera
+                        </label>
+                        <input type="file" id="actGallery" accept="image/*" class="hidden" onchange="processActivityImage(event)">
+                        <label for="actGallery" class="cursor-pointer text-xs text-blue-300 hover:text-blue-200 flex items-center justify-center gap-1.5 font-semibold">
+                            <i class="fa-solid fa-image text-base text-blue-400"></i> Galerija
+                        </label>
+                    </div>
+                    <p id="actPhotoStatus" class="text-[10px] text-slate-400 mt-2">Slikaj ali izberi zaslon ure / vadbe za AI prepoznavo</p>
+                </div>
+
                 <form id="activityForm" class="grid grid-cols-1 md:grid-cols-2 gap-4" onsubmit="saveActivity(event)">
                     <input type="hidden" id="actEditId" value="">
+                    <input type="hidden" id="actImgData" value="">
                     <div>
                         <label class="block text-xs font-medium text-slate-300 mb-1">Datum</label>
                         <input type="date" id="actDate" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
@@ -268,6 +283,20 @@
                     <i class="fa-solid fa-circle-plus text-amber-400"></i> Dodaj obrok
                 </h2>
                 
+                <div class="mb-4 bg-slate-900/90 border border-amber-500/40 rounded-xl p-3 text-center relative overflow-hidden">
+                    <div class="flex justify-center gap-6">
+                        <input type="file" id="mealCamera" accept="image/*" capture="environment" class="hidden" onchange="processMealImage(event)">
+                        <label for="mealCamera" class="cursor-pointer text-xs text-amber-300 hover:text-amber-200 flex items-center justify-center gap-1.5 font-semibold">
+                            <i class="fa-solid fa-camera text-base text-amber-400"></i> Kamera
+                        </label>
+                        <input type="file" id="mealGallery" accept="image/*" class="hidden" onchange="processMealImage(event)">
+                        <label for="mealGallery" class="cursor-pointer text-xs text-amber-300 hover:text-amber-200 flex items-center justify-center gap-1.5 font-semibold">
+                            <i class="fa-solid fa-image text-base text-amber-400"></i> Galerija
+                        </label>
+                    </div>
+                    <p id="mealPhotoStatus" class="text-[10px] text-slate-400 mt-2">Slikaj obrok ali vpiši spodaj ter uporabi AI oceno</p>
+                </div>
+
                 <div class="mb-4">
                     <div class="flex justify-between items-center mb-2">
                         <span class="block text-xs font-medium text-slate-300">Hitri izbor obrokov:</span>
@@ -280,6 +309,7 @@
 
                 <form id="mealForm" class="grid grid-cols-1 md:grid-cols-2 gap-4" onsubmit="saveMeal(event)">
                     <input type="hidden" id="mealEditId" value="">
+                    <input type="hidden" id="mealImgData" value="">
                     <div>
                         <label class="block text-xs font-medium text-slate-300 mb-1">Datum</label>
                         <input type="date" id="mealDate" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
@@ -557,7 +587,7 @@
             if (tab === 'history') renderHistory();
         }
 
-        // --- GEMINI 3.6 API INTEGRACIJA ---
+        // --- GEMINI 3.6 API & IMAGE PROCESSING ---
         async function askGemini(promptText) {
             const apiKey = localStorage.getItem('gemini_api_key');
             if (!apiKey) {
@@ -600,6 +630,140 @@
             } catch (err) {
                 alert("Napaka pri povezavi z Gemini API-jem.");
                 return null;
+            }
+        }
+
+        function processActivityImage(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const base64Data = event.target.result.split(',')[1];
+                document.getElementById('actImgData').value = base64Data;
+                document.getElementById('actPhotoStatus').textContent = "Slika naložena! Analiziram z Gemini AI...";
+                document.getElementById('actPhotoStatus').className = "text-[10px] text-blue-400 mt-2 font-semibold animate-pulse";
+                analyzeActivityImage(base64Data);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function analyzeActivityImage(base64Data) {
+            const apiKey = localStorage.getItem('gemini_api_key');
+            if (!apiKey) {
+                alert("API ključ ni nastavljen!");
+                toggleSettingsModal();
+                return;
+            }
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{
+                    parts: [
+                        { text: "Prepoznaj športno aktivnost s slike (npr. ura, zaslon vadbe). Vrni strogo JSON obliko: {\"type\": \"Fitnes/Kolesarjenje/Tek/Plavanje/Odbojka na mivki/Tenis/Pohodništvo/Smučanje/Ostalo\", \"duration\": številka_minut, \"intensity\": \"Nizka/Srednja/Visoka\", \"note\": \"kratek opis\"}" },
+                        { inlineData: { mimeType: "image/jpeg", data: base64Data } }
+                    ]
+                }],
+                generationConfig: { responseMimeType: "application/json" }
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+                    let textResponse = data.candidates[0].content.parts[0].text;
+                    let resJson;
+                    try {
+                        resJson = JSON.parse(textResponse);
+                    } catch(e) {
+                        const m = textResponse.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+                        resJson = JSON.parse(m ? m[1] : textResponse);
+                    }
+                    if (resJson.type) document.getElementById('actType').value = resJson.type;
+                    if (resJson.duration) document.getElementById('actDuration').value = resJson.duration;
+                    if (resJson.intensity) document.getElementById('actIntensity').value = resJson.intensity;
+                    if (resJson.note) document.getElementById('actNote').value = resJson.note;
+                    
+                    document.getElementById('actPhotoStatus').textContent = "Aktivnost uspešno prepoznana s slike!";
+                    document.getElementById('actPhotoStatus').className = "text-[10px] text-emerald-400 mt-2 font-semibold";
+                } else {
+                    document.getElementById('actPhotoStatus').textContent = "Analiza slike ni uspela.";
+                    document.getElementById('actPhotoStatus').className = "text-[10px] text-rose-400 mt-2 font-semibold";
+                }
+            } catch (err) {
+                document.getElementById('actPhotoStatus').textContent = "Napaka pri povezavi z AI.";
+                document.getElementById('actPhotoStatus').className = "text-[10px] text-rose-400 mt-2 font-semibold";
+            }
+        }
+
+        function processMealImage(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const base64Data = event.target.result.split(',')[1];
+                document.getElementById('mealImgData').value = base64Data;
+                document.getElementById('mealPhotoStatus').textContent = "Slika obroka naložena! Analiziram z Gemini AI...";
+                document.getElementById('mealPhotoStatus').className = "text-[10px] text-amber-400 mt-2 font-semibold animate-pulse";
+                analyzeMealImage(base64Data);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function analyzeMealImage(base64Data) {
+            const apiKey = localStorage.getItem('gemini_api_key');
+            if (!apiKey) {
+                alert("API ključ ni nastavljen!");
+                toggleSettingsModal();
+                return;
+            }
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{
+                    parts: [
+                        { text: "Prepoznaj obrok s slike in oceni njegove hranilne vrednosti. Vrni strogo JSON obliko: {\"description\": \"...\", \"calories\": številka, \"protein\": številka, \"carbs\": številka, \"fat\": številka, \"type\": \"Zajtrk/Malica/Kosilo/Večerja\"}" },
+                        { inlineData: { mimeType: "image/jpeg", data: base64Data } }
+                    ]
+                }],
+                generationConfig: { responseMimeType: "application/json" }
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+                    let textResponse = data.candidates[0].content.parts[0].text;
+                    let resJson;
+                    try {
+                        resJson = JSON.parse(textResponse);
+                    } catch(e) {
+                        const m = textResponse.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+                        resJson = JSON.parse(m ? m[1] : textResponse);
+                    }
+                    if (resJson.description) document.getElementById('mealDesc').value = resJson.description;
+                    if (resJson.calories) document.getElementById('mealCalories').value = resJson.calories;
+                    if (resJson.protein !== undefined) document.getElementById('mealProtein').value = resJson.protein;
+                    if (resJson.carbs !== undefined) document.getElementById('mealCarbs').value = resJson.carbs;
+                    if (resJson.fat !== undefined) document.getElementById('mealFat').value = resJson.fat;
+                    if (resJson.type) document.getElementById('mealType').value = resJson.type;
+
+                    document.getElementById('mealPhotoStatus').textContent = `Obrok uspešno ocenjen (~${resJson.calories} kcal)!`;
+                    document.getElementById('mealPhotoStatus').className = "text-[10px] text-emerald-400 mt-2 font-semibold";
+                } else {
+                    document.getElementById('mealPhotoStatus').textContent = "Analiza slike obroka ni uspela.";
+                    document.getElementById('mealPhotoStatus').className = "text-[10px] text-rose-400 mt-2 font-semibold";
+                }
+            } catch (err) {
+                document.getElementById('mealPhotoStatus').textContent = "Napaka pri povezavi z AI.";
+                document.getElementById('mealPhotoStatus').className = "text-[10px] text-rose-400 mt-2 font-semibold";
             }
         }
 
@@ -739,7 +903,8 @@
                 date: document.getElementById('actDate').value,
                 type, duration, intensity,
                 burned: estimateBurnedCalories(type, duration, intensity),
-                note: document.getElementById('actNote').value.trim()
+                note: document.getElementById('actNote').value.trim(),
+                imgData: document.getElementById('actImgData').value || ''
             };
 
             if (editId) {
@@ -752,6 +917,9 @@
             localStorage.setItem('sport_activities', JSON.stringify(activities));
             document.getElementById('activityForm').reset();
             document.getElementById('actDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('actImgData').value = '';
+            document.getElementById('actPhotoStatus').textContent = 'Slikaj ali izberi zaslon ure / vadbe za AI prepoznavo';
+            document.getElementById('actPhotoStatus').className = 'text-[10px] text-slate-400 mt-2';
             renderApp();
         }
 
@@ -767,7 +935,8 @@
                 calories: parseInt(document.getElementById('mealCalories').value) || 0,
                 protein: parseInt(document.getElementById('mealProtein').value) || 0,
                 carbs: parseInt(document.getElementById('mealCarbs').value) || 0,
-                fat: parseInt(document.getElementById('mealFat').value) || 0
+                fat: parseInt(document.getElementById('mealFat').value) || 0,
+                imgData: document.getElementById('mealImgData').value || ''
             };
 
             if (editId) {
@@ -780,6 +949,9 @@
             localStorage.setItem('sport_meals', JSON.stringify(meals));
             document.getElementById('mealForm').reset();
             document.getElementById('mealDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('mealImgData').value = '';
+            document.getElementById('mealPhotoStatus').textContent = 'Slikaj obrok ali vpiši spodaj ter uporabi AI oceno';
+            document.getElementById('mealPhotoStatus').className = 'text-[10px] text-slate-400 mt-2';
             document.getElementById('aiStatusText').textContent = '';
             renderApp();
         }
@@ -805,6 +977,7 @@
             document.getElementById('actDuration').value = a.duration;
             document.getElementById('actIntensity').value = a.intensity;
             document.getElementById('actNote').value = a.note || '';
+            document.getElementById('actImgData').value = a.imgData || '';
             document.getElementById('actFormTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-blue-400"></i> Uredi športno aktivnost`;
             document.getElementById('actSubmitBtn').textContent = "Posodobi aktivnost";
             document.getElementById('actCancelBtn').classList.remove('hidden');
@@ -822,6 +995,7 @@
             document.getElementById('mealProtein').value = m.protein || 0;
             document.getElementById('mealCarbs').value = m.carbs || 0;
             document.getElementById('mealFat').value = m.fat || 0;
+            document.getElementById('mealImgData').value = m.imgData || '';
             document.getElementById('mealFormTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-amber-400"></i> Uredi obrok`;
             document.getElementById('mealSubmitBtn').textContent = "Posodobi obrok";
             document.getElementById('mealCancelBtn').classList.remove('hidden');
@@ -834,6 +1008,9 @@
                 document.getElementById('actEditId').value = '';
                 document.getElementById('activityForm').reset();
                 document.getElementById('actDate').value = new Date().toISOString().split('T')[0];
+                document.getElementById('actImgData').value = '';
+                document.getElementById('actPhotoStatus').textContent = 'Slikaj ali izberi zaslon ure / vadbe za AI prepoznavo';
+                document.getElementById('actPhotoStatus').className = 'text-[10px] text-slate-400 mt-2';
                 document.getElementById('actFormTitle').innerHTML = `<i class="fa-solid fa-circle-plus text-blue-400"></i> Dodaj športno aktivnost`;
                 document.getElementById('actSubmitBtn').textContent = "Shrani aktivnost";
                 document.getElementById('actCancelBtn').classList.add('hidden');
@@ -841,6 +1018,9 @@
                 document.getElementById('mealEditId').value = '';
                 document.getElementById('mealForm').reset();
                 document.getElementById('mealDate').value = new Date().toISOString().split('T')[0];
+                document.getElementById('mealImgData').value = '';
+                document.getElementById('mealPhotoStatus').textContent = 'Slikaj obrok ali vpiši spodaj ter uporabi AI oceno';
+                document.getElementById('mealPhotoStatus').className = 'text-[10px] text-slate-400 mt-2';
                 document.getElementById('mealFormTitle').innerHTML = `<i class="fa-solid fa-circle-plus text-amber-400"></i> Dodaj obrok`;
                 document.getElementById('mealSubmitBtn').textContent = "Shrani obrok";
                 document.getElementById('mealCancelBtn').classList.add('hidden');
