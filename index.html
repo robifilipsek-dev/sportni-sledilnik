@@ -52,17 +52,20 @@
 
         <!-- HITRI VODNIK -->
         <div id="guideBanner" class="bg-slate-800/80 border border-blue-500/30 rounded-xl p-3.5 mb-6 text-xs text-slate-300 relative">
-            <button onclick="document.getElementById('guideBanner').remove()" class="absolute top-2 right-2 text-slate-400 hover:text-white p-1">
+            <button onclick="dismissGuide()" class="absolute top-2 right-2 text-slate-400 hover:text-white p-1" title="Zapri vodnik">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            <div class="font-bold text-blue-400 mb-1 flex items-center gap-1.5">
-                <i class="fa-solid fa-circle-info"></i> Hitri vodnik za začetek:
+            <div class="font-bold text-blue-400 mb-2 flex items-center gap-1.5 text-sm">
+                <i class="fa-solid fa-circle-info"></i> Obsežen vodnik za uporabo aplikacije:
             </div>
-            <ol class="list-decimal list-inside space-y-1 text-slate-300">
-                <li>Klikni na <strong>Nastavitve</strong> spodaj in vnesi svoje podatke, cilj ter Gemini API ključ.</li>
-                <li>V zavihkih dodajaj svoje dnevne obroke (z AI oceno ali kamero) ali športne aktivnosti.</li>
-                <li>Spremljaj svoj napredek in vnos vode v živo!</li>
-            </ol>
+            <ul class="list-disc list-inside space-y-1.5 text-slate-300">
+                <li><strong>Nastavitve profila in AI:</strong> Spodaj v nogi klikni na gumb za nastavitve. Vnesi svoj Gemini API ključ (za AI funkcije), spol, starost, višino, težo, raven aktivnosti in svoj cilj (hujšanje, ohranjanje ali masa). Aplikacija bo na tej podlagi izračunala tvoj BMR in dnevni cilj kalorij.</li>
+                <li><strong>Spremljanje dneva (Voda & Poraba):</strong> Na vrhu spremljaš skupno energijsko porabo (BMR + šport) ter vnos kalorij in makrohranil (beljakovine, OH, maščobe). S hitrimi gumbi (+2.5dl / +5dl) beležiš vnos vode.</li>
+                <li><strong>Športne aktivnosti:</strong> V zavihku "Šport" lahko ročno vpišeš trening ali pa uporabiš <em>Kamero / Galerijo</em>, kjer Gemini AI samodejno prepozna vrsto vadbe, trajanje in intenzivnost s slike tvoje ure ali zaslona naprave.</li>
+                <li><strong>Prehrana in AI ocena:</strong> V zavihku "Prehrana" beležiš obroke. Uporabiš lahko hitre prednastavitve, sliko obroka za AI prepoznavo ali pa vpišeš opis (npr. "200g piščanca in riž") in klikneš <em>AI samodejna ocena</em>, ki izračuna kalorije in makroje.</li>
+                <li><strong>Telesna teža in zgodovina:</strong> V zavihku "Teža" beležiš napredek, ki se izrisuje v interaktivnem grafu. Zavihek "Zgodovina" ti omogoča pregled in urejanje vseh preteklih vnosov po dnevih.</li>
+                <li>*Prikaz tega vodnika lahko trajno izklopiš v spodnjih nastavitvah.*</li>
+            </ul>
         </div>
 
         <!-- DNEVNI POVZETEK -->
@@ -447,6 +450,17 @@
                     <input type="password" id="geminiApiKey" placeholder="Vnesi AI Studio API Key..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
                 </div>
 
+                <div class="flex items-center justify-between bg-slate-900 p-3 rounded-lg border border-slate-800">
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-300">Prikaz hitrega vodnika ob zagonu</span>
+                        <span class="text-[10px] text-slate-400">Prikaži informativno pasico na vrhu</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="settingHideGuide" class="sr-only peer">
+                        <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                </div>
+
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-medium text-slate-300 mb-1">Spol</label>
@@ -532,13 +546,27 @@
                 saveWater();
             }
 
+            // Preveri nastavitve za prikaz vodnika
+            const hideGuide = localStorage.getItem('sport_hide_guide') === 'true';
+            if (hideGuide) {
+                const banner = document.getElementById('guideBanner');
+                if (banner) banner.remove();
+            }
+
             renderPresets();
             renderApp();
             initChart();
         });
 
+        function dismissGuide() {
+            const banner = document.getElementById('guideBanner');
+            if (banner) banner.remove();
+            localStorage.setItem('sport_hide_guide', 'true');
+        }
+
         function loadSettingsToModal() {
             document.getElementById('geminiApiKey').value = localStorage.getItem('gemini_api_key') || '';
+            document.getElementById('settingHideGuide').checked = localStorage.getItem('sport_hide_guide') === 'true';
             document.getElementById('userGender').value = localStorage.getItem('user_gender') || 'male';
             document.getElementById('userAge').value = localStorage.getItem('user_age') || '30';
             document.getElementById('userWeight').value = localStorage.getItem('user_weight') || '75';
@@ -560,12 +588,23 @@
             if (key) localStorage.setItem('gemini_api_key', key);
             else localStorage.removeItem('gemini_api_key');
 
+            const hideGuideSetting = document.getElementById('settingHideGuide').checked;
+            localStorage.setItem('sport_hide_guide', hideGuideSetting);
+
             localStorage.setItem('user_gender', document.getElementById('userGender').value);
             localStorage.setItem('user_age', document.getElementById('userAge').value);
             localStorage.setItem('user_weight', document.getElementById('userWeight').value);
             localStorage.setItem('user_height', document.getElementById('userHeight').value);
             localStorage.setItem('user_activity', document.getElementById('userActivityLevel').value);
             localStorage.setItem('user_goal', document.getElementById('userGoal').value);
+
+            // Takoj odstrani ali prikaži pasico glede na novo nastavitev
+            const banner = document.getElementById('guideBanner');
+            if (hideGuideSetting) {
+                if (banner) banner.remove();
+            } else {
+                location.reload(); // Osveži stran, če želi uporabnik ponovno videti vodnik
+            }
 
             alert('Nastavitve in osebni podatki uspešno shranjeni!');
             toggleSettingsModal();
