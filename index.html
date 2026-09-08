@@ -57,13 +57,13 @@
                 <i class="fa-solid fa-xmark"></i>
             </button>
             <div class="font-bold text-blue-400 mb-2 flex items-center gap-1.5 text-sm">
-                <i class="fa-solid fa-circle-info"></i> Vodnik za uporabo aplikacije:
+                <i class="fa-solid fa-circle-info"></i> Obsežen vodnik za uporabo aplikacije:
             </div>
             <ul class="list-disc list-inside space-y-1.5 text-slate-300">
                 <li><strong>Nastavitve profila in AI:</strong> Spodaj v nogi klikni na gumb za nastavitve. Vnesi svoj Gemini API ključ (za AI funkcije), spol, starost, višino, težo, povprečne dnevne korake in cilj.</li>
                 <li><strong>Spremljanje dneva (Voda & Poraba):</strong> Na vrhu spremljaš pasivno in aktivno energijsko porabo ter vnos kalorij in makrohranil. Presežek kalorij se samodejno prišteje k cilju gibanja. S hitrimi gumbi beležiš vnos vode.</li>
                 <li><strong>Športne aktivnosti:</strong> V zavihku "Šport" lahko ročno vpišeš trening ali uporabiš <em>Kamero / Galerijo</em> za samodejno AI prepoznavo s slike.</li>
-                <li><strong>Prehrana in AI ocena:</strong> V zavihku "Prehrana" beležiš obroke, urejaš hitre prednastavitve (dodajaš, brišeš ali generiraš z AI/iz zgodovine) ali uporabljaš AI oceno iz opisa ali slike.</li>
+                <li><strong>Prehrana in AI ocena:</strong> V zavihku "Prehrana" beležiš obroke, urejaš hitre prednastavitve ali uporabljaš AI oceno iz opisa ali slike.</li>
                 <li><strong>Telesna teža in zgodovina:</strong> Spremljaj napredek teže v grafu in pregleduj pretekle vnose.</li>
             </ul>
         </div>
@@ -1468,6 +1468,198 @@
             return `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.`;
         }
 
+        // --- APPLIKACIJSKI RENDERING ---
+        function renderApp() {
+            const today = new Date().toISOString().split('T')[0];
+            const metabolics = calculateUserMetabolics();
+
+            const todayActivities = activities.filter(a => a.date === today);
+            const todayMeals = meals.filter(m => m.date === today);
+
+            const todaySportBurn = todayActivities.reduce((sum, a) => sum + (Number(a.burned) || 0), 0);
+            const todayCalories = todayMeals.reduce((sum, m) => sum + (Number(m.calories) || 0), 0);
+            const todayProtein = todayMeals.reduce((sum, m) => sum + (Number(m.protein) || 0), 0);
+            const todayCarbs = todayMeals.reduce((sum, m) => sum + (Number(m.carbs) || 0), 0);
+            const todayFat = todayMeals.reduce((sum, m) => sum + (Number(m.fat) || 0), 0);
+
+            const todayPassiveBurn = metabolics.passiveBurn;
+            const todayTotalBurn = todayPassiveBurn + todaySportBurn;
+
+            document.getElementById('todayPassiveBurn').textContent = `${todayPassiveBurn} kcal`;
+            document.getElementById('todaySportBurn').textContent = `${todaySportBurn} kcal`;
+            document.getElementById('todayTotalBurn').textContent = `${todayTotalBurn} kcal`;
+
+            const goalBadge = document.getElementById('userGoalBadge');
+            if (goalBadge) {
+                const gText = metabolics.goal === 'lose' ? 'Hujšanje' : (metabolics.goal === 'gain' ? 'Pridobivanje' : 'Ohranjanje');
+                goalBadge.textContent = `Cilj: ${gText}`;
+            }
+
+            // --- PRESEŽEK KALORIJ IN PRILAGODITEV CILJA AKTIVNOSTI ---
+            const baseActiveGoal = Math.round(WEEKLY_BURN_GOAL / 7); // Osnovni dnevni cilj (~214 kcal)
+            const calSurplus = Math.max(0, todayCalories - metabolics.targetCalories);
+            const adjustedActiveGoal = baseActiveGoal + calSurplus;
+
+            const activeGoalText = document.getElementById('dailyActiveGoalText');
+            if (activeGoalText) {
+                activeGoalText.textContent = `${todaySportBurn} / ${adjustedActiveGoal} kcal`;
+            }
+
+            const activeProgress = document.getElementById('dailyActiveProgress');
+            if (activeProgress) {
+                const pct = adjustedActiveGoal > 0 ? Math.min(100, Math.round((todaySportBurn / adjustedActiveGoal) * 100)) : 0;
+                activeProgress.style.width = `${pct}%`;
+            }
+
+            const activeRemainingText = document.getElementById('dailyActiveRemainingText');
+            if (activeRemainingText) {
+                const rem = adjustedActiveGoal - todaySportBurn;
+                let msg = "";
+                if (rem > 0) {
+                    msg = `Preostane še ${rem} kcal do cilja.`;
+                } else {
+                    msg = `Cilj aktivnosti dosežen! 🎉`;
+                }
+
+                if (calSurplus > 0) {
+                    msg += ` (vključuje +${calSurplus} kcal zaradi presežka vnosa)`;
+                }
+                activeRemainingText.textContent = msg;
+            }
+
+            // --- ZAUŽITE KALORIJE IN STATUS ---
+            document.getElementById('todayCalories').textContent = `${todayCalories} kcal`;
+            document.getElementById('todayCalTarget').textContent = `Cilj vnos: ~${metabolics.targetCalories} kcal`;
+            
+            const calPct = metabolics.targetCalories > 0 ? Math.min(100, Math.round((todayCalories / metabolics.targetCalories) * 100)) : 0;
+            document.getElementById('todayCalProgress').style.width = `${calPct}%`;
+            document.getElementById('calStatusText').textContent = `${calPct}% cilja`;
+
+            const calRemText = document.getElementById('calRemainingText');
+            if (calRemText) {
+                const diff = metabolics.targetCalories - todayCalories;
+                if (diff >= 0) {
+                    calRemText.textContent = `Še ${diff} kcal do cilja.`;
+                    calRemText.className = "text-[10px] text-slate-500 mt-1 mb-2 block";
+                } else {
+                    calRemText.textContent = `Presežek: +${Math.abs(diff)} kcal nad ciljem.`;
+                    calRemText.className = "text-[10px] text-rose-400 font-semibold mt-1 mb-2 block";
+                }
+            }
+
+            // --- MAKROHRANILA IN PRIKAZ PRESEŽKOV ---
+            const macroTargets = computeMacroTargets(metabolics.targetCalories, metabolics.weight, metabolics.goal);
+
+            function updateMacroDisplay(valId, targetTextId, progressId, currentVal, targetVal, defaultBgClass) {
+                const valEl = document.getElementById(valId);
+                const targetEl = document.getElementById(targetTextId);
+                const progEl = document.getElementById(progressId);
+
+                if (valEl) valEl.textContent = `${currentVal}g`;
+
+                if (targetEl && progEl) {
+                    const surplus = currentVal - targetVal;
+                    const pct = targetVal > 0 ? Math.min(100, Math.round((currentVal / targetVal) * 100)) : 0;
+                    progEl.style.width = `${pct}%`;
+
+                    if (surplus > 0) {
+                        targetEl.textContent = `+${surplus}g nad ciljem`;
+                        targetEl.className = "text-[9px] text-rose-400 font-bold";
+                        progEl.className = `bg-rose-500 h-1 rounded-full transition-all duration-500`;
+                    } else {
+                        targetEl.textContent = `/${targetVal}g`;
+                        targetEl.className = "text-[9px] text-slate-500";
+                        progEl.className = `${defaultBgClass} h-1 rounded-full transition-all duration-500`;
+                    }
+                }
+            }
+
+            updateMacroDisplay('todayProtein', 'proteinTargetText', 'proteinProgress', todayProtein, macroTargets.proteinG, 'bg-purple-500');
+            updateMacroDisplay('todayCarbs', 'carbsTargetText', 'carbsProgress', todayCarbs, macroTargets.carbsG, 'bg-sky-500');
+            updateMacroDisplay('todayFat', 'fatTargetText', 'fatProgress', todayFat, macroTargets.fatG, 'bg-yellow-500');
+
+            // --- VODA ---
+            document.getElementById('todayWaterText').textContent = `${waterData.amount} / ${WATER_GOAL} ml`;
+
+            renderWeeklySummary();
+            renderTodayLists(todayActivities, todayMeals);
+        }
+
+        function renderWeeklySummary() {
+            const now = new Date();
+            const monday = getMonday(now);
+            const sunday = getSunday(monday);
+
+            document.getElementById('currentWeekRange').textContent = `${formatSloDate(monday)} - ${formatSloDate(sunday)}`;
+
+            const weekActs = activities.filter(a => {
+                const d = new Date(a.date);
+                return d >= monday && d <= sunday;
+            });
+
+            const weekMeals = meals.filter(m => {
+                const d = new Date(m.date);
+                return d >= monday && d <= sunday;
+            });
+
+            const weekMins = weekActs.reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
+            const weekBurned = weekActs.reduce((sum, a) => sum + (Number(a.burned) || 0), 0);
+            const weekCalories = weekMeals.reduce((sum, m) => sum + (Number(m.calories) || 0), 0);
+
+            document.getElementById('weeklyMinutes').textContent = `${weekMins} min`;
+            document.getElementById('weeklyBurned').textContent = `${weekBurned} kcal`;
+            document.getElementById('weeklyCalories').textContent = `${weekCalories} kcal`;
+
+            const net = weekBurned - weekCalories;
+            const netEl = document.getElementById('netCalories');
+            netEl.textContent = `${net > 0 ? '+' : ''}${net} kcal`;
+            netEl.className = net < 0 ? 'font-bold text-rose-400' : 'font-bold text-emerald-400';
+
+            const minPct = Math.min(100, Math.round((weekMins / 150) * 100));
+            document.getElementById('goalPercentage').textContent = `${minPct}%`;
+            document.getElementById('progressBar').style.width = `${minPct}%`;
+
+            const burnPct = Math.min(100, Math.round((weekBurned / WEEKLY_BURN_GOAL) * 100));
+            document.getElementById('weeklyBurnGoalText').textContent = `${weekBurned} / ${WEEKLY_BURN_GOAL} kcal (${burnPct}%)`;
+            document.getElementById('weeklyBurnProgressBar').style.width = `${burnPct}%`;
+        }
+
+        function renderTodayLists(todayActivities, todayMeals) {
+            const actList = document.getElementById('todayActivityList');
+            if (actList) {
+                if (todayActivities.length === 0) {
+                    actList.innerHTML = `<p class="text-xs text-slate-500 italic py-2">Danes še nimaš vnesenih aktivnosti.</p>`;
+                } else {
+                    actList.innerHTML = todayActivities.map(createActivityCard).join('');
+                }
+            }
+
+            const mealList = document.getElementById('todayMealList');
+            if (mealList) {
+                if (todayMeals.length === 0) {
+                    mealList.innerHTML = `<p class="text-xs text-slate-500 italic py-2">Danes še nimaš vnesenih obrokov.</p>`;
+                } else {
+                    mealList.innerHTML = todayMeals.map(createMealCard).join('');
+                }
+            }
+        }
+
+        function renderHistory() {
+            const filterDate = document.getElementById('historyDateFilter').value;
+            const dayMeals = meals.filter(m => m.date === filterDate);
+            const dayActs = activities.filter(a => a.date === filterDate);
+
+            const mealList = document.getElementById('historyMealList');
+            if (mealList) {
+                mealList.innerHTML = dayMeals.length ? dayMeals.map(createMealCard).join('') : `<p class="text-xs text-slate-500 italic">Ni vnesenih obrokov za ta dan.</p>`;
+            }
+
+            const actList = document.getElementById('historyActList');
+            if (actList) {
+                actList.innerHTML = dayActs.length ? dayActs.map(createActivityCard).join('') : `<p class="text-xs text-slate-500 italic">Ni vnesenih aktivnosti za ta dan.</p>`;
+            }
+        }
+
         // --- KARTICE ---
         function createActivityCard(a) {
             return `
@@ -1534,138 +1726,6 @@
                     </div>
                 </div>
             `;
-        }
-
-        // --- GLAVNI RENDER ---
-        function renderApp() {
-            const todayStr = new Date().toISOString().split('T')[0];
-            const metab = calculateUserMetabolics();
-            const targets = computeMacroTargets(metab.targetCalories, metab.weight, metab.goal);
-
-            const todayActs = activities.filter(a => a.date === todayStr);
-            const todayMeals = meals.filter(m => m.date === todayStr);
-
-            // Izračuni za danes
-            const todaySportBurn = todayActs.reduce((sum, a) => sum + (Number(a.burned) || 0), 0);
-            const todayTotalBurn = metab.passiveBurn + todaySportBurn;
-
-            const todayCalories = todayMeals.reduce((sum, m) => sum + (Number(m.calories) || 0), 0);
-            const todayProtein = Math.round(todayMeals.reduce((sum, m) => sum + (Number(m.protein) || 0), 0));
-            const todayCarbs = Math.round(todayMeals.reduce((sum, m) => sum + (Number(m.carbs) || 0), 0));
-            const todayFat = Math.round(todayMeals.reduce((sum, m) => sum + (Number(m.fat) || 0), 0));
-
-            // DOM elementi - Poraba energije
-            document.getElementById('todayPassiveBurn').textContent = `${metab.passiveBurn} kcal`;
-            document.getElementById('todaySportBurn').textContent = `${todaySportBurn} kcal`;
-            document.getElementById('todayTotalBurn').textContent = `${todayTotalBurn} kcal`;
-
-            const goalLabels = { lose: 'Hujšanje', maintain: 'Ohranjanje', gain: 'Pridobivanje' };
-            document.getElementById('userGoalBadge').textContent = `Cilj: ${goalLabels[metab.goal] || 'Ohranjanje'}`;
-
-            const dailyActiveGoal = 300;
-            document.getElementById('dailyActiveGoalText').textContent = `${todaySportBurn} / ${dailyActiveGoal} kcal`;
-            const activePct = Math.min(Math.round((todaySportBurn / dailyActiveGoal) * 100), 100);
-            document.getElementById('dailyActiveProgress').style.width = `${activePct}%`;
-            const activeDiff = dailyActiveGoal - todaySportBurn;
-            document.getElementById('dailyActiveRemainingText').textContent = activeDiff > 0 ? `Še ${activeDiff} kcal do cilja` : 'Aktivni cilj dosežen!';
-
-            // Prehrana
-            document.getElementById('todayCalTarget').textContent = `Cilj vnos: ~${metab.targetCalories} kcal`;
-            document.getElementById('todayCalories').textContent = `${Math.round(todayCalories)} kcal`;
-            const calPct = metab.targetCalories > 0 ? Math.min(Math.round((todayCalories / metab.targetCalories) * 100), 100) : 0;
-            document.getElementById('calStatusText').textContent = `${calPct}% cilja`;
-            document.getElementById('todayCalProgress').style.width = `${calPct}%`;
-            const calDiff = metab.targetCalories - todayCalories;
-            document.getElementById('calRemainingText').textContent = calDiff >= 0 ? `Preostalo še ${Math.round(calDiff)} kcal` : `Presežek za ${Math.round(-calDiff)} kcal`;
-
-            // Makrohranila (brez decimalk z Math.round)
-            document.getElementById('proteinTargetText').textContent = `/${targets.proteinG}g`;
-            document.getElementById('todayProtein').textContent = `${todayProtein}g`;
-            const pPct = targets.proteinG > 0 ? Math.min(Math.round((todayProtein / targets.proteinG) * 100), 100) : 0;
-            document.getElementById('proteinProgress').style.width = `${pPct}%`;
-
-            document.getElementById('carbsTargetText').textContent = `/${targets.carbsG}g`;
-            document.getElementById('todayCarbs').textContent = `${todayCarbs}g`;
-            const cPct = targets.carbsG > 0 ? Math.min(Math.round((todayCarbs / targets.carbsG) * 100), 100) : 0;
-            document.getElementById('carbsProgress').style.width = `${cPct}%`;
-
-            document.getElementById('fatTargetText').textContent = `/${targets.fatG}g`;
-            document.getElementById('todayFat').textContent = `${todayFat}g`;
-            const fPct = targets.fatG > 0 ? Math.min(Math.round((todayFat / targets.fatG) * 100), 100) : 0;
-            document.getElementById('fatProgress').style.width = `${fPct}%`;
-
-            // Voda
-            document.getElementById('todayWaterText').textContent = `${waterData.amount} / ${WATER_GOAL} ml`;
-
-            // Tedenski povzetek
-            const now = new Date();
-            const monday = getMonday(now);
-            const sunday = getSunday(monday);
-            document.getElementById('currentWeekRange').textContent = `${formatSloDate(monday)} - ${formatSloDate(sunday)}`;
-
-            const weeklyActs = activities.filter(a => {
-                const d = new Date(a.date);
-                return d >= monday && d <= sunday;
-            });
-            const weeklyMeals = meals.filter(m => {
-                const d = new Date(m.date);
-                return d >= monday && d <= sunday;
-            });
-
-            const weeklyMin = weeklyActs.reduce((s, a) => s + (Number(a.duration) || 0), 0);
-            const weeklyBurn = weeklyActs.reduce((s, a) => s + (Number(a.burned) || 0), 0);
-            const weeklyCal = weeklyMeals.reduce((s, m) => s + (Number(m.calories) || 0), 0);
-
-            document.getElementById('weeklyMinutes').textContent = `${weeklyMin} min`;
-            document.getElementById('weeklyBurned').textContent = `${weeklyBurn} kcal`;
-            document.getElementById('weeklyCalories').textContent = `${Math.round(weeklyCal)} kcal`;
-
-            const net = weeklyBurn - weeklyCal;
-            document.getElementById('netCalories').textContent = `${net >= 0 ? '+' : ''}${Math.round(net)} kcal`;
-            document.getElementById('netCalories').className = net <= 0 ? "font-bold text-emerald-400" : "font-bold text-amber-400";
-
-            const minPct = Math.min(Math.round((weeklyMin / 150) * 100), 100);
-            document.getElementById('goalPercentage').textContent = `${minPct}%`;
-            document.getElementById('progressBar').style.width = `${minPct}%`;
-
-            const burnPct = Math.min(Math.round((weeklyBurn / WEEKLY_BURN_GOAL) * 100), 100);
-            document.getElementById('weeklyBurnGoalText').textContent = `${weeklyBurn} / ${WEEKLY_BURN_GOAL} kcal (${burnPct}%)`;
-            document.getElementById('weeklyBurnProgressBar').style.width = `${burnPct}%`;
-
-            // Seznami
-            const actContainer = document.getElementById('todayActivityList');
-            if (todayActs.length === 0) {
-                actContainer.innerHTML = `<p class="text-xs text-slate-500 italic p-3 text-center bg-slate-900/50 rounded-xl border border-slate-800">Danes še nimaš zabeleženih športnih aktivnosti.</p>`;
-            } else {
-                actContainer.innerHTML = todayActs.map(createActivityCard).join('');
-            }
-
-            const mealContainer = document.getElementById('todayMealList');
-            if (todayMeals.length === 0) {
-                mealContainer.innerHTML = `<p class="text-xs text-slate-500 italic p-3 text-center bg-slate-900/50 rounded-xl border border-slate-800">Danes še nimaš zabeleženih obrokov.</p>`;
-            } else {
-                mealContainer.innerHTML = todayMeals.map(createMealCard).join('');
-            }
-        }
-
-        function renderHistory() {
-            const filterDate = document.getElementById('historyDateFilter').value;
-            const histMeals = meals.filter(m => m.date === filterDate);
-            const histActs = activities.filter(a => a.date === filterDate);
-
-            const mealHistEl = document.getElementById('historyMealList');
-            if (histMeals.length === 0) {
-                mealHistEl.innerHTML = `<p class="text-xs text-slate-500 italic p-3 bg-slate-900/50 rounded-xl border border-slate-800">Za ta datum ni vnesenih obrokov.</p>`;
-            } else {
-                mealHistEl.innerHTML = histMeals.map(createMealCard).join('');
-            }
-
-            const actHistEl = document.getElementById('historyActList');
-            if (histActs.length === 0) {
-                actHistEl.innerHTML = `<p class="text-xs text-slate-500 italic p-3 bg-slate-900/50 rounded-xl border border-slate-800">Za ta datum ni vnesenih aktivnosti.</p>`;
-            } else {
-                actHistEl.innerHTML = histActs.map(createActivityCard).join('');
-            }
         }
     </script>
 </body>
