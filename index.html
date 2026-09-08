@@ -104,6 +104,17 @@
                         <span id="todayTotalBurn" class="text-xs font-bold text-blue-400">0 kcal</span>
                     </div>
                 </div>
+
+                <div class="pt-1">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] text-slate-400">Cilj aktivne porabe danes (šport)</span>
+                        <span id="dailyActiveGoalText" class="text-[10px] font-semibold text-emerald-400">0 / 0 kcal</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                        <div id="dailyActiveProgress" class="bg-emerald-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                    <span id="dailyActiveRemainingText" class="text-[10px] text-slate-500 mt-1 block"></span>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-2">
@@ -117,22 +128,41 @@
                         <span id="todayCalories" class="text-lg font-bold text-amber-400">0 kcal</span>
                         <span id="calStatusText" class="text-[10px] text-slate-400">0% cilja</span>
                     </div>
-                    <div class="w-full bg-slate-800 rounded-full h-2 mt-1.5 overflow-hidden mb-3">
+                    <div class="w-full bg-slate-800 rounded-full h-2 mt-1.5 overflow-hidden">
                         <div id="todayCalProgress" class="bg-amber-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
                     </div>
-                    
-                    <div class="grid grid-cols-3 gap-1 text-center mt-2 border-t border-slate-800/80 pt-2">
+                    <span id="calRemainingText" class="text-[10px] text-slate-500 mt-1 mb-2 block"></span>
+
+                    <div class="grid grid-cols-3 gap-2 text-center mt-1 border-t border-slate-800/80 pt-2">
                         <div>
-                            <span class="block text-[10px] text-slate-400">Beljakovine</span>
-                            <span id="todayProtein" class="text-xs font-bold text-rose-400">0g</span>
+                            <div class="flex justify-between items-baseline mb-0.5">
+                                <span class="text-[10px] text-slate-400">Beljak.</span>
+                                <span id="proteinTargetText" class="text-[9px] text-slate-500">/0g</span>
+                            </div>
+                            <span id="todayProtein" class="text-xs font-bold text-rose-400 block">0g</span>
+                            <div class="w-full bg-slate-800 rounded-full h-1 mt-1 overflow-hidden">
+                                <div id="proteinProgress" class="bg-rose-500 h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
                         </div>
                         <div>
-                            <span class="block text-[10px] text-slate-400">Oglj. hidrati</span>
-                            <span id="todayCarbs" class="text-xs font-bold text-sky-400">0g</span>
+                            <div class="flex justify-between items-baseline mb-0.5">
+                                <span class="text-[10px] text-slate-400">OH</span>
+                                <span id="carbsTargetText" class="text-[9px] text-slate-500">/0g</span>
+                            </div>
+                            <span id="todayCarbs" class="text-xs font-bold text-sky-400 block">0g</span>
+                            <div class="w-full bg-slate-800 rounded-full h-1 mt-1 overflow-hidden">
+                                <div id="carbsProgress" class="bg-sky-500 h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
                         </div>
                         <div>
-                            <span class="block text-[10px] text-slate-400">Maščobe</span>
-                            <span id="todayFat" class="text-xs font-bold text-yellow-500">0g</span>
+                            <div class="flex justify-between items-baseline mb-0.5">
+                                <span class="text-[10px] text-slate-400">Mašč.</span>
+                                <span id="fatTargetText" class="text-[9px] text-slate-500">/0g</span>
+                            </div>
+                            <span id="todayFat" class="text-xs font-bold text-yellow-500 block">0g</span>
+                            <div class="w-full bg-slate-800 rounded-full h-1 mt-1 overflow-hidden">
+                                <div id="fatProgress" class="bg-yellow-500 h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -554,6 +584,9 @@
         let weightHistory = JSON.parse(localStorage.getItem('sport_weights')) || [];
         let waterData = JSON.parse(localStorage.getItem('sport_water')) || { date: '', amount: 0 };
         const WATER_GOAL = 2500;
+        // Tedenski cilj porabe s športom (kcal) - iz njega izpeljemo tudi dnevnega,
+        // da so tedenski in dnevni prikazi vedno usklajeni (ena vrednost, ne dve ločeni).
+        const WEEKLY_BURN_GOAL = 1500;
         
         let presets = JSON.parse(localStorage.getItem('sport_presets')) || [
             { type: 'Zajtrk', desc: 'Ovsena kaša', cal: 350, p: 25, c: 45, f: 8 },
@@ -1060,6 +1093,19 @@
             alert("Obrok shranjen med hitre prednastavitve!");
         }
 
+        // --- MAKRO CILJI ---
+        // Beljakovine: g/kg telesne teže, višje pri hujšanju (ohranjanje mišic v deficitu).
+        // Maščobe: ~25% dnevnih kalorij (standardno priporočilo 20-35%).
+        // OH: preostanek kalorij po beljakovinah in maščobah.
+        function computeMacroTargets(targetCalories, weightKg, goal) {
+            const proteinPerKg = goal === 'lose' ? 2.2 : (goal === 'gain' ? 1.9 : 1.8);
+            const proteinG = Math.round(weightKg * proteinPerKg);
+            const fatG = Math.round((targetCalories * 0.25) / 9);
+            const remainingCal = Math.max(targetCalories - (proteinG * 4) - (fatG * 9), 0);
+            const carbsG = Math.round(remainingCal / 4);
+            return { proteinG, carbsG, fatG };
+        }
+
         // --- AKTIVNOSTI & OBROKI ---
         function estimateBurnedCalories(type, duration, intensity) {
             let baseRate = 7;
@@ -1402,6 +1448,16 @@
             document.getElementById('userGoalBadge').textContent = goalBadgeText;
             document.getElementById('todayCalTarget').textContent = `Cilj vnos: ~${targetCalories} kcal`;
 
+            // Dnevni cilj aktivne porabe (šport) - izpeljan iz tedenskega cilja / 7.
+            const dailyActiveGoal = Math.round(WEEKLY_BURN_GOAL / 7);
+            const activeGoalPercent = Math.min(Math.round((todaySportBurn / dailyActiveGoal) * 100), 100);
+            document.getElementById('dailyActiveGoalText').textContent = `${todaySportBurn} / ${dailyActiveGoal} kcal`;
+            document.getElementById('dailyActiveProgress').style.width = `${activeGoalPercent}%`;
+            const activeRemaining = dailyActiveGoal - todaySportBurn;
+            document.getElementById('dailyActiveRemainingText').textContent = activeRemaining > 0
+                ? `Še manjka ${activeRemaining} kcal aktivne porabe do dnevnega cilja.`
+                : `Dnevni cilj aktivnosti dosežen! (+${Math.abs(activeRemaining)} kcal nad ciljem)`;
+
             let todayCal = 0, todayProt = 0, todayCarb = 0, todayFat = 0;
             
             meals.forEach(m => {
@@ -1417,10 +1473,28 @@
             let calPercent = Math.min(Math.round((todayCal / targetCalories) * 100), 100);
             document.getElementById('todayCalProgress').style.width = `${calPercent}%`;
             document.getElementById('calStatusText').textContent = `${calPercent}% cilja`;
+            const calRemaining = Math.round(targetCalories - todayCal);
+            document.getElementById('calRemainingText').textContent = calRemaining > 0
+                ? `Še manjka ${calRemaining} kcal do cilja vnosa.`
+                : `Cilj vnosa presežen za ${Math.abs(calRemaining)} kcal.`;
 
             document.getElementById('todayProtein').textContent = `${Math.round(todayProt * 10) / 10}g`;
             document.getElementById('todayCarbs').textContent = `${Math.round(todayCarb * 10) / 10}g`;
             document.getElementById('todayFat').textContent = `${Math.round(todayFat * 10) / 10}g`;
+
+            // Makro cilji (g) glede na cilj vnosa kalorij in telesno težo.
+            const macroTargets = computeMacroTargets(targetCalories, weight, goal);
+            const macroFill = (current, target) => target > 0 ? Math.min(Math.round((current / target) * 100), 100) : 0;
+
+            document.getElementById('proteinTargetText').textContent = `/${macroTargets.proteinG}g`;
+            document.getElementById('proteinProgress').style.width = `${macroFill(todayProt, macroTargets.proteinG)}%`;
+
+            document.getElementById('carbsTargetText').textContent = `/${macroTargets.carbsG}g`;
+            document.getElementById('carbsProgress').style.width = `${macroFill(todayCarb, macroTargets.carbsG)}%`;
+
+            document.getElementById('fatTargetText').textContent = `/${macroTargets.fatG}g`;
+            document.getElementById('fatProgress').style.width = `${macroFill(todayFat, macroTargets.fatG)}%`;
+
 
             document.getElementById('todayWaterText').textContent = `${waterData.amount} / ${WATER_GOAL} ml`;
 
@@ -1516,9 +1590,9 @@
             document.getElementById('progressBar').style.width = `${actPercent}%`;
             document.getElementById('goalPercentage').textContent = `${actPercent}%`;
 
-            let burnPercent = Math.min(Math.round((weeklyBurn / 1500) * 100), 100);
+            let burnPercent = Math.min(Math.round((weeklyBurn / WEEKLY_BURN_GOAL) * 100), 100);
             document.getElementById('weeklyBurnProgressBar').style.width = `${burnPercent}%`;
-            document.getElementById('weeklyBurnGoalText').textContent = `${weeklyBurn} / 1500 kcal (${burnPercent}%)`;
+            document.getElementById('weeklyBurnGoalText').textContent = `${weeklyBurn} / ${WEEKLY_BURN_GOAL} kcal (${burnPercent}%)`;
         }
     </script>
 </body>
