@@ -12,7 +12,7 @@
     <meta name="theme-color" content="#0f172a">
 
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='120' fill='%230f172a'/%3E%3Crect x='96' y='156' width='44' height='200' rx='12' fill='%2360a5fa'/%3E%3Crect x='140' y='196' width='24' height='120' rx='6' fill='%233b82f6'/%3E%3Crect x='164' y='226' width='184' height='60' rx='8' fill='%233b82f6'/%3E%3Crect x='348' y='196' width='24' height='120' rx='6' fill='%233b82f6'/%3E%3Crect x='372' y='156' width='44' height='200' rx='12' fill='%2360a5fa'/%3E%3C/svg%3E">
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%C5%A0port%20in%20prehrana%22%2C%22short_name%22%3A%22Fitnes%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%230f172a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%2527http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%2527%2520viewBox%3D%25270%25200%2520512%2520512%2527%253E%253Crect%2520width%3D%2527512%2527%2520height%3D%2527512%2527%2520rx%3D%2527120%2527%2520fill%3D%2527%25230f172a%2527%2F%253E%253Crect%2520x%3D%252796%2527%2520y%3D%2527156%2527%2520width%3D%252744%2527%2520height%3D%2527200%2527%2520rx%3D%252712%2527%2520fill%3D%2527%252360a5fa%2527%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%C5%A0port%20in%20prehrana%22%2C%22short_name%22%3A%22Fitnes%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%230f172a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%2527http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%2527%2520viewBox%3D%25270%25200%2520512%2520512%2527%253E%253Crect%2520width%3D%2527512%2527%2520height%3D%2527512%2527%2520rx%3D%2527120%2527%2520fill%3D%2527%25230f172a%2527%2F%253E%253Crect%2520x%253D%252796%2527%2520y%253D%2527156%2527%2520width%253D%252744%2527%2520height%253D%2527200%2527%2520rx%253D%252712%2527%2520fill%253D%2527%252360a5fa%2527%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -135,9 +135,9 @@
                                 <span class="text-[10px] text-slate-400">Beljak.</span>
                                 <span id="proteinTargetText" class="text-[9px] text-slate-500">/0g</span>
                             </div>
-                            <span id="todayProtein" class="text-xs font-bold text-purple-400 block">0g</span>
+                            <span id="todayProtein" class="text-xs font-bold text-yellow-400 block">0g</span>
                             <div class="w-full bg-slate-800 rounded-full h-1 mt-1 overflow-hidden">
-                                <div id="proteinProgress" class="bg-purple-500 h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                <div id="proteinProgress" class="bg-yellow-400 h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                         </div>
                         <div>
@@ -145,9 +145,9 @@
                                 <span class="text-[10px] text-slate-400">OH</span>
                                 <span id="carbsTargetText" class="text-[9px] text-slate-500">/0g</span>
                             </div>
-                            <span id="todayCarbs" class="text-xs font-bold text-sky-400 block">0g</span>
+                            <span id="todayCarbs" class="text-xs font-bold text-lime-400 block">0g</span>
                             <div class="w-full bg-slate-800 rounded-full h-1 mt-1 overflow-hidden">
-                                <div id="carbsProgress" class="bg-sky-500 h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                <div id="carbsProgress" class="bg-lime-400 h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                         </div>
                         <div>
@@ -155,9 +155,9 @@
                                 <span class="text-[10px] text-slate-400">Mašč.</span>
                                 <span id="fatTargetText" class="text-[9px] text-slate-500">/0g</span>
                             </div>
-                            <span id="todayFat" class="text-xs font-bold text-yellow-500 block">0g</span>
+                            <span id="todayFat" class="text-xs font-bold text-teal-300 block">0g</span>
                             <div class="w-full bg-slate-800 rounded-full h-1 mt-1 overflow-hidden">
-                                <div id="fatProgress" class="bg-yellow-500 h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                <div id="fatProgress" class="bg-teal-400 h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                         </div>
                     </div>
@@ -205,15 +205,24 @@
                 </div>
             </div>
 
-            <div class="bg-slate-900/60 rounded-xl p-3 mb-4 flex justify-between items-center text-xs">
-                <span class="text-slate-300 font-medium">Neto razlika (Zaužito - Skupna poraba):</span>
-                <span id="netCalories" class="font-bold">0 kcal</span>
+            <!-- NETO RAZLIKA SPROTI PO DNEVIH -->
+            <div class="bg-slate-900/60 rounded-xl p-3 mb-4 space-y-2.5">
+                <div class="flex justify-between items-center text-xs border-b border-slate-800/80 pb-2">
+                    <span class="text-slate-300 font-medium">Neto razlika (Zaužito - Skupna poraba do danes):</span>
+                    <span id="netCalories" class="font-bold text-sm">0 kcal</span>
+                </div>
+                <div>
+                    <span class="block text-[10px] text-slate-400 mb-1.5 font-medium">Dnevni pregled in seštevek po dnevih (Pon – Ned):</span>
+                    <div id="weeklyDailyNetBreakdown" class="grid grid-cols-2 sm:grid-cols-7 gap-1.5">
+                        <!-- Popolnjeno dinamično z JS -->
+                    </div>
+                </div>
             </div>
 
             <div class="space-y-3">
                 <div>
                     <div class="flex justify-between items-center mb-1.5">
-                        <span class="text-xs font-medium text-slate-300">Cilj aktivnosti (Smernice WHO: 150 min/teden)</span>
+                        <span id="weeklyActGoalLabel" class="text-xs font-medium text-slate-300">Personaliziran cilj aktivnosti</span>
                         <span id="goalPercentage" class="text-xs font-bold text-blue-400">0%</span>
                     </div>
                     <div class="w-full bg-slate-700 rounded-full h-2.5 overflow-hidden">
@@ -392,16 +401,16 @@
                     
                     <div class="grid grid-cols-3 gap-2">
                         <div>
-                            <label class="block text-[10px] font-medium text-purple-400 mb-1">Beljakovine (g)</label>
-                            <input type="number" step="any" id="mealProtein" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+                            <label class="block text-[10px] font-medium text-yellow-400 mb-1">Beljakovine (g)</label>
+                            <input type="number" step="any" id="mealProtein" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-yellow-400">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-medium text-sky-400 mb-1">OH (g)</label>
-                            <input type="number" step="any" id="mealCarbs" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                            <label class="block text-[10px] font-medium text-lime-400 mb-1">OH (g)</label>
+                            <input type="number" step="any" id="mealCarbs" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-lime-400">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-medium text-yellow-500 mb-1">Maščobe (g)</label>
-                            <input type="number" step="any" id="mealFat" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-yellow-500">
+                            <label class="block text-[10px] font-medium text-teal-300 mb-1">Maščobe (g)</label>
+                            <input type="number" step="any" id="mealFat" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-teal-400">
                         </div>
                     </div>
 
@@ -1242,163 +1251,224 @@
             return r1(duration * baseRate * mult);
         }
 
+        function calculatePersonalizedActivityGoal() {
+            const age = parseFloat(localStorage.getItem('user_age')) || 30;
+            const weight = parseFloat(localStorage.getItem('user_weight')) || 75;
+            const height = parseFloat(localStorage.getItem('user_height')) || 180;
+            const steps = parseFloat(localStorage.getItem('user_steps')) || 6000;
+            const goal = localStorage.getItem('user_goal') || 'maintain';
+
+            let targetMinutes = 180;
+            if (goal === 'lose') {
+                targetMinutes = 210;
+            } else if (goal === 'gain') {
+                targetMinutes = 180;
+            } else {
+                targetMinutes = 150;
+            }
+
+            if (steps < 5000) {
+                targetMinutes += 30;
+            } else if (steps > 10000) {
+                targetMinutes = Math.max(120, targetMinutes - 20);
+            }
+
+            if (age > 50) {
+                targetMinutes = Math.max(120, targetMinutes - 30);
+            } else if (age > 40) {
+                targetMinutes = Math.max(130, targetMinutes - 15);
+            }
+
+            if (height > 0) {
+                const bmi = weight / ((height / 100) ** 2);
+                if (bmi > 30) {
+                    targetMinutes = Math.min(targetMinutes, 180);
+                }
+            }
+
+            return Math.round(targetMinutes);
+        }
+
+        function getLocalDateStr(d) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function getMondayToSundayRange(d = new Date()) {
+            const curr = new Date(d);
+            const day = curr.getDay();
+            const diffToMonday = curr.getDate() - day + (day === 0 ? -6 : 1);
+            
+            const monday = new Date(curr);
+            monday.setDate(diffToMonday);
+            monday.setHours(0, 0, 0, 0);
+
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+            sunday.setHours(23, 59, 59, 999);
+
+            return { monday, sunday };
+        }
+
+        function formatDateSLO(d) {
+            const day = d.getDate();
+            const month = d.getMonth() + 1;
+            const year = d.getFullYear();
+            return `${day}. ${month}. ${year}`;
+        }
+
         // --- SHRANJEVANJE / UREJANJE / BRISANJE ---
         function saveActivity(e) {
             e.preventDefault();
             const editId = document.getElementById('actEditId').value;
+            const date = document.getElementById('actDate').value;
             const type = document.getElementById('actType').value;
-            const duration = parseInt(document.getElementById('actDuration').value);
+            const duration = parseInt(document.getElementById('actDuration').value) || 0;
             const intensity = document.getElementById('actIntensity').value;
-            
-            const actData = {
-                id: editId ? Number(editId) : Date.now(),
-                date: document.getElementById('actDate').value,
-                type, duration, intensity,
-                burned: r1(estimateBurnedCalories(type, duration, intensity)),
-                note: document.getElementById('actNote').value.trim(),
-                imgData: document.getElementById('actImgData').value || ''
-            };
+            const note = document.getElementById('actNote').value.trim();
+            const imgData = document.getElementById('actImgData').value;
+
+            const burnedCalories = estimateBurnedCalories(type, duration, intensity);
 
             if (editId) {
-                activities = activities.map(a => a.id === Number(editId) ? actData : a);
-                cancelEdit('activity');
+                const idx = activities.findIndex(a => a.id === editId);
+                if (idx !== -1) {
+                    activities[idx] = { ...activities[idx], date, type, duration, intensity, note, burnedCalories, imgData };
+                }
             } else {
-                activities.push(actData);
+                const newAct = {
+                    id: 'act_' + Date.now(),
+                    date, type, duration, intensity, note, burnedCalories, imgData
+                };
+                activities.push(newAct);
             }
 
             try {
                 localStorage.setItem('sport_activities', JSON.stringify(activities));
-            } catch (err) {
-                alert("Opozorilo: Pomnilnik brskalnika je poln.");
-            }
+            } catch(err) { console.error(err); }
 
-            document.getElementById('activityForm').reset();
-            document.getElementById('actDate').value = new Date().toISOString().split('T')[0];
-            document.getElementById('actImgData').value = '';
-            document.getElementById('actPhotoStatus').textContent = 'Slikaj ali izberi zaslon ure / vadbe za AI prepoznavo';
-            document.getElementById('actPhotoStatus').className = 'text-[10px] text-slate-400 mt-2';
+            cancelEdit('activity');
             renderApp();
+            if (document.getElementById('tabContent-history').classList.contains('hidden') === false) {
+                renderHistory();
+            }
         }
 
         function editActivity(id) {
             const act = activities.find(a => a.id === id);
             if (!act) return;
+            switchTab('activities');
             document.getElementById('actEditId').value = act.id;
             document.getElementById('actDate').value = act.date;
             document.getElementById('actType').value = act.type;
             document.getElementById('actDuration').value = act.duration;
-            document.getElementById('actIntensity').value = act.intensity;
+            document.getElementById('actIntensity').value = act.intensity || 'Srednja';
             document.getElementById('actNote').value = act.note || '';
             document.getElementById('actImgData').value = act.imgData || '';
 
-            document.getElementById('actFormTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-blue-400"></i> Uredi športno aktivnost`;
-            document.getElementById('actSubmitBtn').textContent = 'Posodobi aktivnost';
+            document.getElementById('actFormTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-blue-400"></i> Uredi aktivnost`;
+            document.getElementById('actSubmitBtn').textContent = 'Shrani spremembe';
             document.getElementById('actCancelBtn').classList.remove('hidden');
-
-            switchTab('activities');
-            window.scrollTo({ top: 300, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function deleteActivity(id) {
-            if (!confirm("Ali res želiš izbrisati to aktivnost?")) return;
-            activities = activities.filter(a => a.id !== id);
-            try {
-                localStorage.setItem('sport_activities', JSON.stringify(activities));
-            } catch (e) { console.error(e); }
-            renderApp();
-            renderHistory();
+            if (confirm("Res želiš izbrisati to aktivnost?")) {
+                activities = activities.filter(a => a.id !== id);
+                try {
+                    localStorage.setItem('sport_activities', JSON.stringify(activities));
+                } catch(err) { console.error(err); }
+                renderApp();
+                renderHistory();
+            }
         }
 
         function saveMeal(e) {
             e.preventDefault();
             const editId = document.getElementById('mealEditId').value;
-            
-            const mealData = {
-                id: editId ? Number(editId) : Date.now(),
-                date: document.getElementById('mealDate').value,
-                type: document.getElementById('mealType').value,
-                description: document.getElementById('mealDesc').value.trim(),
-                calories: r1(document.getElementById('mealCalories').value),
-                protein: r1(document.getElementById('mealProtein').value),
-                carbs: r1(document.getElementById('mealCarbs').value),
-                fat: r1(document.getElementById('mealFat').value),
-                imgData: document.getElementById('mealImgData').value || ''
-            };
+            const date = document.getElementById('mealDate').value;
+            const type = document.getElementById('mealType').value;
+            const desc = document.getElementById('mealDesc').value.trim();
+            const calories = parseFloat(document.getElementById('mealCalories').value) || 0;
+            const protein = parseFloat(document.getElementById('mealProtein').value) || 0;
+            const carbs = parseFloat(document.getElementById('mealCarbs').value) || 0;
+            const fat = parseFloat(document.getElementById('mealFat').value) || 0;
+            const imgData = document.getElementById('mealImgData').value;
 
             if (editId) {
-                meals = meals.map(m => m.id === Number(editId) ? mealData : m);
-                cancelEdit('meal');
+                const idx = meals.findIndex(m => m.id === editId);
+                if (idx !== -1) {
+                    meals[idx] = { ...meals[idx], date, type, description: desc, calories: r1(calories), protein: r1(protein), carbs: r1(carbs), fat: r1(fat), imgData };
+                }
             } else {
-                meals.push(mealData);
+                const newMeal = {
+                    id: 'meal_' + Date.now(),
+                    date, type, description: desc, calories: r1(calories), protein: r1(protein), carbs: r1(carbs), fat: r1(fat), imgData
+                };
+                meals.push(newMeal);
             }
 
             try {
                 localStorage.setItem('sport_meals', JSON.stringify(meals));
-            } catch (err) {
-                meals.forEach(m => { if (m.imgData && m.imgData.length > 500) m.imgData = ''; });
-                try {
-                    localStorage.setItem('sport_meals', JSON.stringify(meals));
-                } catch (innerErr) {
-                    alert("Napaka pri shranjevanju: Pomnilnik brskalnika je poln.");
-                }
-            }
+            } catch(err) { console.error(err); }
 
-            document.getElementById('mealForm').reset();
-            document.getElementById('mealDate').value = new Date().toISOString().split('T')[0];
-            document.getElementById('mealImgData').value = '';
-            document.getElementById('mealPhotoStatus').textContent = 'Slikaj obrok ali vpiši spodaj ter uporabi AI oceno';
-            document.getElementById('mealPhotoStatus').className = 'text-[10px] text-slate-400 mt-2';
-            document.getElementById('aiStatusText').textContent = '';
+            cancelEdit('meal');
             renderApp();
+            if (document.getElementById('tabContent-history').classList.contains('hidden') === false) {
+                renderHistory();
+            }
         }
 
         function editMeal(id) {
-            const m = meals.find(item => item.id === id);
-            if (!m) return;
-            document.getElementById('mealEditId').value = m.id;
-            document.getElementById('mealDate').value = m.date;
-            document.getElementById('mealType').value = m.type;
-            document.getElementById('mealDesc').value = m.description || '';
-            document.getElementById('mealCalories').value = m.calories || '';
-            document.getElementById('mealProtein').value = m.protein || '';
-            document.getElementById('mealCarbs').value = m.carbs || '';
-            document.getElementById('mealFat').value = m.fat || '';
-            document.getElementById('mealImgData').value = m.imgData || '';
+            const meal = meals.find(m => m.id === id);
+            if (!meal) return;
+            switchTab('meals');
+            document.getElementById('mealEditId').value = meal.id;
+            document.getElementById('mealDate').value = meal.date;
+            document.getElementById('mealType').value = meal.type;
+            document.getElementById('mealDesc').value = meal.description || '';
+            document.getElementById('mealCalories').value = r1(meal.calories || 0);
+            document.getElementById('mealProtein').value = r1(meal.protein || 0);
+            document.getElementById('mealCarbs').value = r1(meal.carbs || 0);
+            document.getElementById('mealFat').value = r1(meal.fat || 0);
+            document.getElementById('mealImgData').value = meal.imgData || '';
 
             document.getElementById('mealFormTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-amber-400"></i> Uredi obrok`;
-            document.getElementById('mealSubmitBtn').textContent = 'Posodobi obrok';
+            document.getElementById('mealSubmitBtn').textContent = 'Shrani spremembe';
             document.getElementById('mealCancelBtn').classList.remove('hidden');
-
-            switchTab('meals');
-            window.scrollTo({ top: 300, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function deleteMeal(id) {
-            if (!confirm("Ali res želiš izbrisati ta obrok?")) return;
-            meals = meals.filter(m => m.id !== id);
-            try {
-                localStorage.setItem('sport_meals', JSON.stringify(meals));
-            } catch (e) { console.error(e); }
-            renderApp();
-            renderHistory();
+            if (confirm("Res želiš izbrisati ta obrok?")) {
+                meals = meals.filter(m => m.id !== id);
+                try {
+                    localStorage.setItem('sport_meals', JSON.stringify(meals));
+                } catch(err) { console.error(err); }
+                renderApp();
+                renderHistory();
+            }
         }
 
         function cancelEdit(type) {
+            const today = new Date().toISOString().split('T')[0];
             if (type === 'activity') {
-                document.getElementById('activityForm').reset();
                 document.getElementById('actEditId').value = '';
                 document.getElementById('actImgData').value = '';
-                document.getElementById('actDate').value = new Date().toISOString().split('T')[0];
+                document.getElementById('activityForm').reset();
+                document.getElementById('actDate').value = today;
                 document.getElementById('actFormTitle').innerHTML = `<i class="fa-solid fa-circle-plus text-blue-400"></i> Dodaj športno aktivnost`;
                 document.getElementById('actSubmitBtn').textContent = 'Shrani aktivnost';
                 document.getElementById('actCancelBtn').classList.add('hidden');
                 document.getElementById('actPhotoStatus').textContent = 'Slikaj ali izberi zaslon ure / vadbe za AI prepoznavo';
                 document.getElementById('actPhotoStatus').className = 'text-[10px] text-slate-400 mt-2';
             } else if (type === 'meal') {
-                document.getElementById('mealForm').reset();
                 document.getElementById('mealEditId').value = '';
                 document.getElementById('mealImgData').value = '';
-                document.getElementById('mealDate').value = new Date().toISOString().split('T')[0];
+                document.getElementById('mealForm').reset();
+                document.getElementById('mealDate').value = today;
                 document.getElementById('mealFormTitle').innerHTML = `<i class="fa-solid fa-circle-plus text-amber-400"></i> Dodaj obrok`;
                 document.getElementById('mealSubmitBtn').textContent = 'Shrani obrok';
                 document.getElementById('mealCancelBtn').classList.add('hidden');
@@ -1408,316 +1478,401 @@
             }
         }
 
+        // --- TEŽA ---
         function logWeight() {
             const date = document.getElementById('weightDateInput').value;
-            const val = r1(document.getElementById('weightValueInput').value);
-            if (!date || !val) {
-                alert('Vnesi datum in veljavno težo!');
+            const val = parseFloat(document.getElementById('weightValueInput').value);
+            if (!date || !val || isNaN(val)) {
+                alert("Prosim, vnesi veljaven datum in težo!");
                 return;
             }
-            
+
             const existingIdx = weightHistory.findIndex(w => w.date === date);
-            if (existingIdx >= 0) {
-                weightHistory[existingIdx].weight = val;
+            if (existingIdx !== -1) {
+                weightHistory[existingIdx].weight = r1(val);
             } else {
-                weightHistory.push({ date, weight: val });
+                weightHistory.push({ id: 'w_' + Date.now(), date, weight: r1(val) });
             }
-            
+
             weightHistory.sort((a, b) => new Date(a.date) - new Date(b.date));
+
             try {
                 localStorage.setItem('sport_weights', JSON.stringify(weightHistory));
-            } catch (e) { console.error(e); }
-            
+            } catch(err) { console.error(err); }
+
+            if (weightHistory.length > 0) {
+                const latest = weightHistory[weightHistory.length - 1];
+                localStorage.setItem('user_weight', latest.weight);
+            }
+
             document.getElementById('weightValueInput').value = '';
             updateChart();
-            alert(`Teža ${val} kg za ${date} je shranjena.`);
+            renderApp();
+            alert("Teža uspešno zabeležena!");
+        }
+
+        function deleteWeight(id) {
+            if (confirm("Izbrišem ta vnos teže?")) {
+                weightHistory = weightHistory.filter(w => w.id !== id);
+                try {
+                    localStorage.setItem('sport_weights', JSON.stringify(weightHistory));
+                } catch(err) { console.error(err); }
+                updateChart();
+                renderApp();
+            }
         }
 
         function initChart() {
-            const ctx = document.getElementById('weightChart').getContext('2d');
-            Chart.defaults.color = '#94a3b8';
-            Chart.defaults.font.family = "'Inter', sans-serif";
-            
+            const ctx = document.getElementById('weightChart');
+            if (!ctx) return;
+
+            weightHistory.sort((a, b) => new Date(a.date) - new Date(b.date));
+
             weightChartInstance = new Chart(ctx, {
                 type: 'line',
-                data: { labels: [], datasets: [{
-                    label: 'Teža (kg)',
-                    data: [],
-                    borderColor: '#22d3ee',
-                    backgroundColor: 'rgba(34, 211, 238, 0.1)',
-                    borderWidth: 2,
-                    pointBackgroundColor: '#0f172a',
-                    pointBorderColor: '#22d3ee',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    tension: 0.3,
-                    fill: true
-                }]},
+                data: {
+                    labels: weightHistory.map(w => w.date),
+                    datasets: [{
+                        label: 'Telesna teža (kg)',
+                        data: weightHistory.map(w => w.weight),
+                        borderColor: '#06b6d4',
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#06b6d4',
+                        pointRadius: 4
+                    }]
+                },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: {
-                        backgroundColor: '#1e293b',
-                        titleColor: '#f8fafc',
-                        bodyColor: '#cbd5e1',
-                        borderColor: '#334155',
-                        borderWidth: 1,
-                        padding: 10,
-                        displayColors: false,
-                        callbacks: { label: (ctx) => `${ctx.parsed.y} kg` }
-                    }},
                     scales: {
-                        y: { grid: { color: '#334155', drawBorder: false }, border: { display: false } },
-                        x: { grid: { display: false, drawBorder: false }, border: { display: false }, ticks: { maxRotation: 45, minRotation: 45 } }
+                        x: {
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8', font: { size: 10 } }
+                        },
+                        y: {
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8', font: { size: 10 } }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#f8fafc', font: { size: 11 } } }
                     }
                 }
             });
-            updateChart();
         }
 
         function updateChart() {
-            if (!weightChartInstance) return;
-            const recent = weightHistory.slice(-14);
-            weightChartInstance.data.labels = recent.map(w => w.date.split('-').slice(1).join('.'));
-            weightChartInstance.data.datasets[0].data = recent.map(w => w.weight);
+            if (!weightChartInstance) {
+                initChart();
+                return;
+            }
+            weightHistory.sort((a, b) => new Date(a.date) - new Date(b.date));
+            weightChartInstance.data.labels = weightHistory.map(w => w.date);
+            weightChartInstance.data.datasets[0].data = weightHistory.map(w => w.weight);
             weightChartInstance.update();
         }
 
-        // --- RENDER ---
+        // --- RENDER APP ---
         function renderApp() {
-            const today = new Date().toISOString().split('T')[0];
-            const metab = calculateUserMetabolics();
-            const macros = computeMacroTargets(metab.targetCalories, metab.weight, metab.goal);
+            const todayStr = getLocalDateStr(new Date());
+            const metabolics = calculateUserMetabolics();
             
-            let goalTextStr = "Ohranjanje";
-            let goalColor = "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
-            if (metab.goal === 'lose') { goalTextStr = "Hujšanje"; goalColor = "text-blue-400 bg-blue-500/10 border-blue-500/20"; }
-            if (metab.goal === 'gain') { goalTextStr = "Masa"; goalColor = "text-amber-400 bg-amber-500/10 border-amber-500/20"; }
-            const badge = document.getElementById('userGoalBadge');
-            badge.className = `text-[10px] font-medium px-2 py-0.5 rounded-full border ${goalColor}`;
-            badge.textContent = `Cilj: ${goalTextStr}`;
+            const todayMeals = meals.filter(m => m.date === todayStr);
+            const todayActs = activities.filter(a => a.date === todayStr);
 
-            const todayActivities = activities.filter(a => a.date === today);
-            const todayMeals = meals.filter(m => m.date === today);
-            
-            const todaySportBurn = r1(todayActivities.reduce((sum, a) => sum + (Number(a.burned) || 0), 0));
-            const todayTotalBurn = r1(metab.passiveBurn + todaySportBurn);
-            const todayCalories = r1(todayMeals.reduce((sum, m) => sum + (Number(m.calories) || 0), 0));
-            const remainingCal = r1(metab.targetCalories - todayCalories);
-            
-            const todayProtein = r1(todayMeals.reduce((sum, m) => sum + (Number(m.protein) || 0), 0));
-            const todayCarbs = r1(todayMeals.reduce((sum, m) => sum + (Number(m.carbs) || 0), 0));
-            const todayFat = r1(todayMeals.reduce((sum, m) => sum + (Number(m.fat) || 0), 0));
+            const todayCal = todayMeals.reduce((sum, m) => sum + (Number(m.calories) || 0), 0);
+            const todayProt = todayMeals.reduce((sum, m) => sum + (Number(m.protein) || 0), 0);
+            const todayCarb = todayMeals.reduce((sum, m) => sum + (Number(m.carbs) || 0), 0);
+            const todayFatVal = todayMeals.reduce((sum, m) => sum + (Number(m.fat) || 0), 0);
 
-            document.getElementById('todayPassiveBurn').textContent = `${metab.passiveBurn} kcal`;
-            document.getElementById('todaySportBurn').textContent = `${todaySportBurn} kcal`;
-            document.getElementById('todayTotalBurn').textContent = `${todayTotalBurn} kcal`;
-            
-            document.getElementById('todayCalories').textContent = `${todayCalories} kcal`;
-            document.getElementById('todayCalTarget').textContent = `Cilj vnos: ~${metab.targetCalories} kcal`;
-            
-            let calPct = r1(Math.min((todayCalories / metab.targetCalories) * 100, 100)) || 0;
-            document.getElementById('todayCalProgress').style.width = `${calPct}%`;
-            
-            if (calPct > 100) document.getElementById('todayCalProgress').classList.replace('bg-amber-500', 'bg-rose-500');
-            else document.getElementById('todayCalProgress').classList.replace('bg-rose-500', 'bg-amber-500');
+            const todaySportBurn = todayActs.reduce((sum, a) => sum + (Number(a.burnedCalories) || 0), 0);
+            const todayTotalBurn = metabolics.passiveBurn + todaySportBurn;
 
-            const calRemEl = document.getElementById('calRemainingText');
-            if (remainingCal >= 0) {
-                calRemEl.textContent = `Na voljo še: ${remainingCal} kcal`;
-                calRemEl.className = "text-[10px] text-emerald-400/80 font-medium mt-1 mb-2 block";
+            const macroTargets = computeMacroTargets(metabolics.targetCalories, metabolics.weight, metabolics.goal);
+
+            document.getElementById('userGoalBadge').textContent = 
+                metabolics.goal === 'lose' ? 'Cilj: Hujšanje' :
+                metabolics.goal === 'gain' ? 'Cilj: Pridobivanje mase' : 'Cilj: Ohranjanje';
+
+            document.getElementById('todayPassiveBurn').textContent = `${r1(metabolics.passiveBurn)} kcal`;
+            document.getElementById('todaySportBurn').textContent = `${r1(todaySportBurn)} kcal`;
+            document.getElementById('todayTotalBurn').textContent = `${r1(todayTotalBurn)} kcal`;
+
+            // Dnevni cilj športne porabe (300 kcal ali po meri)
+            const dailySportGoal = 300;
+            document.getElementById('dailyActiveGoalText').textContent = `${r1(todaySportBurn)} / ${dailySportGoal} kcal`;
+            const sportPct = Math.min(100, Math.round((todaySportBurn / dailySportGoal) * 100));
+            document.getElementById('dailyActiveProgress').style.width = `${sportPct}%`;
+            
+            const sportRem = dailySportGoal - todaySportBurn;
+            document.getElementById('dailyActiveRemainingText').textContent = 
+                sportRem > 0 ? `Do dnevnega športnega cilja še ${r1(sportRem)} kcal` : `Dnevni športni cilj dosežen! (+${r1(Math.abs(sportRem))} kcal)`;
+
+            // Prehrana
+            document.getElementById('todayCalTarget').textContent = `Cilj vnos: ~${r1(metabolics.targetCalories)} kcal`;
+            document.getElementById('todayCalories').textContent = `${r1(todayCal)} kcal`;
+            
+            const calPct = Math.round((todayCal / metabolics.targetCalories) * 100);
+            document.getElementById('calStatusText').textContent = `${calPct}% cilja`;
+            
+            const calProgressBar = document.getElementById('todayCalProgress');
+            calProgressBar.style.width = `${Math.min(100, calPct)}%`;
+
+            // OBARVANJE VRSTICE KALORIJ IN MAKROHRANIL OB PRESEŽKU
+            if (todayCal > metabolics.targetCalories) {
+                calProgressBar.className = "bg-rose-500 h-2 rounded-full transition-all duration-500";
             } else {
-                calRemEl.textContent = `Preseženo za: ${Math.abs(remainingCal)} kcal`;
-                calRemEl.className = "text-[10px] text-rose-400/80 font-medium mt-1 mb-2 block";
-            }
-            document.getElementById('calStatusText').textContent = `${calPct}%`;
-
-            document.getElementById('todayProtein').textContent = `${todayProtein}g`;
-            document.getElementById('proteinTargetText').textContent = `/${macros.proteinG}g`;
-            document.getElementById('proteinProgress').style.width = `${Math.min((todayProtein / macros.proteinG) * 100, 100)}%`;
-
-            document.getElementById('todayCarbs').textContent = `${todayCarbs}g`;
-            document.getElementById('carbsTargetText').textContent = `/${macros.carbsG}g`;
-            document.getElementById('carbsProgress').style.width = `${Math.min((todayCarbs / macros.carbsG) * 100, 100)}%`;
-
-            document.getElementById('todayFat').textContent = `${todayFat}g`;
-            document.getElementById('fatTargetText').textContent = `/${macros.fatG}g`;
-            document.getElementById('fatProgress').style.width = `${Math.min((todayFat / macros.fatG) * 100, 100)}%`;
-
-            // Daily Active Goal
-            let dailyActiveGoal = 200;
-            if (metab.goal === 'lose') dailyActiveGoal = 400;
-            else if (metab.goal === 'gain') dailyActiveGoal = 150;
-            
-            // Add negative remaining calories to the daily active goal
-            if (remainingCal < 0) {
-                dailyActiveGoal += Math.abs(remainingCal);
+                calProgressBar.className = "bg-amber-500 h-2 rounded-full transition-all duration-500";
             }
 
-            document.getElementById('dailyActiveGoalText').textContent = `${todaySportBurn} / ${dailyActiveGoal} kcal`;
-            let activePct = r1(Math.min((todaySportBurn / dailyActiveGoal) * 100, 100)) || 0;
-            document.getElementById('dailyActiveProgress').style.width = `${activePct}%`;
-            
-            const activeRemEl = document.getElementById('dailyActiveRemainingText');
-            if (todaySportBurn >= dailyActiveGoal) {
-                activeRemEl.textContent = `Bravo! Dnevni cilj aktivnosti je dosežen.`;
-                activeRemEl.className = "text-[10px] text-emerald-400 mt-1 block font-medium";
+            const calDiff = todayCal - metabolics.targetCalories;
+            if (calDiff > 0) {
+                document.getElementById('calRemainingText').textContent = `Presežek: +${r1(calDiff)} kcal nad ciljem!`;
+                document.getElementById('calRemainingText').className = "text-[10px] text-rose-400 font-semibold mt-1 mb-2 block";
             } else {
-                activeRemEl.textContent = `Za dosego cilja porabi še ${r1(dailyActiveGoal - todaySportBurn)} kcal z vadbo.`;
-                activeRemEl.className = "text-[10px] text-slate-400 mt-1 block";
+                document.getElementById('calRemainingText').textContent = `Preostane še ${r1(Math.abs(calDiff))} kcal do cilja`;
+                document.getElementById('calRemainingText').className = "text-[10px] text-slate-500 mt-1 mb-2 block";
             }
+
+            // Makrohranila
+            document.getElementById('proteinTargetText').textContent = `/${r1(macroTargets.proteinG)}g`;
+            document.getElementById('todayProtein').textContent = `${r1(todayProt)}g`;
+            const protProgressBar = document.getElementById('proteinProgress');
+            protProgressBar.style.width = `${Math.min(100, (todayProt / macroTargets.proteinG) * 100)}%`;
+            protProgressBar.className = todayProt > macroTargets.proteinG ? "bg-rose-500 h-1 rounded-full transition-all duration-500" : "bg-yellow-400 h-1 rounded-full transition-all duration-500";
+
+            document.getElementById('carbsTargetText').textContent = `/${r1(macroTargets.carbsG)}g`;
+            document.getElementById('todayCarbs').textContent = `${r1(todayCarb)}g`;
+            const carbsProgressBar = document.getElementById('carbsProgress');
+            carbsProgressBar.style.width = `${Math.min(100, (todayCarb / macroTargets.carbsG) * 100)}%`;
+            carbsProgressBar.className = todayCarb > macroTargets.carbsG ? "bg-rose-500 h-1 rounded-full transition-all duration-500" : "bg-lime-400 h-1 rounded-full transition-all duration-500";
+
+            document.getElementById('fatTargetText').textContent = `/${r1(macroTargets.fatG)}g`;
+            document.getElementById('todayFat').textContent = `${r1(todayFatVal)}g`;
+            const fatProgressBar = document.getElementById('fatProgress');
+            fatProgressBar.style.width = `${Math.min(100, (todayFatVal / macroTargets.fatG) * 100)}%`;
+            fatProgressBar.className = todayFatVal > macroTargets.fatG ? "bg-rose-500 h-1 rounded-full transition-all duration-500" : "bg-teal-400 h-1 rounded-full transition-all duration-500";
 
             // Voda
             document.getElementById('todayWaterText').textContent = `${waterData.amount} / ${WATER_GOAL} ml`;
-            
-            // Tedenski
-            const now = new Date();
-            const startOfWeek = new Date(now);
-            const day = now.getDay() || 7; 
-            startOfWeek.setDate(now.getDate() - day + 1);
-            startOfWeek.setHours(0,0,0,0);
-            
-            const daysInWeekSoFar = day;
-            const weekStartStr = startOfWeek.toISOString().split('T')[0];
-            document.getElementById('currentWeekRange').textContent = `Od ${weekStartStr.split('-').reverse().join('.')} do danes`;
 
-            const weeklyActivities = activities.filter(a => new Date(a.date) >= startOfWeek);
-            const weeklyMeals = meals.filter(m => new Date(m.date) >= startOfWeek);
+            // TEDENSKI POVZETEK & NETO PRERAČUN PO DNEVIH
+            const { monday, sunday } = getMondayToSundayRange(new Date());
+            document.getElementById('currentWeekRange').textContent = `${formatDateSLO(monday)} – ${formatDateSLO(sunday)}`;
 
-            const weeklyMinutes = r1(weeklyActivities.reduce((sum, a) => sum + (Number(a.duration) || 0), 0));
-            const weeklySportBurn = r1(weeklyActivities.reduce((sum, a) => sum + (Number(a.burned) || 0), 0));
-            const weeklyCalories = r1(weeklyMeals.reduce((sum, m) => sum + (Number(m.calories) || 0), 0));
-            
-            const weeklyPassiveBurn = r1(daysInWeekSoFar * metab.passiveBurn);
-            const weeklyTotalBurn = r1(weeklyPassiveBurn + weeklySportBurn);
-            const net = r1(weeklyCalories - weeklyTotalBurn);
+            const weekDays = [];
+            let cur = new Date(monday);
+            const dayNames = ['Pon', 'Tor', 'Sre', 'Čet', 'Pet', 'Sob', 'Ned'];
 
-            document.getElementById('weeklyMinutes').textContent = `${weeklyMinutes} min`;
-            document.getElementById('weeklyBurned').textContent = `${weeklySportBurn} kcal`;
-            document.getElementById('weeklyCalories').textContent = `${weeklyCalories} kcal`;
-            
-            const netEl = document.getElementById('netCalories');
-            if (net > 0) {
-                netEl.textContent = `+${net} kcal (Suficit)`;
-                netEl.className = "font-bold text-rose-400";
-            } else if (net < 0) {
-                netEl.textContent = `${net} kcal (Deficit)`;
-                netEl.className = "font-bold text-emerald-400";
-            } else {
-                netEl.textContent = `0 kcal (Ravnovesje)`;
-                netEl.className = "font-bold text-slate-300";
-            }
-
-            const pct = Math.min((weeklyMinutes / 150) * 100, 100);
-            document.getElementById('goalPercentage').textContent = `${r1(pct)}%`;
-            document.getElementById('progressBar').style.width = `${pct}%`;
-
-            const burnPct = Math.min((weeklySportBurn / WEEKLY_BURN_GOAL) * 100, 100);
-            document.getElementById('weeklyBurnGoalText').textContent = `${weeklySportBurn} / ${WEEKLY_BURN_GOAL} kcal (${r1(burnPct)}%)`;
-            document.getElementById('weeklyBurnProgressBar').style.width = `${burnPct}%`;
-
-            // Liste
-            const actList = document.getElementById('todayActivityList');
-            actList.innerHTML = '';
-            if (todayActivities.length === 0) {
-                actList.innerHTML = '<p class="text-xs text-slate-500 italic">Danes ni beleženih aktivnosti.</p>';
-            } else {
-                todayActivities.forEach(a => {
-                    actList.innerHTML += `
-                    <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 flex justify-between items-center group relative overflow-hidden">
-                        <div class="flex-1 min-w-0 pr-3">
-                            <h4 class="font-bold text-slate-200 text-sm truncate flex items-center gap-2">
-                                ${a.type} ${a.imgData ? '<i class="fa-solid fa-camera text-[10px] text-blue-400/50" title="S sliko"></i>' : ''}
-                            </h4>
-                            <p class="text-[11px] text-slate-400 mt-0.5 truncate">${a.duration} min • ${a.intensity} napor • ${a.note || '/'}</p>
-                        </div>
-                        <div class="text-right flex-shrink-0">
-                            <span class="block text-emerald-400 font-bold text-sm">${a.burned} kcal</span>
-                            <div class="flex gap-2 justify-end mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button onclick="editActivity(${a.id})" class="text-blue-400 hover:text-blue-300 text-[11px]"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deleteActivity(${a.id})" class="text-rose-400 hover:text-rose-300 text-[11px]"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        </div>
-                    </div>`;
+            for (let i = 0; i < 7; i++) {
+                const dateStr = getLocalDateStr(cur);
+                weekDays.push({
+                    dateStr,
+                    dayName: dayNames[i],
+                    isToday: dateStr === todayStr,
+                    isPastOrToday: dateStr <= todayStr
                 });
+                cur.setDate(cur.getDate() + 1);
             }
 
+            let weeklyCalSum = 0;
+            let weeklySportBurnSum = 0;
+            let weeklyMinutesSum = 0;
+            let weeklyTotalBurnSum = 0;
+
+            const breakdownContainer = document.getElementById('weeklyDailyNetBreakdown');
+            breakdownContainer.innerHTML = '';
+
+            weekDays.forEach(day => {
+                const dayMeals = meals.filter(m => m.date === day.dateStr);
+                const dayActs = activities.filter(a => a.date === day.dateStr);
+
+                const dCal = dayMeals.reduce((s, m) => s + (Number(m.calories) || 0), 0);
+                const dSport = dayActs.reduce((s, a) => s + (Number(a.burnedCalories) || 0), 0);
+                const dMin = dayActs.reduce((s, a) => s + (Number(a.duration) || 0), 0);
+
+                const dPassive = day.isPastOrToday ? metabolics.passiveBurn : 0;
+                const dTotalBurn = dPassive + dSport;
+                const dNet = dCal - dTotalBurn;
+
+                weeklyCalSum += dCal;
+                weeklySportBurnSum += dSport;
+                weeklyMinutesSum += dMin;
+                if (day.isPastOrToday) {
+                    weeklyTotalBurnSum += dTotalBurn;
+                }
+
+                // Ustvari kartico za posamezen dan v tednu
+                const card = document.createElement('div');
+                card.className = `p-2 rounded-xl text-center border transition-all ${
+                    day.isToday 
+                        ? 'bg-blue-950/80 border-blue-500 ring-1 ring-blue-500 shadow-md shadow-blue-900/30' 
+                        : 'bg-slate-950/40 border-slate-800'
+                }`;
+
+                const netColor = dNet > 0 ? 'text-rose-400 font-bold' : (dNet < 0 ? 'text-emerald-400 font-bold' : 'text-slate-400');
+                const netFormatted = dNet > 0 ? `+${r1(dNet)}` : `${r1(dNet)}`;
+
+                card.innerHTML = `
+                    <div class="text-[10px] font-bold ${day.isToday ? 'text-blue-400' : 'text-slate-400'} flex items-center justify-center gap-1">
+                        ${day.dayName}
+                        ${day.isToday ? '<span class="text-[8px] bg-blue-500 text-white px-1 rounded font-normal">Danes</span>' : ''}
+                    </div>
+                    <div class="mt-1 space-y-0.5 text-[9px]">
+                        <div class="text-amber-300 font-medium" title="Zaužito">+${r1(dCal)}</div>
+                        <div class="text-slate-400" title="Skupna poraba">-${r1(dTotalBurn)}</div>
+                        <div class="border-t border-slate-800 pt-0.5 ${netColor}" title="Neto razlika">
+                            ${day.isPastOrToday ? netFormatted : '-'}
+                        </div>
+                    </div>
+                `;
+                breakdownContainer.appendChild(card);
+            });
+
+            const weeklyNet = weeklyCalSum - weeklyTotalBurnSum;
+            document.getElementById('weeklyMinutes').textContent = `${weeklyMinutesSum} min`;
+            document.getElementById('weeklyBurned').textContent = `${r1(weeklySportBurnSum)} kcal`;
+            document.getElementById('weeklyCalories').textContent = `${r1(weeklyCalSum)} kcal`;
+
+            const netEl = document.getElementById('netCalories');
+            netEl.textContent = `${weeklyNet > 0 ? '+' : ''}${r1(weeklyNet)} kcal`;
+            netEl.className = weeklyNet > 0 ? "font-bold text-sm text-rose-400" : "font-bold text-sm text-emerald-400";
+
+            // Tedenski cilj aktivnosti
+            const targetMin = calculatePersonalizedActivityGoal();
+            document.getElementById('weeklyActGoalLabel').textContent = `Personaliziran cilj aktivnosti (${targetMin} min/teden)`;
+            const actGoalPct = Math.min(100, Math.round((weeklyMinutesSum / targetMin) * 100));
+            document.getElementById('goalPercentage').textContent = `${actGoalPct}%`;
+            document.getElementById('progressBar').style.width = `${actGoalPct}%`;
+
+            const burnGoalPct = Math.min(100, Math.round((weeklySportBurnSum / WEEKLY_BURN_GOAL) * 100));
+            document.getElementById('weeklyBurnGoalText').textContent = `${r1(weeklySportBurnSum)} / ${WEEKLY_BURN_GOAL} kcal (${burnGoalPct}%)`;
+            document.getElementById('weeklyBurnProgressBar').style.width = `${burnGoalPct}%`;
+
+            renderTodayLists(todayMeals, todayActs);
+        }
+
+        function renderTodayLists(todayMeals, todayActs) {
             const mealList = document.getElementById('todayMealList');
             mealList.innerHTML = '';
             if (todayMeals.length === 0) {
-                mealList.innerHTML = '<p class="text-xs text-slate-500 italic">Danes ni beleženih obrokov.</p>';
+                mealList.innerHTML = `<p class="text-xs text-slate-500 italic">Danes še nimaš vnesenih obrokov.</p>`;
             } else {
                 todayMeals.forEach(m => {
-                    mealList.innerHTML += `
-                    <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 flex justify-between items-center group relative overflow-hidden">
-                        <div class="flex-1 min-w-0 pr-3">
-                            <div class="flex items-center gap-2 mb-0.5">
-                                <span class="text-[10px] uppercase font-bold text-amber-500/80 bg-amber-500/10 px-1.5 py-0.5 rounded">${m.type}</span>
-                                ${m.imgData ? '<i class="fa-solid fa-camera text-[10px] text-amber-400/50" title="S sliko"></i>' : ''}
-                            </div>
-                            <h4 class="font-medium text-slate-200 text-xs line-clamp-2">${escapeHtml(m.description)}</h4>
-                            <div class="flex gap-2 mt-1 text-[10px]">
-                                <span class="text-purple-400">B: ${m.protein}g</span>
-                                <span class="text-sky-400">OH: ${m.carbs}g</span>
-                                <span class="text-yellow-500">M: ${m.fat}g</span>
-                            </div>
-                        </div>
-                        <div class="text-right flex-shrink-0">
-                            <span class="block text-amber-400 font-bold text-sm">${m.calories} kcal</span>
-                            <div class="flex gap-2 justify-end mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button onclick="editMeal(${m.id})" class="text-blue-400 hover:text-blue-300 text-[11px]"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deleteMeal(${m.id})" class="text-rose-400 hover:text-rose-300 text-[11px]"><i class="fa-solid fa-trash"></i></button>
+                    const div = document.createElement('div');
+                    div.className = "bg-slate-900 border border-slate-800 p-3 rounded-xl flex justify-between items-center";
+                    div.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            ${m.imgData ? `<img src="data:image/jpeg;base64,${m.imgData}" class="w-10 h-10 object-cover rounded-lg border border-slate-700">` : ''}
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-bold text-amber-400">${escapeHtml(m.type)}</span>
+                                    <span class="text-xs text-white font-medium">${escapeHtml(m.description)}</span>
+                                </div>
+                                <div class="text-[10px] text-slate-400 mt-0.5">
+                                    B: ${r1(m.protein)}g | OH: ${r1(m.carbs)}g | M: ${r1(m.fat)}g
+                                </div>
                             </div>
                         </div>
-                    </div>`;
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-bold text-amber-300">${r1(m.calories)} kcal</span>
+                            <div class="flex items-center gap-1">
+                                <button onclick="editMeal('${m.id}')" class="text-slate-400 hover:text-blue-400 p-1 text-xs"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteMeal('${m.id}')" class="text-slate-400 hover:text-rose-400 p-1 text-xs"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                    mealList.appendChild(div);
+                });
+            }
+
+            const actList = document.getElementById('todayActivityList');
+            actList.innerHTML = '';
+            if (todayActs.length === 0) {
+                actList.innerHTML = `<p class="text-xs text-slate-500 italic">Danes še nimaš vnesenih športnih aktivnosti.</p>`;
+            } else {
+                todayActs.forEach(a => {
+                    const div = document.createElement('div');
+                    div.className = "bg-slate-900 border border-slate-800 p-3 rounded-xl flex justify-between items-center";
+                    div.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            ${a.imgData ? `<img src="data:image/jpeg;base64,${a.imgData}" class="w-10 h-10 object-cover rounded-lg border border-slate-700">` : ''}
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-bold text-blue-400">${escapeHtml(a.type)}</span>
+                                    <span class="text-xs text-slate-300">(${a.duration} min, ${escapeHtml(a.intensity || 'Srednja')})</span>
+                                </div>
+                                ${a.note ? `<div class="text-[10px] text-slate-400 mt-0.5">${escapeHtml(a.note)}</div>` : ''}
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-bold text-emerald-400">-${r1(a.burnedCalories)} kcal</span>
+                            <div class="flex items-center gap-1">
+                                <button onclick="editActivity('${a.id}')" class="text-slate-400 hover:text-blue-400 p-1 text-xs"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteActivity('${a.id}')" class="text-slate-400 hover:text-rose-400 p-1 text-xs"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                    actList.appendChild(div);
                 });
             }
         }
 
         function renderHistory() {
-            const date = document.getElementById('historyDateFilter').value;
-            const histAct = activities.filter(a => a.date === date);
-            const histMeals = meals.filter(m => m.date === date);
+            const filterDate = document.getElementById('historyDateFilter').value;
+            if (!filterDate) return;
 
-            const mList = document.getElementById('historyMealList');
-            mList.innerHTML = '';
-            if (histMeals.length === 0) {
-                mList.innerHTML = '<p class="text-xs text-slate-500 italic">Ni zapisov obrokov za ta dan.</p>';
+            const filteredMeals = meals.filter(m => m.date === filterDate);
+            const historyMealContainer = document.getElementById('historyMealList');
+            historyMealContainer.innerHTML = '';
+
+            if (filteredMeals.length === 0) {
+                historyMealContainer.innerHTML = `<p class="text-xs text-slate-500 italic">Za ta datum ni vnesenih obrokov.</p>`;
             } else {
-                histMeals.forEach(m => {
-                    mList.innerHTML += `
-                    <div class="bg-slate-900/40 p-3 rounded-lg border border-slate-800 text-xs">
-                        <div class="flex justify-between font-bold text-slate-300 mb-1">
-                            <span>${m.type}</span>
-                            <span class="text-amber-400">${m.calories} kcal</span>
+                filteredMeals.forEach(m => {
+                    const div = document.createElement('div');
+                    div.className = "bg-slate-900/60 border border-slate-800 p-2.5 rounded-xl flex justify-between items-center text-xs";
+                    div.innerHTML = `
+                        <div>
+                            <span class="font-bold text-amber-400">${escapeHtml(m.type)}:</span>
+                            <span class="text-slate-200 ml-1">${escapeHtml(m.description)}</span>
+                            <span class="text-[10px] text-slate-400 block">B: ${r1(m.protein)}g | OH: ${r1(m.carbs)}g | M: ${r1(m.fat)}g</span>
                         </div>
-                        <p class="text-slate-400 line-clamp-2 mb-1">${escapeHtml(m.description)}</p>
-                        <div class="flex gap-3 text-[10px] text-slate-500 mt-1 pt-1 border-t border-slate-800/50">
-                            <span>B: ${m.protein}g</span>
-                            <span>OH: ${m.carbs}g</span>
-                            <span>M: ${m.fat}g</span>
-                            ${m.imgData ? '<span class="ml-auto text-amber-500/50"><i class="fa-solid fa-image"></i> Slika</span>' : ''}
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-amber-300">${r1(m.calories)} kcal</span>
+                            <button onclick="editMeal('${m.id}')" class="text-slate-400 hover:text-blue-400 p-1"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteMeal('${m.id}')" class="text-slate-400 hover:text-rose-400 p-1"><i class="fa-solid fa-trash"></i></button>
                         </div>
-                    </div>`;
+                    `;
+                    historyMealContainer.appendChild(div);
                 });
             }
 
-            const aList = document.getElementById('historyActList');
-            aList.innerHTML = '';
-            if (histAct.length === 0) {
-                aList.innerHTML = '<p class="text-xs text-slate-500 italic">Ni zapisov aktivnosti za ta dan.</p>';
+            const filteredActs = activities.filter(a => a.date === filterDate);
+            const historyActContainer = document.getElementById('historyActList');
+            historyActContainer.innerHTML = '';
+
+            if (filteredActs.length === 0) {
+                historyActContainer.innerHTML = `<p class="text-xs text-slate-500 italic">Za ta datum ni vnesenih aktivnosti.</p>`;
             } else {
-                histAct.forEach(a => {
-                    aList.innerHTML += `
-                    <div class="bg-slate-900/40 p-3 rounded-lg border border-slate-800 text-xs">
-                        <div class="flex justify-between font-bold text-slate-300 mb-1">
-                            <span>${a.type}</span>
-                            <span class="text-emerald-400">${a.burned} kcal</span>
+                filteredActs.forEach(a => {
+                    const div = document.createElement('div');
+                    div.className = "bg-slate-900/60 border border-slate-800 p-2.5 rounded-xl flex justify-between items-center text-xs";
+                    div.innerHTML = `
+                        <div>
+                            <span class="font-bold text-blue-400">${escapeHtml(a.type)}:</span>
+                            <span class="text-slate-200 ml-1">${a.duration} min (${escapeHtml(a.intensity || 'Srednja')})</span>
+                            ${a.note ? `<span class="text-[10px] text-slate-400 block">${escapeHtml(a.note)}</span>` : ''}
                         </div>
-                        <p class="text-slate-400">${a.duration} min, ${a.intensity.toLowerCase()} napor</p>
-                        ${a.note ? `<p class="text-slate-500 mt-1 pt-1 border-t border-slate-800/50 line-clamp-1 italic">${escapeHtml(a.note)}</p>` : ''}
-                    </div>`;
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-emerald-400">-${r1(a.burnedCalories)} kcal</span>
+                            <button onclick="editActivity('${a.id}')" class="text-slate-400 hover:text-blue-400 p-1"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteActivity('${a.id}')" class="text-slate-400 hover:text-rose-400 p-1"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    `;
+                    historyActContainer.appendChild(div);
                 });
             }
         }
