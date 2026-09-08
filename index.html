@@ -132,7 +132,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:text-center mt-1 border-t border-slate-800/80 pt-2">
                         <div>
                             <div class="flex justify-between items-baseline mb-0.5">
-                                <span class="text-[10px] text-slate-400">Beljak.</span>
+                                <span class="text-[10px] text-slate-400">Beljakovine</span>
                                 <span id="proteinTargetText" class="text-[9px] text-slate-500">/0g</span>
                             </div>
                             <span id="todayProtein" class="text-xs font-bold text-yellow-400 block">0g</span>
@@ -142,7 +142,7 @@
                         </div>
                         <div>
                             <div class="flex justify-between items-baseline mb-0.5">
-                                <span class="text-[10px] text-slate-400">OH</span>
+                                <span class="text-[10px] text-slate-400">Ogljikovi hidrati</span>
                                 <span id="carbsTargetText" class="text-[9px] text-slate-500">/0g</span>
                             </div>
                             <span id="todayCarbs" class="text-xs font-bold text-lime-400 block">0g</span>
@@ -152,7 +152,7 @@
                         </div>
                         <div>
                             <div class="flex justify-between items-baseline mb-0.5">
-                                <span class="text-[10px] text-slate-400">Mašč.</span>
+                                <span class="text-[10px] text-slate-400">Maščobe</span>
                                 <span id="fatTargetText" class="text-[9px] text-slate-500">/0g</span>
                             </div>
                             <span id="todayFat" class="text-xs font-bold text-teal-300 block">0g</span>
@@ -207,12 +207,12 @@
 
             <!-- NETO RAZLIKA SPROTI PO DNEVIH -->
             <div class="bg-slate-900/60 rounded-xl p-3 mb-4 space-y-2.5">
-                <div class="flex justify-between items-center text-xs border-b border-slate-800/80 pb-2">
+                <div class="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:items-center text-xs border-b border-slate-800/80 pb-2">
                     <span class="text-slate-300 font-medium">Neto razlika (Zaužito - Skupna poraba do danes):</span>
                     <span id="netCalories" class="font-bold text-sm">0 kcal</span>
                 </div>
                 <div>
-                    <span class="block text-[10px] text-slate-400 mb-1.5 font-medium">Dnevni pregled in seštevek po dnevih (Pon – Ned):</span>
+                    <span class="block text-[10px] text-slate-400 mb-1.5 font-medium">Dnevni pregled in seštevek po dnevih (Pon – Ned) – klikni na kljukico, da dan izključiš iz povzetka:</span>
                     <div id="weeklyDailyNetBreakdown" class="grid grid-cols-1 sm:grid-cols-7 gap-1.5">
                         <!-- Popolnjeno dinamično z JS -->
                     </div>
@@ -230,7 +230,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="flex justify-between items-center mb-1.5">
+                    <div class="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:items-center mb-1.5">
                         <span class="text-xs font-medium text-slate-300">Cilj porabe kalorij z aktivnostjo (tedensko)</span>
                         <span id="weeklyBurnGoalText" class="text-xs font-bold text-emerald-400">0 / 1500 kcal (0%)</span>
                     </div>
@@ -445,10 +445,10 @@
                     <i class="fa-solid fa-weight-scale text-cyan-400"></i> Spremljanje telesne teže
                 </h2>
                 
-                <div class="flex gap-3 mb-6">
-                    <input type="date" id="weightDateInput" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 w-1/3">
+                <div class="flex flex-col sm:flex-row gap-3 mb-6">
+                    <input type="date" id="weightDateInput" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 w-full sm:w-1/3">
                     <input type="number" id="weightValueInput" step="0.1" placeholder="Teža v kg (npr. 75.5)" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500 w-full">
-                    <button onclick="logWeight()" class="bg-cyan-600 hover:bg-cyan-700 text-white font-medium px-4 rounded-lg transition-colors text-sm shrink-0">
+                    <button onclick="logWeight()" class="bg-cyan-600 hover:bg-cyan-700 text-white font-medium px-4 py-2 sm:py-0 rounded-lg transition-colors text-sm shrink-0 w-full sm:w-auto">
                         Vnesi
                     </button>
                 </div>
@@ -601,6 +601,7 @@
         let meals = JSON.parse(localStorage.getItem('sport_meals')) || [];
         let weightHistory = JSON.parse(localStorage.getItem('sport_weights')) || [];
         let waterData = JSON.parse(localStorage.getItem('sport_water')) || { date: '', amount: 0 };
+        let excludedDays = JSON.parse(localStorage.getItem('sport_excluded_days')) || [];
         const WATER_GOAL = 2500;
         const WEEKLY_BURN_GOAL = 1500;
         
@@ -1296,6 +1297,19 @@
             return `${year}-${month}-${day}`;
         }
 
+        function toggleDayExclusion(dateStr) {
+            const idx = excludedDays.indexOf(dateStr);
+            if (idx === -1) {
+                excludedDays.push(dateStr);
+            } else {
+                excludedDays.splice(idx, 1);
+            }
+            try {
+                localStorage.setItem('sport_excluded_days', JSON.stringify(excludedDays));
+            } catch(err) { console.error(err); }
+            renderApp();
+        }
+
         function getMondayToSundayRange(d = new Date()) {
             const curr = new Date(d);
             const day = curr.getDay();
@@ -1569,7 +1583,7 @@
                         }
                     },
                     plugins: {
-                        legend: { labels: { color: '#f8fafc', font: { size: 11 } } }
+                        legend: { labels: { color: '#f8fafc', font: { size: 11 }, usePointStyle: true, pointStyle: 'line' } }
                     }
                 }
             });
@@ -1710,6 +1724,7 @@
             breakdownContainer.innerHTML = '';
 
             weekDays.forEach(day => {
+                const isExcluded = excludedDays.includes(day.dateStr);
                 const dayMeals = meals.filter(m => m.date === day.dateStr);
                 const dayActs = activities.filter(a => a.date === day.dateStr);
 
@@ -1721,19 +1736,23 @@
                 const dTotalBurn = dPassive + dSport;
                 const dNet = dCal - dTotalBurn;
 
-                weeklyCalSum += dCal;
-                weeklySportBurnSum += dSport;
-                weeklyMinutesSum += dMin;
-                if (day.isPastOrToday) {
-                    weeklyTotalBurnSum += dTotalBurn;
+                if (!isExcluded) {
+                    weeklyCalSum += dCal;
+                    weeklySportBurnSum += dSport;
+                    weeklyMinutesSum += dMin;
+                    if (day.isPastOrToday) {
+                        weeklyTotalBurnSum += dTotalBurn;
+                    }
                 }
 
                 // Ustvari kartico za posamezen dan v tednu
                 const card = document.createElement('div');
                 card.className = `p-2 rounded-xl border transition-all flex items-center justify-between gap-2 sm:flex-col sm:justify-start sm:text-center ${
-                    day.isToday 
-                        ? 'bg-blue-950/80 border-blue-500 ring-1 ring-blue-500 shadow-md shadow-blue-900/30' 
-                        : 'bg-slate-950/40 border-slate-800'
+                    isExcluded
+                        ? 'bg-slate-950/40 border-slate-800 opacity-50'
+                        : day.isToday 
+                            ? 'bg-blue-950/80 border-blue-500 ring-1 ring-blue-500 shadow-md shadow-blue-900/30' 
+                            : 'bg-slate-950/40 border-slate-800'
                 }`;
 
                 const netColor = dNet > 0 ? 'text-rose-400 font-bold' : (dNet < 0 ? 'text-emerald-400 font-bold' : 'text-slate-400');
@@ -1741,8 +1760,12 @@
 
                 card.innerHTML = `
                     <div class="text-[10px] font-bold ${day.isToday ? 'text-blue-400' : 'text-slate-400'} flex items-center gap-1 shrink-0">
+                        <button onclick="toggleDayExclusion('${day.dateStr}')" title="${isExcluded ? 'Vključi ta dan v tedenski povzetek' : 'Izključi ta dan iz tedenskega povzetka'}" class="${isExcluded ? 'text-slate-600' : 'text-slate-500'} hover:text-white transition-colors">
+                            <i class="fa-solid ${isExcluded ? 'fa-square' : 'fa-square-check'} text-[10px]"></i>
+                        </button>
                         ${day.dayName}
                         ${day.isToday ? '<span class="text-[8px] bg-blue-500 text-white px-1 rounded font-normal">Danes</span>' : ''}
+                        ${isExcluded ? '<span class="text-[8px] bg-slate-700 text-slate-300 px-1 rounded font-normal">Izklop</span>' : ''}
                     </div>
                     <div class="flex items-center gap-2.5 text-[10px] sm:mt-1 sm:flex-col sm:items-center sm:gap-0.5 sm:text-[9px]">
                         <div class="text-amber-300 font-medium" title="Zaužito">+${r1(dCal)}</div>
