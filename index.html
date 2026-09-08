@@ -129,7 +129,7 @@
                     <span id="calRemainingText" class="text-[10px] text-slate-500 mt-1 mb-2 block"></span>
 
                     <!-- MAKROHRANILA -->
-                    <div class="grid grid-cols-3 gap-2 text-center mt-1 border-t border-slate-800/80 pt-2">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:text-center mt-1 border-t border-slate-800/80 pt-2">
                         <div>
                             <div class="flex justify-between items-baseline mb-0.5">
                                 <span class="text-[10px] text-slate-400">Beljak.</span>
@@ -213,7 +213,7 @@
                 </div>
                 <div>
                     <span class="block text-[10px] text-slate-400 mb-1.5 font-medium">Dnevni pregled in seštevek po dnevih (Pon – Ned):</span>
-                    <div id="weeklyDailyNetBreakdown" class="grid grid-cols-2 sm:grid-cols-7 gap-1.5">
+                    <div id="weeklyDailyNetBreakdown" class="grid grid-cols-1 sm:grid-cols-7 gap-1.5">
                         <!-- Popolnjeno dinamično z JS -->
                     </div>
                 </div>
@@ -614,7 +614,7 @@
         let weightChartInstance = null;
 
         document.addEventListener('DOMContentLoaded', () => {
-            const today = new Date().toISOString().split('T')[0];
+            const today = getLocalDateStr(new Date());
             document.getElementById('actDate').value = today;
             document.getElementById('mealDate').value = today;
             document.getElementById('weightDateInput').value = today;
@@ -945,7 +945,7 @@
         }
 
         function saveWater() {
-            const today = new Date().toISOString().split('T')[0];
+            const today = getLocalDateStr(new Date());
             waterData.date = today;
             try {
                 localStorage.setItem('sport_water', JSON.stringify(waterData));
@@ -1453,7 +1453,7 @@
         }
 
         function cancelEdit(type) {
-            const today = new Date().toISOString().split('T')[0];
+            const today = getLocalDateStr(new Date());
             if (type === 'activity') {
                 document.getElementById('actEditId').value = '';
                 document.getElementById('actImgData').value = '';
@@ -1522,11 +1522,21 @@
             }
         }
 
+        function getWeightAxisRange() {
+            if (weightHistory.length === 0) return { min: undefined, max: undefined };
+            const baseline = weightHistory[0].weight;
+            return {
+                min: r1(baseline * 0.8),
+                max: r1(baseline * 1.2)
+            };
+        }
+
         function initChart() {
             const ctx = document.getElementById('weightChart');
             if (!ctx) return;
 
             weightHistory.sort((a, b) => new Date(a.date) - new Date(b.date));
+            const { min: yMin, max: yMax } = getWeightAxisRange();
 
             weightChartInstance = new Chart(ctx, {
                 type: 'line',
@@ -1552,6 +1562,8 @@
                             ticks: { color: '#94a3b8', font: { size: 10 } }
                         },
                         y: {
+                            min: yMin,
+                            max: yMax,
                             grid: { color: '#334155' },
                             ticks: { color: '#94a3b8', font: { size: 10 } }
                         }
@@ -1569,6 +1581,9 @@
                 return;
             }
             weightHistory.sort((a, b) => new Date(a.date) - new Date(b.date));
+            const { min: yMin, max: yMax } = getWeightAxisRange();
+            weightChartInstance.options.scales.y.min = yMin;
+            weightChartInstance.options.scales.y.max = yMax;
             weightChartInstance.data.labels = weightHistory.map(w => w.date);
             weightChartInstance.data.datasets[0].data = weightHistory.map(w => w.weight);
             weightChartInstance.update();
@@ -1638,19 +1653,28 @@
 
             // Makrohranila
             document.getElementById('proteinTargetText').textContent = `/${r1(macroTargets.proteinG)}g`;
-            document.getElementById('todayProtein').textContent = `${r1(todayProt)}g`;
+            const protExcess = todayProt - macroTargets.proteinG;
+            const todayProteinEl = document.getElementById('todayProtein');
+            todayProteinEl.textContent = protExcess > 0 ? `${r1(todayProt)}g (+${r1(protExcess)}g)` : `${r1(todayProt)}g`;
+            todayProteinEl.className = protExcess > 0 ? "text-xs font-bold text-rose-500 block" : "text-xs font-bold text-yellow-400 block";
             const protProgressBar = document.getElementById('proteinProgress');
             protProgressBar.style.width = `${Math.min(100, (todayProt / macroTargets.proteinG) * 100)}%`;
             protProgressBar.className = todayProt > macroTargets.proteinG ? "bg-rose-500 h-1 rounded-full transition-all duration-500" : "bg-yellow-400 h-1 rounded-full transition-all duration-500";
 
             document.getElementById('carbsTargetText').textContent = `/${r1(macroTargets.carbsG)}g`;
-            document.getElementById('todayCarbs').textContent = `${r1(todayCarb)}g`;
+            const carbsExcess = todayCarb - macroTargets.carbsG;
+            const todayCarbsEl = document.getElementById('todayCarbs');
+            todayCarbsEl.textContent = carbsExcess > 0 ? `${r1(todayCarb)}g (+${r1(carbsExcess)}g)` : `${r1(todayCarb)}g`;
+            todayCarbsEl.className = carbsExcess > 0 ? "text-xs font-bold text-rose-500 block" : "text-xs font-bold text-lime-400 block";
             const carbsProgressBar = document.getElementById('carbsProgress');
             carbsProgressBar.style.width = `${Math.min(100, (todayCarb / macroTargets.carbsG) * 100)}%`;
             carbsProgressBar.className = todayCarb > macroTargets.carbsG ? "bg-rose-500 h-1 rounded-full transition-all duration-500" : "bg-lime-400 h-1 rounded-full transition-all duration-500";
 
             document.getElementById('fatTargetText').textContent = `/${r1(macroTargets.fatG)}g`;
-            document.getElementById('todayFat').textContent = `${r1(todayFatVal)}g`;
+            const fatExcess = todayFatVal - macroTargets.fatG;
+            const todayFatEl = document.getElementById('todayFat');
+            todayFatEl.textContent = fatExcess > 0 ? `${r1(todayFatVal)}g (+${r1(fatExcess)}g)` : `${r1(todayFatVal)}g`;
+            todayFatEl.className = fatExcess > 0 ? "text-xs font-bold text-rose-500 block" : "text-xs font-bold text-teal-300 block";
             const fatProgressBar = document.getElementById('fatProgress');
             fatProgressBar.style.width = `${Math.min(100, (todayFatVal / macroTargets.fatG) * 100)}%`;
             fatProgressBar.className = todayFatVal > macroTargets.fatG ? "bg-rose-500 h-1 rounded-full transition-all duration-500" : "bg-teal-400 h-1 rounded-full transition-all duration-500";
@@ -1706,7 +1730,7 @@
 
                 // Ustvari kartico za posamezen dan v tednu
                 const card = document.createElement('div');
-                card.className = `p-2 rounded-xl text-center border transition-all ${
+                card.className = `p-2 rounded-xl border transition-all flex items-center justify-between gap-2 sm:flex-col sm:justify-start sm:text-center ${
                     day.isToday 
                         ? 'bg-blue-950/80 border-blue-500 ring-1 ring-blue-500 shadow-md shadow-blue-900/30' 
                         : 'bg-slate-950/40 border-slate-800'
@@ -1716,14 +1740,14 @@
                 const netFormatted = dNet > 0 ? `+${r1(dNet)}` : `${r1(dNet)}`;
 
                 card.innerHTML = `
-                    <div class="text-[10px] font-bold ${day.isToday ? 'text-blue-400' : 'text-slate-400'} flex items-center justify-center gap-1">
+                    <div class="text-[10px] font-bold ${day.isToday ? 'text-blue-400' : 'text-slate-400'} flex items-center gap-1 shrink-0">
                         ${day.dayName}
                         ${day.isToday ? '<span class="text-[8px] bg-blue-500 text-white px-1 rounded font-normal">Danes</span>' : ''}
                     </div>
-                    <div class="mt-1 space-y-0.5 text-[9px]">
+                    <div class="flex items-center gap-2.5 text-[10px] sm:mt-1 sm:flex-col sm:items-center sm:gap-0.5 sm:text-[9px]">
                         <div class="text-amber-300 font-medium" title="Zaužito">+${r1(dCal)}</div>
                         <div class="text-slate-400" title="Skupna poraba">-${r1(dTotalBurn)}</div>
-                        <div class="border-t border-slate-800 pt-0.5 ${netColor}" title="Neto razlika">
+                        <div class="pl-2.5 border-l border-slate-800 sm:pl-0 sm:border-l-0 sm:border-t sm:pt-0.5 sm:w-full ${netColor}" title="Neto razlika">
                             ${day.isPastOrToday ? netFormatted : '-'}
                         </div>
                     </div>
