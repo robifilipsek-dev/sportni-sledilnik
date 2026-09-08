@@ -1448,18 +1448,8 @@
             document.getElementById('userGoalBadge').textContent = goalBadgeText;
             document.getElementById('todayCalTarget').textContent = `Cilj vnos: ~${targetCalories} kcal`;
 
-            // Dnevni cilj aktivne porabe (šport) - izpeljan iz tedenskega cilja / 7.
-            const dailyActiveGoal = Math.round(WEEKLY_BURN_GOAL / 7);
-            const activeGoalPercent = Math.min(Math.round((todaySportBurn / dailyActiveGoal) * 100), 100);
-            document.getElementById('dailyActiveGoalText').textContent = `${todaySportBurn} / ${dailyActiveGoal} kcal`;
-            document.getElementById('dailyActiveProgress').style.width = `${activeGoalPercent}%`;
-            const activeRemaining = dailyActiveGoal - todaySportBurn;
-            document.getElementById('dailyActiveRemainingText').textContent = activeRemaining > 0
-                ? `Še manjka ${activeRemaining} kcal aktivne porabe do dnevnega cilja.`
-                : `Dnevni cilj aktivnosti dosežen! (+${Math.abs(activeRemaining)} kcal nad ciljem)`;
-
             let todayCal = 0, todayProt = 0, todayCarb = 0, todayFat = 0;
-            
+
             meals.forEach(m => {
                 if (m.date === todayStr) {
                     todayCal += Number(m.calories);
@@ -1474,26 +1464,56 @@
             document.getElementById('todayCalProgress').style.width = `${calPercent}%`;
             document.getElementById('calStatusText').textContent = `${calPercent}% cilja`;
             const calRemaining = Math.round(targetCalories - todayCal);
+            // Presežek vnosa (če je pozitiven) - kolikšen kalorični "plus" imaš danes.
+            const calSurplus = Math.max(Math.round(todayCal - targetCalories), 0);
             document.getElementById('calRemainingText').textContent = calRemaining > 0
                 ? `Še manjka ${calRemaining} kcal do cilja vnosa.`
-                : `Cilj vnosa presežen za ${Math.abs(calRemaining)} kcal.`;
+                : `Cilj vnosa presežen za ${calSurplus} kcal.`;
+
+            // Dnevni cilj aktivne porabe (šport) = osnovni cilj (tedenski cilj/7) + morebiten
+            // presežek vnosa hrane danes. Tako se prehranski presežek pretvori v konkreten,
+            // dosegljiv cilj gibanja - "pojedel si več, cilj aktivnosti se za toliko dvigne".
+            const baseActiveGoal = Math.round(WEEKLY_BURN_GOAL / 7);
+            const dailyActiveGoal = baseActiveGoal + calSurplus;
+            const activeGoalPercent = Math.min(Math.round((todaySportBurn / dailyActiveGoal) * 100), 100);
+            document.getElementById('dailyActiveGoalText').textContent = `${todaySportBurn} / ${dailyActiveGoal} kcal`;
+            document.getElementById('dailyActiveProgress').style.width = `${activeGoalPercent}%`;
+            const activeRemaining = dailyActiveGoal - todaySportBurn;
+            let activeGoalNote = activeRemaining > 0
+                ? `Še manjka ${activeRemaining} kcal aktivne porabe do dnevnega cilja.`
+                : `Dnevni cilj aktivnosti dosežen! (+${Math.abs(activeRemaining)} kcal nad ciljem)`;
+            if (calSurplus > 0) {
+                activeGoalNote += ` (vključuje +${calSurplus} kcal zaradi presežka vnosa)`;
+            }
+            document.getElementById('dailyActiveRemainingText').textContent = activeGoalNote;
 
             document.getElementById('todayProtein').textContent = `${Math.round(todayProt * 10) / 10}g`;
             document.getElementById('todayCarbs').textContent = `${Math.round(todayCarb * 10) / 10}g`;
             document.getElementById('todayFat').textContent = `${Math.round(todayFat * 10) / 10}g`;
 
             // Makro cilji (g) glede na cilj vnosa kalorij in telesno težo.
+            // Če presežeš cilj makrohranila, bar ostane poln, obarva se opozorilno (rose),
+            // besedilo pa namesto "/cilj" pokaže "+Xg nad ciljem".
             const macroTargets = computeMacroTargets(targetCalories, weight, goal);
-            const macroFill = (current, target) => target > 0 ? Math.min(Math.round((current / target) * 100), 100) : 0;
-
-            document.getElementById('proteinTargetText').textContent = `/${macroTargets.proteinG}g`;
-            document.getElementById('proteinProgress').style.width = `${macroFill(todayProt, macroTargets.proteinG)}%`;
-
-            document.getElementById('carbsTargetText').textContent = `/${macroTargets.carbsG}g`;
-            document.getElementById('carbsProgress').style.width = `${macroFill(todayCarb, macroTargets.carbsG)}%`;
-
-            document.getElementById('fatTargetText').textContent = `/${macroTargets.fatG}g`;
-            document.getElementById('fatProgress').style.width = `${macroFill(todayFat, macroTargets.fatG)}%`;
+            function applyMacroDisplay(current, target, progressElId, targetTextElId, normalColorClass) {
+                const progressEl = document.getElementById(progressElId);
+                const targetTextEl = document.getElementById(targetTextElId);
+                if (target > 0 && current > target) {
+                    progressEl.style.width = `100%`;
+                    progressEl.className = `bg-rose-500 h-1 rounded-full transition-all duration-500`;
+                    targetTextEl.textContent = `+${Math.round(current - target)}g nad ciljem`;
+                    targetTextEl.className = `text-[9px] text-rose-400 font-semibold`;
+                } else {
+                    const pct = target > 0 ? Math.min(Math.round((current / target) * 100), 100) : 0;
+                    progressEl.style.width = `${pct}%`;
+                    progressEl.className = `${normalColorClass} h-1 rounded-full transition-all duration-500`;
+                    targetTextEl.textContent = `/${target}g`;
+                    targetTextEl.className = `text-[9px] text-slate-500`;
+                }
+            }
+            applyMacroDisplay(todayProt, macroTargets.proteinG, 'proteinProgress', 'proteinTargetText', 'bg-rose-500');
+            applyMacroDisplay(todayCarb, macroTargets.carbsG, 'carbsProgress', 'carbsTargetText', 'bg-sky-500');
+            applyMacroDisplay(todayFat, macroTargets.fatG, 'fatProgress', 'fatTargetText', 'bg-yellow-500');
 
 
             document.getElementById('todayWaterText').textContent = `${waterData.amount} / ${WATER_GOAL} ml`;
