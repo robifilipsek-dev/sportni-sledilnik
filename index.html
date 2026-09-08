@@ -829,7 +829,7 @@
                 errorClass: "text-[10px] text-rose-400 mt-2 font-semibold",
                 onSuccess: (resJson) => {
                     if (resJson.type) document.getElementById('actType').value = resJson.type;
-                    if (resJson.duration) document.getElementById('actDuration').value = Math.round(resJson.duration);
+                    if (resJson.duration) document.getElementById('actDuration').value = resJson.duration;
                     if (resJson.intensity) document.getElementById('actIntensity').value = resJson.intensity;
                     if (resJson.note) document.getElementById('actNote').value = resJson.note;
                     statusEl.textContent = "Aktivnost uspešno prepoznana s slike!";
@@ -863,12 +863,12 @@
                 errorClass: "text-[10px] text-rose-400 mt-2 font-semibold",
                 onSuccess: (resJson) => {
                     if (resJson.description) document.getElementById('mealDesc').value = resJson.description;
-                    if (resJson.calories) document.getElementById('mealCalories').value = Math.round(resJson.calories);
-                    if (resJson.protein !== undefined) document.getElementById('mealProtein').value = Number(resJson.protein).toFixed(1).replace(/\.0$/, '');
-                    if (resJson.carbs !== undefined) document.getElementById('mealCarbs').value = Number(resJson.carbs).toFixed(1).replace(/\.0$/, '');
-                    if (resJson.fat !== undefined) document.getElementById('mealFat').value = Number(resJson.fat).toFixed(1).replace(/\.0$/, '');
+                    if (resJson.calories) document.getElementById('mealCalories').value = resJson.calories;
+                    if (resJson.protein !== undefined) document.getElementById('mealProtein').value = Math.round(resJson.protein);
+                    if (resJson.carbs !== undefined) document.getElementById('mealCarbs').value = Math.round(resJson.carbs);
+                    if (resJson.fat !== undefined) document.getElementById('mealFat').value = Math.round(resJson.fat);
                     if (resJson.type) document.getElementById('mealType').value = resJson.type;
-                    statusEl.textContent = `Obrok uspešno ocenjen (~${Math.round(resJson.calories)} kcal)!`;
+                    statusEl.textContent = `Obrok uspešno ocenjen (~${resJson.calories} kcal)!`;
                     statusEl.className = "text-[10px] text-emerald-400 mt-2 font-semibold";
                 }
             });
@@ -890,12 +890,12 @@
                 busyText: "Gemini AI ocenjuje hranilne vrednosti...",
                 onSuccess: (aiResult) => {
                     if (aiResult.description) document.getElementById('mealDesc').value = aiResult.description;
-                    if (aiResult.calories) document.getElementById('mealCalories').value = Math.round(aiResult.calories);
-                    if (aiResult.protein !== undefined) document.getElementById('mealProtein').value = Number(aiResult.protein).toFixed(1).replace(/\.0$/, '');
-                    if (aiResult.carbs !== undefined) document.getElementById('mealCarbs').value = Number(aiResult.carbs).toFixed(1).replace(/\.0$/, '');
-                    if (aiResult.fat !== undefined) document.getElementById('mealFat').value = Number(aiResult.fat).toFixed(1).replace(/\.0$/, '');
+                    if (aiResult.calories) document.getElementById('mealCalories').value = aiResult.calories;
+                    if (aiResult.protein !== undefined) document.getElementById('mealProtein').value = Math.round(aiResult.protein);
+                    if (aiResult.carbs !== undefined) document.getElementById('mealCarbs').value = Math.round(aiResult.carbs);
+                    if (aiResult.fat !== undefined) document.getElementById('mealFat').value = Math.round(aiResult.fat);
                     if (aiResult.type) document.getElementById('mealType').value = aiResult.type;
-                    statusEl.textContent = `AI ocena uspešna (~${Math.round(aiResult.calories)} kcal)`;
+                    statusEl.textContent = `AI ocena uspešna (~${aiResult.calories} kcal)`;
                     statusEl.className = "text-[10px] text-emerald-400 font-semibold";
                 }
             });
@@ -1063,9 +1063,9 @@
             document.getElementById('mealType').value = p.type || 'Kosilo';
             document.getElementById('mealDesc').value = p.desc || '';
             document.getElementById('mealCalories').value = Math.round(p.cal || 0);
-            document.getElementById('mealProtein').value = Number(p.p || 0).toFixed(1).replace(/\.0$/, '');
-            document.getElementById('mealCarbs').value = Number(p.c || 0).toFixed(1).replace(/\.0$/, '');
-            document.getElementById('mealFat').value = Number(p.f || 0).toFixed(1).replace(/\.0$/, '');
+            document.getElementById('mealProtein').value = Math.round(p.p || 0);
+            document.getElementById('mealCarbs').value = Math.round(p.c || 0);
+            document.getElementById('mealFat').value = Math.round(p.f || 0);
         }
 
         function deletePreset(idx) {
@@ -1081,17 +1081,17 @@
         function saveCurrentAsPreset() {
             const type = document.getElementById('mealType').value;
             const desc = document.getElementById('mealDesc').value.trim();
-            const cal = Math.round(parseFloat(document.getElementById('mealCalories').value) || 0);
-            const p = Math.round(parseFloat(document.getElementById('mealProtein').value) || 0);
-            const c = Math.round(parseFloat(document.getElementById('mealCarbs').value) || 0);
-            const f = Math.round(parseFloat(document.getElementById('mealFat').value) || 0);
+            const cal = parseFloat(document.getElementById('mealCalories').value) || 0;
+            const p = parseFloat(document.getElementById('mealProtein').value) || 0;
+            const c = parseFloat(document.getElementById('mealCarbs').value) || 0;
+            const f = parseFloat(document.getElementById('mealFat').value) || 0;
 
             if (!desc || !cal) {
                 alert("Najprej vpiši opis in kalorije obroka!");
                 return;
             }
 
-            presets.push({ type, desc, cal, p, c, f });
+            presets.push({ type, desc, cal: Math.round(cal), p: Math.round(p), c: Math.round(c), f: Math.round(f) });
             try {
                 localStorage.setItem('sport_presets', JSON.stringify(presets));
             } catch(e) { console.error(e); }
@@ -1244,7 +1244,7 @@
             e.preventDefault();
             const editId = document.getElementById('actEditId').value;
             const type = document.getElementById('actType').value;
-            const duration = Math.round(parseInt(document.getElementById('actDuration').value));
+            const duration = parseInt(document.getElementById('actDuration').value);
             const intensity = document.getElementById('actIntensity').value;
             
             const actData = {
@@ -1287,9 +1287,9 @@
                 type: document.getElementById('mealType').value,
                 description: document.getElementById('mealDesc').value.trim(),
                 calories: Math.round(parseFloat(document.getElementById('mealCalories').value) || 0),
-                protein: Number(parseFloat(document.getElementById('mealProtein').value) || 0).toFixed(1).replace(/\.0$/, ''),
-                carbs: Number(parseFloat(document.getElementById('mealCarbs').value) || 0).toFixed(1).replace(/\.0$/, ''),
-                fat: Number(parseFloat(document.getElementById('mealFat').value) || 0).toFixed(1).replace(/\.0$/, ''),
+                protein: Math.round(parseFloat(document.getElementById('mealProtein').value) || 0),
+                carbs: Math.round(parseFloat(document.getElementById('mealCarbs').value) || 0),
+                fat: Math.round(parseFloat(document.getElementById('mealFat').value) || 0),
                 imgData: document.getElementById('mealImgData').value || ''
             };
 
@@ -1356,10 +1356,10 @@
             document.getElementById('mealDate').value = m.date;
             document.getElementById('mealType').value = m.type;
             document.getElementById('mealDesc').value = m.description;
-            document.getElementById('mealCalories').value = m.calories;
-            document.getElementById('mealProtein').value = m.protein || 0;
-            document.getElementById('mealCarbs').value = m.carbs || 0;
-            document.getElementById('mealFat').value = m.fat || 0;
+            document.getElementById('mealCalories').value = Math.round(m.calories || 0);
+            document.getElementById('mealProtein').value = Math.round(m.protein || 0);
+            document.getElementById('mealCarbs').value = Math.round(m.carbs || 0);
+            document.getElementById('mealFat').value = Math.round(m.fat || 0);
             document.getElementById('mealImgData').value = m.imgData || '';
             document.getElementById('mealFormTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-amber-400"></i> Uredi obrok`;
             document.getElementById('mealSubmitBtn').textContent = "Posodobi obrok";
@@ -1396,7 +1396,7 @@
         // --- TEŽA & GRAF ---
         function logWeight() {
             const date = document.getElementById('weightDateInput').value;
-            const val = parseFloat(parseFloat(document.getElementById('weightValueInput').value).toFixed(1));
+            const val = parseFloat(document.getElementById('weightValueInput').value);
             if (!date || isNaN(val)) {
                 alert("Vnesi veljaven datum in težo!");
                 return;
@@ -1434,7 +1434,7 @@
                     plugins: { legend: { display: false } },
                     scales: {
                         x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8', font: { size: 10 } } },
-                        y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8', font: { size: 10 }, callback: function(value) { return Number(value).toFixed(1); } } }
+                        y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8', font: { size: 10 } } }
                     }
                 }
             });
@@ -1444,7 +1444,7 @@
         function updateChart() {
             if (!weightChartInstance) return;
             weightChartInstance.data.labels = weightHistory.map(w => w.date);
-            weightChartInstance.data.datasets[0].data = weightHistory.map(w => Number(w.weight).toFixed(1));
+            weightChartInstance.data.datasets[0].data = weightHistory.map(w => w.weight);
             weightChartInstance.update();
         }
 
@@ -1483,9 +1483,9 @@
                                 <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full border border-slate-700">${escapeHtml(a.intensity)} napor</span>
                             </div>
                             <div class="text-xs text-slate-400 mt-0.5 flex items-center gap-2">
-                                <span><i class="fa-regular fa-clock text-blue-400 mr-1"></i>${Math.round(a.duration)} min</span>
+                                <span><i class="fa-regular fa-clock text-blue-400 mr-1"></i>${a.duration} min</span>
                                 <span>•</span>
-                                <span class="text-emerald-400 font-semibold"><i class="fa-solid fa-fire text-emerald-400 mr-1"></i>${Math.round(a.burned)} kcal</span>
+                                <span class="text-emerald-400 font-semibold"><i class="fa-solid fa-fire text-emerald-400 mr-1"></i>${a.burned} kcal</span>
                             </div>
                             ${a.note ? `<p class="text-[11px] text-slate-400 italic mt-1 truncate">${escapeHtml(a.note)}</p>` : ''}
                         </div>
@@ -1516,11 +1516,11 @@
                                 <span class="font-bold text-sm text-white truncate">${escapeHtml(m.description)}</span>
                             </div>
                             <div class="text-xs text-slate-400 mt-1 flex items-center gap-2 flex-wrap">
-                                <span class="text-amber-400 font-bold">${Math.round(m.calories)} kcal</span>
+                                <span class="text-amber-400 font-bold">${Math.round(m.calories || 0)} kcal</span>
                                 <span>•</span>
-                                <span class="text-purple-400 font-medium">B: ${Number(m.protein || 0).toFixed(1).replace(/\.0$/, '')}g</span>
-                                <span class="text-sky-400 font-medium">OH: ${Number(m.carbs || 0).toFixed(1).replace(/\.0$/, '')}g</span>
-                                <span class="text-yellow-500 font-medium">M: ${Number(m.fat || 0).toFixed(1).replace(/\.0$/, '')}g</span>
+                                <span class="text-purple-400 font-medium">B: ${Math.round(m.protein || 0)}g</span>
+                                <span class="text-sky-400 font-medium">OH: ${Math.round(m.carbs || 0)}g</span>
+                                <span class="text-yellow-500 font-medium">M: ${Math.round(m.fat || 0)}g</span>
                             </div>
                         </div>
                     </div>
@@ -1536,145 +1536,136 @@
             `;
         }
 
-        // --- RENDER APP & PRIKAZ PODATKOV ---
+        // --- GLAVNI RENDER ---
         function renderApp() {
-            const today = new Date().toISOString().split('T')[0];
+            const todayStr = new Date().toISOString().split('T')[0];
             const metab = calculateUserMetabolics();
-            const macroTargets = computeMacroTargets(metab.targetCalories, metab.weight, metab.goal);
+            const targets = computeMacroTargets(metab.targetCalories, metab.weight, metab.goal);
 
-            // Cilj badge
-            const goalBadge = document.getElementById('userGoalBadge');
-            if (goalBadge) {
-                const goalMap = { lose: 'Hujšanje', maintain: 'Ohranjanje', gain: 'Masa' };
-                goalBadge.textContent = `Cilj: ${goalMap[metab.goal] || 'Ohranjanje'}`;
-            }
+            const todayActs = activities.filter(a => a.date === todayStr);
+            const todayMeals = meals.filter(m => m.date === todayStr);
 
-            // Današnje aktivnosti
-            const todayActs = activities.filter(a => a.date === today);
+            // Izračuni za danes
             const todaySportBurn = todayActs.reduce((sum, a) => sum + (Number(a.burned) || 0), 0);
-            const todayMinutes = todayActs.reduce((sum, a) => sum + (Number(a.duration) || 0), 0);
-            const actListEl = document.getElementById('todayActivityList');
-            if (actListEl) {
-                actListEl.innerHTML = todayActs.length === 0 ? 
-                    `<p class="text-xs text-slate-500 italic">Danes še ni vnesenih športnih aktivnosti.</p>` :
-                    todayActs.map(createActivityCard).join('');
-            }
+            const todayTotalBurn = metab.passiveBurn + todaySportBurn;
 
-            // Današnji obroki
-            const todayMeals = meals.filter(m => m.date === today);
             const todayCalories = todayMeals.reduce((sum, m) => sum + (Number(m.calories) || 0), 0);
-            const todayProtein = todayMeals.reduce((sum, m) => sum + (Number(m.protein) || 0), 0);
-            const todayCarbs = todayMeals.reduce((sum, m) => sum + (Number(m.carbs) || 0), 0);
-            const todayFat = todayMeals.reduce((sum, m) => sum + (Number(m.fat) || 0), 0);
+            const todayProtein = Math.round(todayMeals.reduce((sum, m) => sum + (Number(m.protein) || 0), 0));
+            const todayCarbs = Math.round(todayMeals.reduce((sum, m) => sum + (Number(m.carbs) || 0), 0));
+            const todayFat = Math.round(todayMeals.reduce((sum, m) => sum + (Number(m.fat) || 0), 0));
 
-            const mealListEl = document.getElementById('todayMealList');
-            if (mealListEl) {
-                mealListEl.innerHTML = todayMeals.length === 0 ? 
-                    `<p class="text-xs text-slate-500 italic">Danes še ni vnesenih obrokov.</p>` :
-                    todayMeals.map(createMealCard).join('');
-            }
-
-            // Dinamični prilagojen cilj vnošenja kalorij (če je presežek pri športu, se prišteje)
-            const dynamicCalTarget = Math.round(metab.targetCalories + todaySportBurn);
-            
-            // Pasivna in skupna poraba
-            const todayTotalBurn = Math.round(metab.passiveBurn + todaySportBurn);
-            document.getElementById('todayPassiveBurn').textContent = `${Math.round(metab.passiveBurn)} kcal`;
-            document.getElementById('todaySportBurn').textContent = `${Math.round(todaySportBurn)} kcal`;
+            // DOM elementi - Poraba energije
+            document.getElementById('todayPassiveBurn').textContent = `${metab.passiveBurn} kcal`;
+            document.getElementById('todaySportBurn').textContent = `${todaySportBurn} kcal`;
             document.getElementById('todayTotalBurn').textContent = `${todayTotalBurn} kcal`;
 
-            // Aktivni cilj dneva (priporočilo glede na šport npr. 300 kcal ali 30 min)
-            const dailyActiveGoal = 300;
-            const dailyActivePct = Math.min(Math.round((todaySportBurn / dailyActiveGoal) * 100), 100);
-            document.getElementById('dailyActiveGoalText').textContent = `${Math.round(todaySportBurn)} / ${dailyActiveGoal} kcal`;
-            document.getElementById('dailyActiveProgress').style.width = `${dailyActivePct}%`;
-            document.getElementById('dailyActiveRemainingText').textContent = todaySportBurn >= dailyActiveGoal ? 
-                `Cilj dnevne športne porabe dosežen! 🎉` : <span>Še ${Math.round(dailyActiveGoal - todaySportBurn)} kcal do cilja</span>;
+            const goalLabels = { lose: 'Hujšanje', maintain: 'Ohranjanje', gain: 'Pridobivanje' };
+            document.getElementById('userGoalBadge').textContent = `Cilj: ${goalLabels[metab.goal] || 'Ohranjanje'}`;
 
-            // Prehrana prikaz
-            document.getElementById('todayCalTarget').textContent = `Cilj vnos: ~${dynamicCalTarget} kcal`;
+            const dailyActiveGoal = 300;
+            document.getElementById('dailyActiveGoalText').textContent = `${todaySportBurn} / ${dailyActiveGoal} kcal`;
+            const activePct = Math.min(Math.round((todaySportBurn / dailyActiveGoal) * 100), 100);
+            document.getElementById('dailyActiveProgress').style.width = `${activePct}%`;
+            const activeDiff = dailyActiveGoal - todaySportBurn;
+            document.getElementById('dailyActiveRemainingText').textContent = activeDiff > 0 ? `Še ${activeDiff} kcal do cilja` : 'Aktivni cilj dosežen!';
+
+            // Prehrana
+            document.getElementById('todayCalTarget').textContent = `Cilj vnos: ~${metab.targetCalories} kcal`;
             document.getElementById('todayCalories').textContent = `${Math.round(todayCalories)} kcal`;
-            
-            const calPct = dynamicCalTarget > 0 ? Math.min(Math.round((todayCalories / dynamicCalTarget) * 100), 100) : 0;
+            const calPct = metab.targetCalories > 0 ? Math.min(Math.round((todayCalories / metab.targetCalories) * 100), 100) : 0;
             document.getElementById('calStatusText').textContent = `${calPct}% cilja`;
             document.getElementById('todayCalProgress').style.width = `${calPct}%`;
-            
-            const calDiff = dynamicCalTarget - todayCalories;
-            document.getElementById('calRemainingText').textContent = calDiff >= 0 ? 
-                `Še ${Math.round(calDiff)} kcal do ciljnega vnosa` : `Presežek: ${Math.round(-calDiff)} kcal preko cilja`;
+            const calDiff = metab.targetCalories - todayCalories;
+            document.getElementById('calRemainingText').textContent = calDiff >= 0 ? `Preostalo še ${Math.round(calDiff)} kcal` : `Presežek za ${Math.round(-calDiff)} kcal`;
 
-            // Makri prikaz
-            document.getElementById('proteinTargetText').textContent = `/${macroTargets.proteinG}g`;
-            document.getElementById('todayProtein', true).textContent = `${Number(todayProtein).toFixed(1).replace(/\.0$/, '')}g`;
-            document.getElementById('proteinProgress').style.width = `${Math.min(Math.round((todayProtein / macroTargets.proteinG) * 100), 100)}%`;
+            // Makrohranila (brez decimalk z Math.round)
+            document.getElementById('proteinTargetText').textContent = `/${targets.proteinG}g`;
+            document.getElementById('todayProtein').textContent = `${todayProtein}g`;
+            const pPct = targets.proteinG > 0 ? Math.min(Math.round((todayProtein / targets.proteinG) * 100), 100) : 0;
+            document.getElementById('proteinProgress').style.width = `${pPct}%`;
 
-            document.getElementById('carbsTargetText').textContent = `/${macroTargets.carbsG}g`;
-            document.getElementById('todayCarbs', true).textContent = `${Number(todayCarbs).toFixed(1).replace(/\.0$/, '')}g`;
-            document.getElementById('carbsProgress').style.width = `${Math.min(Math.round((todayCarbs / macroTargets.carbsG) * 100), 100)}%`;
+            document.getElementById('carbsTargetText').textContent = `/${targets.carbsG}g`;
+            document.getElementById('todayCarbs').textContent = `${todayCarbs}g`;
+            const cPct = targets.carbsG > 0 ? Math.min(Math.round((todayCarbs / targets.carbsG) * 100), 100) : 0;
+            document.getElementById('carbsProgress').style.width = `${cPct}%`;
 
-            document.getElementById('fatTargetText').textContent = `/${macroTargets.fatG}g`;
-            document.getElementById('todayFat', true).textContent = `${Number(todayFat).toFixed(1).replace(/\.0$/, '')}g`;
-            document.getElementById('fatProgress').style.width = `${Math.min(Math.round((todayFat / macroTargets.fatG) * 100), 100)}%`;
+            document.getElementById('fatTargetText').textContent = `/${targets.fatG}g`;
+            document.getElementById('todayFat').textContent = `${todayFat}g`;
+            const fPct = targets.fatG > 0 ? Math.min(Math.round((todayFat / targets.fatG) * 100), 100) : 0;
+            document.getElementById('fatProgress').style.width = `${fPct}%`;
 
             // Voda
-            const waterAmount = waterData.amount || 0;
-            const waterPct = Math.min(Math.round((waterAmount / WATER_GOAL) * 100), 100);
-            document.getElementById('todayWaterText').textContent = `${waterAmount} / ${WATER_GOAL} ml (${waterPct}%)`;
+            document.getElementById('todayWaterText').textContent = `${waterData.amount} / ${WATER_GOAL} ml`;
 
             // Tedenski povzetek
             const now = new Date();
-            const mon = getMonday(now);
-            const sun = getSunday(mon);
-            document.getElementById('currentWeekRange').textContent = `${formatSloDate(mon)} - ${formatSloDate(sun)}${mon.getFullYear()}`;
+            const monday = getMonday(now);
+            const sunday = getSunday(monday);
+            document.getElementById('currentWeekRange').textContent = `${formatSloDate(monday)} - ${formatSloDate(sunday)}`;
 
-            const weekActs = activities.filter(a => {
+            const weeklyActs = activities.filter(a => {
                 const d = new Date(a.date);
-                return d >= mon && d <= sun;
+                return d >= monday && d <= sunday;
             });
-            const weekMeals = meals.filter(m => {
+            const weeklyMeals = meals.filter(m => {
                 const d = new Date(m.date);
-                return d >= mon && d <= sun;
+                return d >= monday && d <= sunday;
             });
 
-            const wkMinutes = weekActs.reduce((s, a) => s + (Number(a.duration) || 0), 0);
-            const wkBurned = weekActs.reduce((s, a) => s + (Number(a.burned) || 0), 0);
-            const wkCalories = weekMeals.reduce((s, m) => s + (Number(m.calories) || 0), 0);
-            const wkNet = wkBurned - wkCalories;
+            const weeklyMin = weeklyActs.reduce((s, a) => s + (Number(a.duration) || 0), 0);
+            const weeklyBurn = weeklyActs.reduce((s, a) => s + (Number(a.burned) || 0), 0);
+            const weeklyCal = weeklyMeals.reduce((s, m) => s + (Number(m.calories) || 0), 0);
 
-            document.getElementById('weeklyMinutes').textContent = `${Math.round(wkMinutes)} min`;
-            document.getElementById('weeklyBurned').textContent = `${Math.round(wkBurned)} kcal`;
-            document.getElementById('weeklyCalories').textContent = `${Math.round(wkCalories)} kcal`;
-            
-            const netEl = document.getElementById('netCalories');
-            netEl.textContent = `${wkNet >= 0 ? '+' : ''}${Math.round(wkNet)} kcal`;
-            netEl.className = `font-bold ${wkNet >= 0 ? 'text-emerald-400' : 'text-amber-400'}`;
+            document.getElementById('weeklyMinutes').textContent = `${weeklyMin} min`;
+            document.getElementById('weeklyBurned').textContent = `${weeklyBurn} kcal`;
+            document.getElementById('weeklyCalories').textContent = `${Math.round(weeklyCal)} kcal`;
 
-            const timeGoalPct = Math.min(Math.round((wkMinutes / 150) * 100), 100);
-            document.getElementById('goalPercentage').textContent = `${timeGoalPct}%`;
-            document.getElementById('progressBar').style.width = `${timeGoalPct}%`;
+            const net = weeklyBurn - weeklyCal;
+            document.getElementById('netCalories').textContent = `${net >= 0 ? '+' : ''}${Math.round(net)} kcal`;
+            document.getElementById('netCalories').className = net <= 0 ? "font-bold text-emerald-400" : "font-bold text-amber-400";
 
-            const burnGoalPct = Math.min(Math.round((wkBurned / WEEKLY_BURN_GOAL) * 100), 100);
-            document.getElementById('weeklyBurnGoalText').textContent = `${Math.round(wkBurned)} / ${WEEKLY_BURN_GOAL} kcal (${burnGoalPct}%)`;
-            document.getElementById('weeklyBurnProgressBar').style.width = `${burnGoalPct}%`;
+            const minPct = Math.min(Math.round((weeklyMin / 150) * 100), 100);
+            document.getElementById('goalPercentage').textContent = `${minPct}%`;
+            document.getElementById('progressBar').style.width = `${minPct}%`;
+
+            const burnPct = Math.min(Math.round((weeklyBurn / WEEKLY_BURN_GOAL) * 100), 100);
+            document.getElementById('weeklyBurnGoalText').textContent = `${weeklyBurn} / ${WEEKLY_BURN_GOAL} kcal (${burnPct}%)`;
+            document.getElementById('weeklyBurnProgressBar').style.width = `${burnPct}%`;
+
+            // Seznami
+            const actContainer = document.getElementById('todayActivityList');
+            if (todayActs.length === 0) {
+                actContainer.innerHTML = `<p class="text-xs text-slate-500 italic p-3 text-center bg-slate-900/50 rounded-xl border border-slate-800">Danes še nimaš zabeleženih športnih aktivnosti.</p>`;
+            } else {
+                actContainer.innerHTML = todayActs.map(createActivityCard).join('');
+            }
+
+            const mealContainer = document.getElementById('todayMealList');
+            if (todayMeals.length === 0) {
+                mealContainer.innerHTML = `<p class="text-xs text-slate-500 italic p-3 text-center bg-slate-900/50 rounded-xl border border-slate-800">Danes še nimaš zabeleženih obrokov.</p>`;
+            } else {
+                mealContainer.innerHTML = todayMeals.map(createMealCard).join('');
+            }
         }
 
-        // --- ZGODOVINA ---
         function renderHistory() {
             const filterDate = document.getElementById('historyDateFilter').value;
-            const mealContainer = document.getElementById('historyMealList');
-            const actContainer = document.getElementById('historyActList');
-            if (!mealContainer || !actContainer) return;
+            const histMeals = meals.filter(m => m.date === filterDate);
+            const histActs = activities.filter(a => a.date === filterDate);
 
-            const dayMeals = meals.filter(m => m.date === filterDate);
-            const dayActs = activities.filter(a => a.date === filterDate);
+            const mealHistEl = document.getElementById('historyMealList');
+            if (histMeals.length === 0) {
+                mealHistEl.innerHTML = `<p class="text-xs text-slate-500 italic p-3 bg-slate-900/50 rounded-xl border border-slate-800">Za ta datum ni vnesenih obrokov.</p>`;
+            } else {
+                mealHistEl.innerHTML = histMeals.map(createMealCard).join('');
+            }
 
-            mealContainer.innerHTML = dayMeals.length === 0 ? 
-                `<p class="text-xs text-slate-500 italic">Ni zabeleženih obrokov na ta dan.</p>` :
-                dayMeals.map(createMealCard).join('');
-
-            actContainer.innerHTML = dayActs.length === 0 ? 
-                `<p class="text-xs text-slate-500 italic">Ni zabeleženih aktivnosti na ta dan.</p>` :
-                dayActs.map(createActivityCard).join('');
+            const actHistEl = document.getElementById('historyActList');
+            if (histActs.length === 0) {
+                actHistEl.innerHTML = `<p class="text-xs text-slate-500 italic p-3 bg-slate-900/50 rounded-xl border border-slate-800">Za ta datum ni vnesenih aktivnosti.</p>`;
+            } else {
+                actHistEl.innerHTML = histActs.map(createActivityCard).join('');
+            }
         }
     </script>
 </body>
