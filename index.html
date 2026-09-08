@@ -694,7 +694,7 @@
 
         // --- GEMINI API & IMAGE PROCESSING ---
         // Ime modela na enem mestu - lažje ga je posodobiti, če Google model upokoji.
-        const GEMINI_MODEL = 'gemini-3.6-flash';
+        const GEMINI_MODEL = 'gemini-3.1-flash-lite';
         // Zaklep proti sočasnim/dvojnim AI klicem (npr. dvojni klik na gumb med nalaganjem).
         let aiCallInProgress = false;
 
@@ -731,7 +731,20 @@
             const data = await response.json();
 
             if (data.error) {
-                throw new Error("API napaka: Preveri povezavo ali ključ");
+                // Pokažemo DEJANSKO napako namesto splošnega sporočila, da veš kaj popraviti:
+                // 429 = presežen brezplačni limit (počakaj ali zamenjaj model/ključ)
+                // 403 = ključ nima dostopa / napačno omejen
+                // 400 = napačna zahteva (npr. neveljaven format slike ali ime modela)
+                const code = data.error.code || response.status;
+                const status = data.error.status || '';
+                const message = data.error.message || 'neznana napaka';
+                if (code === 429) {
+                    throw new Error(`AI: Presežen brezplačni limit (429). Počakaj minuto ali dan (glej AI Studio > Usage). Podrobnosti: ${message}`);
+                }
+                if (code === 403 || code === 401) {
+                    throw new Error(`AI: API ključ zavrnjen (${code}). Preveri, da je ključ pravilen in ima omogočen Generative Language API. Podrobnosti: ${message}`);
+                }
+                throw new Error(`AI: Napaka ${code} ${status}. ${message}`);
             }
 
             const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
