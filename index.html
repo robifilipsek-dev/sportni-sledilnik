@@ -1551,28 +1551,29 @@
             const macroTargets = computeMacroTargets(metabolics.targetCalories, metabolics.weight, metabolics.goal);
 
             function updateMacroDisplay(valId, targetTextId, progressId, currentVal, targetVal, defaultBgClass) {
-                const valEl = document.getElementById(valId);
-                const targetEl = document.getElementById(targetTextId);
-                const progEl = document.getElementById(progressId);
+    const valEl = document.getElementById(valId);
+    const targetEl = document.getElementById(targetTextId);
+    const progEl = document.getElementById(progressId);
 
-                if (valEl) valEl.textContent = `${currentVal}g`;
+    if (valEl) valEl.textContent = `${Math.round(currentVal * 10) / 10}g`;
 
-                if (targetEl && progEl) {
-                    const surplus = currentVal - targetVal;
-                    const pct = targetVal > 0 ? Math.min(100, Math.round((currentVal / targetVal) * 100)) : 0;
-                    progEl.style.width = `${pct}%`;
+    if (targetEl && progEl) {
+        const surplus = currentVal - targetVal;
+        const pct = targetVal > 0 ? Math.min(100, Math.round((currentVal / targetVal) * 100)) : 0;
+        progEl.style.width = `${pct}%`;
 
-                    if (surplus > 0) {
-                        targetEl.textContent = `+${surplus}g nad ciljem`;
-                        targetEl.className = "text-[9px] text-rose-400 font-bold";
-                        progEl.className = `bg-rose-500 h-1 rounded-full transition-all duration-500`;
-                    } else {
-                        targetEl.textContent = `/${targetVal}g`;
-                        targetEl.className = "text-[9px] text-slate-500";
-                        progEl.className = `${defaultBgClass} h-1 rounded-full transition-all duration-500`;
-                    }
-                }
-            }
+        if (surplus > 0) {
+            const formattedSurplus = Math.round(surplus * 10) / 10; // <--- TUKAJ ZAOKRANJE
+            targetEl.textContent = `+${formattedSurplus}g nad ciljem`;
+            targetEl.className = "text-[9px] text-rose-400 font-bold";
+            progEl.className = `bg-rose-500 h-1 rounded-full transition-all duration-500`;
+        } else {
+            targetEl.textContent = `/${targetVal}g`;
+            targetEl.className = "text-[9px] text-slate-500";
+            progEl.className = `${defaultBgClass} h-1 rounded-full transition-all duration-500`;
+        }
+    }
+}
 
             updateMacroDisplay('todayProtein', 'proteinTargetText', 'proteinProgress', todayProtein, macroTargets.proteinG, 'bg-purple-500');
             updateMacroDisplay('todayCarbs', 'carbsTargetText', 'carbsProgress', todayCarbs, macroTargets.carbsG, 'bg-sky-500');
