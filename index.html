@@ -644,7 +644,7 @@
         }
 
         // --- POMOŽNA FUNKCIJA ZA KOMPRESIJO SLIK ---
-        function compressImage(file, maxWidth = 800, quality = 0.7, callback) {
+        function compressImage(file, maxWidth = 400, quality = 0.6, callback) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
@@ -692,7 +692,7 @@
                 const data = await response.json();
                 
                 if (data.error) {
-                    throw new Error(data.error.message || 'Neznana napaka API-ja');
+                    throw new Error("API napaka: Preveri povezavo ali ključ");
                 }
 
                 if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
@@ -706,7 +706,7 @@
                         return JSON.parse(cleanJson);
                     }
                 }
-                throw new Error("Model ni vrnil veljavnega odgovora.");
+                throw new Error("AI: Ne morem prepoznati podatkov.");
             } catch (err) {
                 console.error("Gemini API Error:", err);
                 throw err;
@@ -719,7 +719,7 @@
             document.getElementById('actPhotoStatus').textContent = "Obdelujem sliko...";
             document.getElementById('actPhotoStatus').className = "text-[10px] text-blue-400 mt-2 font-semibold animate-pulse";
             
-            compressImage(file, 800, 0.7, (base64Data) => {
+            compressImage(file, 400, 0.6, (base64Data) => {
                 document.getElementById('actImgData').value = base64Data;
                 document.getElementById('actPhotoStatus').textContent = "Slika naložena! Analiziram z Gemini AI...";
                 analyzeActivityImage(base64Data);
@@ -738,7 +738,7 @@
             const payload = {
                 contents: [{
                     parts: [
-                        { text: "Prepoznaj športno aktivnost s slike (npr. ura, zaslon vadbe). Vrni strogo JSON obliko: {\"type\": \"Fitnes/Kolesarjenje/Tek/Plavanje/Odbojka na mivki/Tenis/Pohodništvo/Smučanje/Ostalo\", \"duration\": številka_minut, \"intensity\": \"Nizka/Srednja/Visoka\", \"note\": \"kratek opis\"}" },
+                        { text: "Prepoznaj šport s slike. Vrni JSON: {\"type\": \"Fitnes/Kolesarjenje/Tek/Plavanje/Odbojka na mivki/Tenis/Pohodništvo/Smučanje/Ostalo\", \"duration\": minut, \"intensity\": \"Nizka/Srednja/Visoka\", \"note\": \"opis\"}" },
                         { inlineData: { mimeType: "image/jpeg", data: base64Data } }
                     ]
                 }],
@@ -754,7 +754,7 @@
                 const data = await response.json();
                 
                 if (data.error) {
-                    throw new Error(data.error.message);
+                    throw new Error("API napaka: Preveri povezavo ali ključ");
                 }
 
                 if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
@@ -774,10 +774,11 @@
                     document.getElementById('actPhotoStatus').textContent = "Aktivnost uspešno prepoznana s slike!";
                     document.getElementById('actPhotoStatus').className = "text-[10px] text-emerald-400 mt-2 font-semibold";
                 } else {
-                    throw new Error("AI ni mogel prepoznati podatkov s slike. Poskusi z bolj jasno fotografijo.");
+                    throw new Error("AI: Ne morem prepoznati aktivnosti s slike.");
                 }
             } catch (err) {
-                document.getElementById('actPhotoStatus').textContent = `Analiza ni uspela: ${err.message || 'Preveri internetno povezavo ali API ključ'}`;
+                let msg = err.message && err.message.startsWith("AI:") ? err.message : "API napaka: Preveri povezavo ali ključ";
+                document.getElementById('actPhotoStatus').textContent = msg;
                 document.getElementById('actPhotoStatus').className = "text-[10px] text-rose-400 mt-2 font-semibold";
             }
         }
@@ -788,7 +789,7 @@
             document.getElementById('mealPhotoStatus').textContent = "Obdelujem sliko obroka...";
             document.getElementById('mealPhotoStatus').className = "text-[10px] text-amber-400 mt-2 font-semibold animate-pulse";
             
-            compressImage(file, 800, 0.7, (base64Data) => {
+            compressImage(file, 400, 0.6, (base64Data) => {
                 document.getElementById('mealImgData').value = base64Data;
                 document.getElementById('mealPhotoStatus').textContent = "Slika naložena! Analiziram z Gemini AI...";
                 analyzeMealImage(base64Data);
@@ -807,7 +808,7 @@
             const payload = {
                 contents: [{
                     parts: [
-                        { text: "Prepoznaj obrok s slike in oceni njegove hranilne vrednosti. Vrni strogo JSON obliko: {\"description\": \"...\", \"calories\": številka, \"protein\": številka, \"carbs\": številka, \"fat\": številka, \"type\": \"Zajtrk/Malica/Kosilo/Večerja\"}" },
+                        { text: "Oceni obrok s slike. Vrni JSON: {\"description\": \"...\", \"calories\": kcal, \"protein\": g, \"carbs\": g, \"fat\": g, \"type\": \"Zajtrk/Malica/Kosilo/Večerja\"}" },
                         { inlineData: { mimeType: "image/jpeg", data: base64Data } }
                     ]
                 }],
@@ -823,7 +824,7 @@
                 const data = await response.json();
                 
                 if (data.error) {
-                    throw new Error(data.error.message);
+                    throw new Error("API napaka: Preveri povezavo ali ključ");
                 }
 
                 if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
@@ -845,10 +846,11 @@
                     document.getElementById('mealPhotoStatus').textContent = `Obrok uspešno ocenjen (~${resJson.calories} kcal)!`;
                     document.getElementById('mealPhotoStatus').className = "text-[10px] text-emerald-400 mt-2 font-semibold";
                 } else {
-                    throw new Error("Slika ne vsebuje prepoznatljivega obroka ali pa je osvetlitev slaba.");
+                    throw new Error("AI: Ne morem prepoznati obroka s slike.");
                 }
             } catch (err) {
-                document.getElementById('mealPhotoStatus').textContent = `Analiza slike ni uspela: ${err.message || 'Preveri API ključ ali povezavo'}`;
+                let msg = err.message && err.message.startsWith("AI:") ? err.message : "API napaka: Preveri povezavo ali ključ";
+                document.getElementById('mealPhotoStatus').textContent = msg;
                 document.getElementById('mealPhotoStatus').className = "text-[10px] text-rose-400 mt-2 font-semibold";
             }
         }
@@ -864,7 +866,7 @@
             statusEl.textContent = "Gemini AI ocenjuje hranilne vrednosti...";
             statusEl.className = "text-[10px] text-amber-400 font-semibold animate-pulse";
 
-            const prompt = `Oceni hranilne vrednosti za obrok: "${desc}". Vrni strogo JSON obliko: {"description": "...", "calories": številka, "protein": številka_gramov, "carbs": številka_gramov, "fat": številka_gramov, "type": "Zajtrk/Malica/Kosilo/Večerja"}`;
+            const prompt = `Oceni obrok: "${desc}". Vrni JSON: {"description":"...","calories":kcal,"protein":g,"carbs":g,"fat":g,"type":"Zajtrk/Malica/Kosilo/Večerja"}`;
             
             try {
                 const aiResult = await askGemini(prompt);
@@ -880,7 +882,8 @@
                     statusEl.className = "text-[10px] text-emerald-400 font-semibold";
                 }
             } catch (err) {
-                statusEl.textContent = `AI ocena ni uspela: ${err.message}`;
+                let msg = err.message && err.message.startsWith("AI:") ? err.message : "API napaka: Preveri povezavo ali ključ";
+                statusEl.textContent = msg;
                 statusEl.className = "text-[10px] text-rose-400 font-semibold";
             }
         }
@@ -1043,7 +1046,6 @@
                 meals.push(mealData);
             }
 
-            // Varno shranjevanje z obravnavo prekoračitve kvote (LocalStorage Quota)
             try {
                 localStorage.setItem('sport_meals', JSON.stringify(meals));
             } catch (err) {
@@ -1379,39 +1381,51 @@
                 });
             }
 
-            let weeklyMinutes = 0, weeklyBurned = 0, weeklyCalories = 0;
-            activities.forEach(act => {
-                const w = getWeekNumber(new Date(act.date));
-                if (w.year === currentW.year && w.week === currentW.week) {
-                    weeklyMinutes += Number(act.duration);
-                    weeklyBurned += Number(act.burned);
-                }
-            });
-            meals.forEach(meal => {
-                const w = getWeekNumber(new Date(meal.date));
-                if (w.year === currentW.year && w.week === currentW.week) {
-                    weeklyCalories += Number(meal.calories);
+            let weeklyActs = 0;
+            let weeklyBurn = 0;
+            let weeklyCal = 0;
+            const weekStr = getWeekRange(todayObj);
+            document.getElementById('currentWeekRange').textContent = weekStr;
+
+            activities.forEach(a => {
+                const d = new Date(a.date);
+                if (getWeekNumber(d).week === currentW.week && getWeekNumber(d).year === currentW.year) {
+                    weeklyActs += Number(a.duration);
+                    weeklyBurn += Number(a.burned);
                 }
             });
 
-            document.getElementById('weeklyMinutes').textContent = `${weeklyMinutes} min`;
-            document.getElementById('weeklyBurned').textContent = `${weeklyBurned} kcal`;
-            document.getElementById('weeklyCalories').textContent = `${Math.round(weeklyCalories)} kcal`;
-            document.getElementById('currentWeekRange').textContent = `Teden ${currentW.week} (${getWeekRange(todayObj)})`;
+            meals.forEach(m => {
+                const d = new Date(m.date);
+                if (getWeekNumber(d).week === currentW.week && getWeekNumber(d).year === currentW.year) {
+                    weeklyCal += Number(m.calories);
+                }
+            });
 
-            const net = weeklyBurned - weeklyCalories;
+            document.getElementById('weeklyMinutes').textContent = `${weeklyActs} min`;
+            document.getElementById('weeklyBurned').textContent = `${weeklyBurn} kcal`;
+            document.getElementById('weeklyCalories').textContent = `${Math.round(weeklyCal)} kcal`;
+            
+            const netDiff = weeklyBurn - weeklyCal;
             const netEl = document.getElementById('netCalories');
-            netEl.textContent = `${net > 0 ? '+' : ''}${Math.round(net)} kcal`;
-            netEl.className = `font-bold ${net >= 0 ? 'text-emerald-400' : 'text-amber-400'}`;
+            if (netDiff > 0) {
+                netEl.textContent = `-${netDiff} kcal (Deficit)`;
+                netEl.className = "font-bold text-emerald-400";
+            } else if (netDiff < 0) {
+                netEl.textContent = `+${Math.abs(netDiff)} kcal (Suficit)`;
+                netEl.className = "font-bold text-rose-400";
+            } else {
+                netEl.textContent = `0 kcal (Uravnoteženo)`;
+                netEl.className = "font-bold text-slate-300";
+            }
 
-            let goalPercent = Math.min(Math.round((weeklyMinutes / 150) * 100), 100);
-            document.getElementById('progressBar').style.width = `${goalPercent}%`;
-            document.getElementById('goalPercentage').textContent = `${goalPercent}%`;
+            let actPercent = Math.min(Math.round((weeklyActs / 150) * 100), 100);
+            document.getElementById('progressBar').style.width = `${actPercent}%`;
+            document.getElementById('goalPercentage').textContent = `${actPercent}%`;
 
-            const weeklyBurnGoal = 1500;
-            let weeklyBurnPercent = Math.min(Math.round((weeklyBurned / weeklyBurnGoal) * 100), 100);
-            document.getElementById('weeklyBurnGoalText').textContent = `${weeklyBurned} / ${weeklyBurnGoal} kcal (${weeklyBurnPercent}%)`;
-            document.getElementById('weeklyBurnProgressBar').style.width = `${weeklyBurnPercent}%`;
+            let burnPercent = Math.min(Math.round((weeklyBurn / 1500) * 100), 100);
+            document.getElementById('weeklyBurnProgressBar').style.width = `${burnPercent}%`;
+            document.getElementById('weeklyBurnGoalText').textContent = `${weeklyBurn} / 1500 kcal (${burnPercent}%)`;
         }
     </script>
 </body>
