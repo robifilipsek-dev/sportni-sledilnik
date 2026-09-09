@@ -287,29 +287,42 @@
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-300 mb-1">Vrsta aktivnosti</label>
-                        <select id="actType" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
-                            <option value="Fitnes">Fitnes / Trening z utežmi</option>
-                            <option value="Kolesarjenje">Kolesarjenje</option>
-                            <option value="Tek">Tek</option>
-                            <option value="Plavanje">Plavanje</option>
-                            <option value="Odbojka na mivki">Odbojka na mivki</option>
-                            <option value="Tenis">Tenis</option>
-                            <option value="Pohodništvo">Pohodništvo</option>
-                            <option value="Smučanje">Smučanje</option>
-                            <option value="Ostalo">Ostalo</option>
-                        </select>
+                        <input type="text" id="actType" list="actTypeList" required placeholder="npr. Tek, Nogomet, Joga ..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500" oninput="updateEstimatedBurnedCalories()">
+                        <datalist id="actTypeList">
+                            <option value="Fitnes">
+                            <option value="Kolesarjenje">
+                            <option value="Tek">
+                            <option value="Plavanje">
+                            <option value="Odbojka na mivki">
+                            <option value="Tenis">
+                            <option value="Pohodništvo">
+                            <option value="Smučanje">
+                            <option value="Nogomet">
+                            <option value="Košarka">
+                            <option value="Joga">
+                        </datalist>
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-300 mb-1">Trajanje (minut)</label>
-                        <input type="number" id="actDuration" min="1" required placeholder="npr. 45" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+                        <input type="number" id="actDuration" min="1" required placeholder="npr. 45" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500" oninput="updateEstimatedBurnedCalories()">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-300 mb-1">Intenzivnost napora</label>
-                        <select id="actIntensity" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+                        <select id="actIntensity" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500" onchange="updateEstimatedBurnedCalories()">
                             <option value="Nizka">Nizka (lahkotno gibanje)</option>
                             <option value="Srednja" selected>Srednja (zmeren napor)</option>
                             <option value="Visoka">Visoka (visok utrip/težak trening)</option>
                         </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Porabljene kalorije (kcal)</label>
+                        <div class="flex gap-2">
+                            <input type="number" step="any" id="actBurnedCalories" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+                            <button type="button" id="actAiCalorieBtn" onclick="estimateActivityCaloriesAI()" class="shrink-0 text-blue-300 hover:text-blue-200 text-xs font-semibold flex items-center gap-1.5 transition-colors bg-blue-900/30 px-3 py-2 rounded-lg border border-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> AI ocena
+                            </button>
+                        </div>
+                        <p id="actCalorieAiStatus" class="text-[10px] text-slate-400 mt-1">Privzeto ocenjeno samodejno – za natančnejšo oceno uporabi gumb "AI ocena"</p>
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-xs font-medium text-slate-300 mb-1">Opomba (izbirno)</label>
@@ -741,7 +754,40 @@
         const GEMINI_MODEL = 'gemini-3.1-flash-lite';
         let aiCallInProgress = false;
 
-        async function callGeminiAPI(promptText, imageBase64 = null) {
+        const MEAL_SCHEMA = {
+            type: "OBJECT",
+            properties: {
+                description: { type: "STRING" },
+                calories: { type: "NUMBER" },
+                protein: { type: "NUMBER" },
+                carbs: { type: "NUMBER" },
+                fat: { type: "NUMBER" },
+                type: { type: "STRING", enum: ["Zajtrk", "Malica", "Kosilo", "Večerja"] }
+            },
+            required: ["description", "calories", "protein", "carbs", "fat", "type"]
+        };
+
+        const ACTIVITY_SCHEMA = {
+            type: "OBJECT",
+            properties: {
+                type: { type: "STRING" },
+                duration: { type: "NUMBER" },
+                intensity: { type: "STRING", enum: ["Nizka", "Srednja", "Visoka"] },
+                note: { type: "STRING" },
+                calories: { type: "NUMBER" }
+            },
+            required: ["type", "duration", "intensity", "calories"]
+        };
+
+        const ACTIVITY_CALORIE_SCHEMA = {
+            type: "OBJECT",
+            properties: {
+                calories: { type: "NUMBER" }
+            },
+            required: ["calories"]
+        };
+
+        async function callGeminiAPI(promptText, imageBase64 = null, schema = null) {
             const apiKey = localStorage.getItem('gemini_api_key');
             if (!apiKey) {
                 alert("API ključ ni nastavljen! Prosim, odpri nastavitve in vnesi svoj Gemini API ključ.");
@@ -754,10 +800,13 @@
                 parts.push({ inlineData: { mimeType: "image/jpeg", data: imageBase64 } });
             }
 
+            const generationConfig = { responseMimeType: "application/json" };
+            if (schema) generationConfig.responseSchema = schema;
+
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
             const payload = {
                 contents: [{ parts }],
-                generationConfig: { responseMimeType: "application/json" }
+                generationConfig
             };
 
             const response = await fetch(url, {
@@ -789,7 +838,7 @@
             }
         }
 
-        async function runAiTask({ prompt, image, statusEl, busyText, busyClass, errorClass, triggerEl, onSuccess, onDone }) {
+        async function runAiTask({ prompt, image, schema, statusEl, busyText, busyClass, errorClass, triggerEl, onSuccess, onDone }) {
             if (aiCallInProgress) {
                 if (statusEl) statusEl.textContent = "AI je že zaposlen, počakaj trenutek...";
                 return;
@@ -802,7 +851,7 @@
             }
 
             try {
-                const result = await callGeminiAPI(prompt, image);
+                const result = await callGeminiAPI(prompt, image, schema);
                 if (result) onSuccess(result);
             } catch (err) {
                 if (statusEl) {
@@ -832,10 +881,11 @@
 
         function analyzeActivityImage(base64Data) {
             const statusEl = document.getElementById('actPhotoStatus');
-            const prompt = "Prepoznaj šport s slike. Vrni JSON: {\"type\": \"Fitnes/Kolesarjenje/Tek/Plavanje/Odbojka na mivki/Tenis/Pohodništvo/Smučanje/Ostalo\", \"duration\": minut, \"intensity\": \"Nizka/Srednja/Visoka\", \"note\": \"opis\"}";
+            const weight = parseFloat(localStorage.getItem('user_weight')) || 75;
+            const prompt = `Prepoznaj šport s slike (npr. z zaslona pametne ure ali aplikacije za vadbo). Oseba ima telesno težo ${weight} kg. Nujno oceni tudi približno število porabljenih kalorij (če je na sliki vidna vrednost kalorij, jo uporabi, sicer jo oceni glede na vrsto, trajanje in intenzivnost). Vrni JSON: {"type": "ime aktivnosti (npr. Tek, Kolesarjenje, Nogomet ...)", "duration": minut, "intensity": "Nizka/Srednja/Visoka", "note": "opis", "calories": ocena_porabljenih_kalorij}`;
 
             runAiTask({
-                prompt, image: base64Data, statusEl,
+                prompt, image: base64Data, schema: ACTIVITY_SCHEMA, statusEl,
                 busyText: "Analiziram z Gemini AI...",
                 busyClass: "text-[10px] text-blue-400 mt-2 font-semibold animate-pulse",
                 errorClass: "text-[10px] text-rose-400 mt-2 font-semibold",
@@ -844,6 +894,11 @@
                     if (resJson.duration) document.getElementById('actDuration').value = resJson.duration;
                     if (resJson.intensity) document.getElementById('actIntensity').value = resJson.intensity;
                     if (resJson.note) document.getElementById('actNote').value = resJson.note;
+                    if (resJson.calories !== undefined) {
+                        document.getElementById('actBurnedCalories').value = r1(resJson.calories);
+                    } else {
+                        updateEstimatedBurnedCalories();
+                    }
                     statusEl.textContent = "Aktivnost uspešno prepoznana s slike!";
                     statusEl.className = "text-[10px] text-emerald-400 mt-2 font-semibold";
                 }
@@ -866,10 +921,10 @@
 
         function analyzeMealImage(base64Data) {
             const statusEl = document.getElementById('mealPhotoStatus');
-            const prompt = "Oceni obrok s slike. Vrni JSON: {\"description\": \"...\", \"calories\": kcal, \"protein\": g, \"carbs\": g, \"fat\": g, \"type\": \"Zajtrk/Malica/Kosilo/Večerja\"}";
+            const prompt = "Oceni obrok s slike. Nujno oceni tudi vsebnost beljakovin, ogljikovih hidratov in maščob v gramih (nikoli ne izpusti teh treh vrednosti, tudi če je ocena približna). Vrni JSON: {\"description\": \"...\", \"calories\": kcal, \"protein\": g, \"carbs\": g, \"fat\": g, \"type\": \"Zajtrk/Malica/Kosilo/Večerja\"}";
 
             runAiTask({
-                prompt, image: base64Data, statusEl,
+                prompt, image: base64Data, schema: MEAL_SCHEMA, statusEl,
                 busyText: "Analiziram z Gemini AI...",
                 busyClass: "text-[10px] text-amber-400 mt-2 font-semibold animate-pulse",
                 errorClass: "text-[10px] text-rose-400 mt-2 font-semibold",
@@ -895,10 +950,10 @@
 
             const statusEl = document.getElementById('aiStatusText');
             const triggerEl = document.getElementById('mealAiEstimateBtn');
-            const prompt = `Oceni obrok: "${desc}". Vrni JSON: {"description":"...","calories":kcal,"protein":g,"carbs":g,"fat":g,"type":"Zajtrk/Malica/Kosilo/Večerja"}`;
+            const prompt = `Oceni obrok: "${desc}". Nujno oceni tudi vsebnost beljakovin, ogljikovih hidratov in maščob v gramih (nikoli ne izpusti teh treh vrednosti). Vrni JSON: {"description":"...","calories":kcal,"protein":g,"carbs":g,"fat":g,"type":"Zajtrk/Malica/Kosilo/Večerja"}`;
 
             runAiTask({
-                prompt, statusEl, triggerEl,
+                prompt, schema: MEAL_SCHEMA, statusEl, triggerEl,
                 busyText: "Gemini AI ocenjuje hranilne vrednosti...",
                 onSuccess: (aiResult) => {
                     if (aiResult.description) document.getElementById('mealDesc').value = aiResult.description;
@@ -1252,6 +1307,43 @@
             return r1(duration * baseRate * mult);
         }
 
+        function updateEstimatedBurnedCalories() {
+            const type = document.getElementById('actType').value.trim();
+            const duration = parseInt(document.getElementById('actDuration').value) || 0;
+            const intensity = document.getElementById('actIntensity').value;
+            if (duration > 0) {
+                document.getElementById('actBurnedCalories').value = estimateBurnedCalories(type, duration, intensity);
+            }
+        }
+
+        function estimateActivityCaloriesAI() {
+            const type = document.getElementById('actType').value.trim();
+            const duration = parseInt(document.getElementById('actDuration').value) || 0;
+            const intensity = document.getElementById('actIntensity').value;
+            if (!type || !duration) {
+                alert("Najprej vnesi vrsto aktivnosti in trajanje!");
+                return;
+            }
+            const weight = parseFloat(localStorage.getItem('user_weight')) || 75;
+            const statusEl = document.getElementById('actCalorieAiStatus');
+            const triggerEl = document.getElementById('actAiCalorieBtn');
+            const prompt = `Oceni število porabljenih kalorij pri naslednji športni aktivnosti osebe s telesno težo ${weight} kg: aktivnost "${type}", trajanje ${duration} minut, intenzivnost napora "${intensity}". Vrni JSON: {"calories": ocena_porabljenih_kalorij_kot_stevilka}`;
+
+            runAiTask({
+                prompt, schema: ACTIVITY_CALORIE_SCHEMA, statusEl, triggerEl,
+                busyText: "Gemini AI ocenjuje porabljene kalorije...",
+                busyClass: "text-[10px] text-blue-400 mt-1 font-semibold animate-pulse",
+                errorClass: "text-[10px] text-rose-400 mt-1 font-semibold",
+                onSuccess: (aiResult) => {
+                    if (aiResult.calories !== undefined) {
+                        document.getElementById('actBurnedCalories').value = r1(aiResult.calories);
+                        statusEl.textContent = `AI ocena: ~${r1(aiResult.calories)} kcal`;
+                        statusEl.className = "text-[10px] text-emerald-400 mt-1 font-semibold";
+                    }
+                }
+            });
+        }
+
         function calculatePersonalizedActivityGoal() {
             const age = parseFloat(localStorage.getItem('user_age')) || 30;
             const weight = parseFloat(localStorage.getItem('user_weight')) || 75;
@@ -1338,13 +1430,16 @@
             e.preventDefault();
             const editId = document.getElementById('actEditId').value;
             const date = document.getElementById('actDate').value;
-            const type = document.getElementById('actType').value;
+            const type = document.getElementById('actType').value.trim();
             const duration = parseInt(document.getElementById('actDuration').value) || 0;
             const intensity = document.getElementById('actIntensity').value;
             const note = document.getElementById('actNote').value.trim();
             const imgData = document.getElementById('actImgData').value;
 
-            const burnedCalories = estimateBurnedCalories(type, duration, intensity);
+            const burnedCaloriesInput = parseFloat(document.getElementById('actBurnedCalories').value);
+            const burnedCalories = !isNaN(burnedCaloriesInput) && burnedCaloriesInput > 0
+                ? r1(burnedCaloriesInput)
+                : estimateBurnedCalories(type, duration, intensity);
 
             if (editId) {
                 const idx = activities.findIndex(a => a.id === editId);
@@ -1381,6 +1476,7 @@
             document.getElementById('actIntensity').value = act.intensity || 'Srednja';
             document.getElementById('actNote').value = act.note || '';
             document.getElementById('actImgData').value = act.imgData || '';
+            document.getElementById('actBurnedCalories').value = act.burnedCalories || '';
 
             document.getElementById('actFormTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-blue-400"></i> Uredi aktivnost`;
             document.getElementById('actSubmitBtn').textContent = 'Shrani spremembe';
@@ -1478,6 +1574,8 @@
                 document.getElementById('actCancelBtn').classList.add('hidden');
                 document.getElementById('actPhotoStatus').textContent = 'Slikaj ali izberi zaslon ure / vadbe za AI prepoznavo';
                 document.getElementById('actPhotoStatus').className = 'text-[10px] text-slate-400 mt-2';
+                document.getElementById('actCalorieAiStatus').textContent = 'Privzeto ocenjeno samodejno – za natančnejšo oceno uporabi gumb "AI ocena"';
+                document.getElementById('actCalorieAiStatus').className = 'text-[10px] text-slate-400 mt-1';
             } else if (type === 'meal') {
                 document.getElementById('mealEditId').value = '';
                 document.getElementById('mealImgData').value = '';
