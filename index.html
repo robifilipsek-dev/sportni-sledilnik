@@ -131,6 +131,83 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
 .seg-btn{display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.55rem .3rem;border-radius:.75rem;font-size:.75rem;font-weight:600;color:rgb(var(--slate-400))}
 .seg-btn:hover{color:rgb(var(--slate-200))}
 .seg-btn.active{background:rgb(var(--blue-500) / .16);color:rgb(var(--blue-400))}
+
+/* ===================== MODERNI VIDEZ ===================== */
+body{background-image:radial-gradient(60rem 26rem at 50% -9rem, rgb(var(--blue-500) / .16), transparent 70%),radial-gradient(34rem 22rem at 100% 38%, rgb(var(--purple-500) / .07), transparent 70%),radial-gradient(34rem 22rem at 0% 70%, rgb(var(--cyan-500) / .05), transparent 70%)}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+section,#tabContent-activities,#tabContent-meals,#tabContent-body,#tabContent-history{animation:rise .55s cubic-bezier(.22,1,.36,1) both}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.eyebrow{font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.cap-first::first-letter{text-transform:uppercase}
+.hero-card{background-image:radial-gradient(34rem 16rem at 0% -10%, rgb(var(--blue-500) / .14), transparent 65%),radial-gradient(28rem 14rem at 100% 110%, rgb(var(--purple-500) / .10), transparent 65%)}
+
+/* ----- krožni indikatorji ----- */
+.ring{--rc:var(--blue-500);position:relative;width:100%;aspect-ratio:1/1;margin:0 auto}
+/* Tailwind ima svoj utility razred .ring (moder okvir) – izklopimo ga za naše kroge */
+.ring.ring{box-shadow:none!important;--tw-ring-shadow:0 0 #0000!important;--tw-ring-offset-shadow:0 0 #0000!important;outline:none!important;border:0!important;background:transparent}
+.ring-lg{max-width:136px}
+.ring-md{max-width:112px}
+.ring-sm{max-width:70px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg);overflow:visible;display:block}
+.ring-bg{fill:none;stroke:rgb(var(--slate-800));stroke-width:9}
+.ring-fg{fill:none;stroke:rgb(var(--rc));stroke-width:9;stroke-linecap:round;stroke-dasharray:0 100;
+    transition:stroke-dasharray 1s cubic-bezier(.22,1,.36,1),stroke .35s ease,opacity .2s;
+    filter:drop-shadow(0 0 3px rgb(var(--rc) / .55))}
+html.light .ring-fg{filter:drop-shadow(0 0 2px rgb(var(--rc) / .3))}
+.ring-sm .ring-bg,.ring-sm .ring-fg{stroke-width:12}
+.ring-fg.empty{opacity:0}
+.ring-fg.over{stroke:rgb(var(--rose-500));filter:drop-shadow(0 0 3px rgb(var(--rose-500) / .55))}
+.ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;pointer-events:none}
+.ring-i{color:rgb(var(--rc));font-size:clamp(.7rem,2.8vw,.95rem);margin-bottom:.3rem}
+.ring-v{font-weight:800;font-size:clamp(1rem,4.8vw,1.45rem);color:rgb(var(--strong));letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.ring-md .ring-v{font-size:clamp(.95rem,4.2vw,1.3rem)}
+.ring-sm .ring-v{font-size:.72rem;letter-spacing:0}
+.ring-blue{--rc:var(--blue-500)}.ring-amber{--rc:var(--amber-500)}.ring-emerald{--rc:var(--emerald-500)}
+.ring-cyan{--rc:var(--cyan-500)}.ring-yellow{--rc:var(--yellow-500)}.ring-lime{--rc:var(--lime-500)}
+.ring-teal{--rc:var(--teal-500)}.ring-purple{--rc:var(--purple-500)}
+.ring.mini{width:2.7rem;max-width:2.7rem;flex-shrink:0}
+.ring.mini .ring-v{font-size:.5rem}
+.ring-tile{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.ring-title{margin-top:.6rem;font-size:.74rem;font-weight:700;color:rgb(var(--strong));line-height:1.2}
+.ring-sub{margin-top:.2rem;font-size:.65rem;color:rgb(var(--slate-400));font-variant-numeric:tabular-nums;line-height:1.3}
+.over-text{color:rgb(var(--rose-400))!important;font-weight:600}
+
+/* ----- ploščice, vrstice, žetoni ----- */
+.stat{background:rgb(var(--slate-900) / .65);border:1px solid rgb(var(--slate-800));border-radius:1rem;padding:.7rem .4rem;text-align:center}
+.stat .k{display:block;font-size:.6rem;color:rgb(var(--slate-400));line-height:1.25;margin-bottom:.2rem}
+.stat .v{display:block;font-size:.85rem;font-weight:700;font-variant-numeric:tabular-nums}
+.info-row{display:flex;gap:.55rem;align-items:flex-start;padding:.6rem .8rem;border-radius:.95rem;background:rgb(var(--slate-900) / .6);border:1px solid rgb(var(--slate-800));font-size:.72rem;line-height:1.4;color:rgb(var(--slate-400))}
+.info-row i{margin-top:.12rem;font-size:.75rem}
+.water-row{display:flex;align-items:center;gap:.5rem;padding:.65rem .8rem;border-radius:1rem;background:rgb(var(--slate-900) / .6);border:1px solid rgb(var(--slate-800))}
+.water-btn{font-size:.75rem;font-weight:600;padding:.5rem .8rem;border-radius:.8rem;border:1px solid rgb(var(--cyan-500) / .3);background:rgb(var(--cyan-500) / .12);color:rgb(var(--cyan-400))}
+.water-btn:hover{background:rgb(var(--cyan-500) / .22)}
+.water-btn.reset{border-color:rgb(var(--rose-500) / .3);background:rgb(var(--rose-500) / .1);color:rgb(var(--rose-400))}
+.water-btn.reset:hover{background:rgb(var(--rose-500) / .2)}
+.chip{width:2.75rem;height:2.75rem;border-radius:.95rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.95rem}
+.chip-amber{background:rgb(var(--amber-500) / .14);color:rgb(var(--amber-400))}
+.chip-blue{background:rgb(var(--blue-500) / .14);color:rgb(var(--blue-400))}
+.item-card{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.7rem .8rem;border-radius:1.1rem;background:rgb(var(--card));border:1px solid rgb(var(--slate-800));box-shadow:var(--shadow-sm)}
+.item-card.compact{padding:.55rem .7rem;border-radius:1rem}
+.mini-btn{width:2rem;height:2rem;border-radius:.7rem;display:inline-flex;align-items:center;justify-content:center;font-size:.72rem;color:rgb(var(--slate-400));background:rgb(var(--slate-900) / .7)}
+.mini-btn.edit:hover{color:rgb(var(--blue-400));background:rgb(var(--blue-500) / .12)}
+.mini-btn.del:hover{color:rgb(var(--rose-400));background:rgb(var(--rose-500) / .12)}
+.empty-state{display:flex;align-items:center;gap:.65rem;padding:.9rem 1rem;border:1px dashed rgb(var(--slate-700));border-radius:1.1rem;color:rgb(var(--slate-500));font-size:.75rem}
+.empty-state i{font-size:1rem;opacity:.7}
+
+/* ----- obrazci, gumbi, zavihki ----- */
+body input:not([type=checkbox]):not([type=file]),body select{border-radius:.9rem;background-color:rgb(var(--slate-900));border-color:rgb(var(--slate-800))}
+body input:not([type=checkbox]):not([type=file]):focus,body select:focus{border-color:rgb(var(--blue-500) / .7)}
+body button.bg-blue-600{background-image:linear-gradient(135deg,rgb(var(--blue-500)),rgb(var(--purple-600)));box-shadow:0 10px 22px -12px rgb(var(--blue-500) / .9);border-radius:.95rem}
+body button.bg-amber-600{background-image:linear-gradient(135deg,rgb(var(--amber-500)),rgb(var(--rose-500)));box-shadow:0 10px 22px -12px rgb(var(--amber-500) / .9);border-radius:.95rem}
+body button.bg-cyan-600{background-image:linear-gradient(135deg,rgb(var(--cyan-500)),rgb(var(--blue-500)));box-shadow:0 10px 22px -12px rgb(var(--cyan-500) / .9);border-radius:.95rem}
+body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan-600:hover{filter:brightness(1.1)}
+.tabs{border-radius:1.25rem;padding:.3rem}
+.tab-btn{flex-direction:column;gap:.25rem;padding:.55rem .3rem;border-radius:1rem;font-size:.68rem}
+.tab-btn i{font-size:1rem}
+.tab-btn.active{background:linear-gradient(135deg,rgb(var(--ac) / .22),rgb(var(--ac) / .08));box-shadow:inset 0 0 0 1px rgb(var(--ac) / .35)}
+@media(min-width:640px){.tab-btn{flex-direction:row;gap:.5rem;font-size:.85rem;padding:.65rem .6rem}.tab-btn i{font-size:.95rem}}
+.hero-card h2,.hero-card .ring-v{text-shadow:none}
     </style>
 </head>
 
@@ -169,7 +246,7 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
         </header>
 
         <!-- HITRI VODNIK -->
-        <div id="guideBanner" class="bg-slate-800/80 border border-blue-500/30 rounded-xl p-3.5 mb-6 text-xs text-slate-300 relative">
+        <div id="guideBanner" class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-4 mb-6 text-xs text-slate-300 relative backdrop-blur">
             <button onclick="dismissGuide()" class="absolute top-2 right-2 text-slate-400 hover:text-white p-1" title="Zapri vodnik">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -186,173 +263,118 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
         </div>
 
         <!-- DNEVNI POVZETEK -->
-        <section class="bg-cardBg border border-blue-500/30 rounded-2xl p-4 sm:p-5 shadow-lg mb-6 relative overflow-hidden">
-            <div class="absolute top-0 right-0 bg-blue-500/10 text-blue-400 text-[10px] font-semibold px-3 py-1 rounded-bl-xl border-l border-b border-blue-500/20">
-                Pregled za danes
+        <section class="bg-cardBg border border-slate-800 rounded-3xl p-4 sm:p-6 shadow-lg mb-6 relative overflow-hidden hero-card">
+            <div class="flex items-start justify-between gap-3 mb-5">
+                <div class="min-w-0">
+                    <p class="eyebrow text-blue-400">Pregled za danes</p>
+                    <h2 id="todayDateLabel" class="text-lg sm:text-xl font-bold text-white mt-0.5 truncate cap-first">Danes</h2>
+                </div>
+                <span id="userGoalBadge" class="shrink-0 text-[10px] text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">Cilj: Ohranjanje</span>
             </div>
-            
-            <div class="bg-slate-900/80 rounded-xl p-3 mb-4 border border-slate-800/80 space-y-2.5 mt-2">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                    <div class="flex items-center gap-2">
-                        <div class="w-7 h-7 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
-                            <i class="fa-solid fa-fire text-xs"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-slate-200">Energijska poraba danes</span>
-                    </div>
-                    <span id="userGoalBadge" class="text-[10px] text-emerald-400 font-medium bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">Cilj: Ohranjanje</span>
-                </div>
-                
-                <div class="grid grid-cols-3 gap-2 text-center">
-                    <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-800/60">
-                        <span class="block text-[10px] text-slate-400">Pasivna (BMR + Koraki)</span>
-                        <span id="todayPassiveBurn" class="text-xs font-bold text-slate-200">0 kcal</span>
-                    </div>
-                    <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-800/60">
-                        <span class="block text-[10px] text-slate-400">Aktivna (Šport)</span>
-                        <span id="todaySportBurn" class="text-xs font-bold text-emerald-400">0 kcal</span>
-                    </div>
-                    <div class="bg-slate-950/60 p-2 rounded-lg border border-slate-800/60">
-                        <span class="block text-[10px] text-slate-400">Skupna poraba</span>
-                        <span id="todayTotalBurn" class="text-xs font-bold text-blue-400">0 kcal</span>
-                    </div>
-                </div>
 
-                <div class="pt-1">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-[10px] text-slate-400">Cilj aktivne porabe danes (šport)</span>
-                        <span id="dailyActiveGoalText" class="text-[10px] font-semibold text-emerald-400">0 / 0 kcal</span>
-                    </div>
-                    <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                        <div id="dailyActiveProgress" class="bg-emerald-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
-                    </div>
-                    <span id="dailyActiveRemainingText" class="text-[10px] text-slate-500 mt-1 block"></span>
+            <!-- GLAVNI KROGI -->
+            <div class="grid grid-cols-3 gap-2 sm:gap-6 mb-5">
+                <div class="ring-tile">
+                    <div class="ring ring-lg ring-amber"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="42" pathLength="100"/><circle id="todayCalProgress" class="ring-fg empty" cx="50" cy="50" r="42" pathLength="100"/></svg><div class="ring-c"><i class="fa-solid fa-utensils ring-i"></i><span id="calStatusText" class="ring-v">0%</span></div></div>
+                    <div class="ring-title">Vnos</div>
+                    <div id="todayCalories" class="ring-sub">0 kcal</div>
+                </div>
+                <div class="ring-tile">
+                    <div class="ring ring-lg ring-emerald"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="42" pathLength="100"/><circle id="dailyActiveProgress" class="ring-fg empty" cx="50" cy="50" r="42" pathLength="100"/></svg><div class="ring-c"><i class="fa-solid fa-fire ring-i"></i><span id="dailyActivePct" class="ring-v">0%</span></div></div>
+                    <div class="ring-title">Šport</div>
+                    <div id="dailyActiveGoalText" class="ring-sub">0 / 0 kcal</div>
+                </div>
+                <div class="ring-tile">
+                    <div class="ring ring-lg ring-cyan"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="42" pathLength="100"/><circle id="waterProgress" class="ring-fg empty" cx="50" cy="50" r="42" pathLength="100"/></svg><div class="ring-c"><i class="fa-solid fa-droplet ring-i"></i><span id="waterPct" class="ring-v">0%</span></div></div>
+                    <div class="ring-title">Voda</div>
+                    <div id="todayWaterText" class="ring-sub">0 / 0 ml</div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-2">
-                <!-- PREHRANA -->
-                <div class="bg-slate-900/70 rounded-xl p-3 border border-slate-800">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-xs font-medium text-slate-300">Zaužito (vnos kcal)</span>
-                        <span id="todayCalTarget" class="text-[10px] text-slate-400">Cilj vnos: ~0 kcal</span>
-                    </div>
-                    <div class="flex items-baseline justify-between">
-                        <span id="todayCalories" class="text-lg font-bold text-amber-400">0 kcal</span>
-                        <span id="calStatusText" class="text-[10px] text-slate-400">0% cilja</span>
-                    </div>
-                    <div class="w-full bg-slate-800 rounded-full h-2 mt-1.5 overflow-hidden">
-                        <div id="todayCalProgress" class="bg-amber-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
-                    </div>
-                    <span id="calRemainingText" class="text-[10px] text-slate-500 mt-1 mb-2 block"></span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-5">
+                <div class="info-row"><i class="fa-solid fa-utensils text-amber-400"></i><span id="calRemainingText"></span></div>
+                <div class="info-row"><i class="fa-solid fa-fire text-emerald-400"></i><span id="dailyActiveRemainingText"></span></div>
+            </div>
 
-                    <!-- MAKROHRANILA -->
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:text-center mt-1 border-t border-slate-800/80 pt-2">
-                        <div>
-                            <div class="flex justify-between items-baseline mb-0.5">
-                                <span class="text-[10px] text-slate-400">Beljakovine</span>
-                                <span id="proteinTargetText" class="text-[9px] text-slate-500">/0g</span>
-                            </div>
-                            <span id="todayProtein" class="text-xs font-bold text-yellow-400 block">0g</span>
-                            <div class="w-full bg-slate-800 rounded-full h-1 mt-1 overflow-hidden">
-                                <div id="proteinProgress" class="bg-yellow-400 h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between items-baseline mb-0.5">
-                                <span class="text-[10px] text-slate-400">Ogljikovi hidrati</span>
-                                <span id="carbsTargetText" class="text-[9px] text-slate-500">/0g</span>
-                            </div>
-                            <span id="todayCarbs" class="text-xs font-bold text-lime-400 block">0g</span>
-                            <div class="w-full bg-slate-800 rounded-full h-1 mt-1 overflow-hidden">
-                                <div id="carbsProgress" class="bg-lime-400 h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between items-baseline mb-0.5">
-                                <span class="text-[10px] text-slate-400">Maščobe</span>
-                                <span id="fatTargetText" class="text-[9px] text-slate-500">/0g</span>
-                            </div>
-                            <span id="todayFat" class="text-xs font-bold text-teal-300 block">0g</span>
-                            <div class="w-full bg-slate-800 rounded-full h-1 mt-1 overflow-hidden">
-                                <div id="fatProgress" class="bg-teal-400 h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
-                            </div>
-                        </div>
+            <!-- ENERGIJSKA PORABA -->
+            <div class="mb-5">
+                <p class="eyebrow text-slate-400 mb-2">Energijska poraba danes</p>
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="stat"><span class="k">Pasivna (BMR + koraki)</span><span id="todayPassiveBurn" class="v text-white">0 kcal</span></div>
+                    <div class="stat"><span class="k">Aktivna (šport)</span><span id="todaySportBurn" class="v text-emerald-400">0 kcal</span></div>
+                    <div class="stat"><span class="k">Skupna poraba</span><span id="todayTotalBurn" class="v text-blue-400">0 kcal</span></div>
+                </div>
+            </div>
+
+            <!-- MAKROHRANILA -->
+            <div class="mb-5">
+                <p class="eyebrow text-slate-400 mb-3">Makrohranila</p>
+                <div class="grid grid-cols-3 gap-2 sm:gap-6">
+                    <div class="ring-tile">
+                        <div class="ring ring-sm ring-yellow"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="42" pathLength="100"/><circle id="proteinProgress" class="ring-fg empty" cx="50" cy="50" r="42" pathLength="100"/></svg><div class="ring-c"><span id="proteinPct" class="ring-v">0%</span></div></div>
+                        <div class="ring-title">Beljakovine</div>
+                        <div class="ring-sub"><span id="todayProtein">0g</span><span id="proteinTargetText">/0g</span></div>
+                    </div>
+                    <div class="ring-tile">
+                        <div class="ring ring-sm ring-lime"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="42" pathLength="100"/><circle id="carbsProgress" class="ring-fg empty" cx="50" cy="50" r="42" pathLength="100"/></svg><div class="ring-c"><span id="carbsPct" class="ring-v">0%</span></div></div>
+                        <div class="ring-title">Ogljikovi hidrati</div>
+                        <div class="ring-sub"><span id="todayCarbs">0g</span><span id="carbsTargetText">/0g</span></div>
+                    </div>
+                    <div class="ring-tile">
+                        <div class="ring ring-sm ring-teal"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="42" pathLength="100"/><circle id="fatProgress" class="ring-fg empty" cx="50" cy="50" r="42" pathLength="100"/></svg><div class="ring-c"><span id="fatPct" class="ring-v">0%</span></div></div>
+                        <div class="ring-title">Maščobe</div>
+                        <div class="ring-sub"><span id="todayFat">0g</span><span id="fatTargetText">/0g</span></div>
                     </div>
                 </div>
+            </div>
 
-                <!-- VODA -->
-                <div class="flex flex-col gap-3">
-                    <div class="bg-slate-900/70 rounded-xl p-3 border border-slate-800 flex items-center justify-between flex-1">
-                        <div>
-                            <span class="block text-xs font-medium text-slate-300">Vnos vode</span>
-                            <span id="todayWaterText" class="text-sm font-bold text-cyan-400">0 / 0 ml</span>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            <button onclick="addWater(250)" class="bg-cyan-900/60 hover:bg-cyan-800 text-cyan-300 text-xs px-2.5 py-1.5 rounded-lg border border-cyan-500/30 transition-colors font-medium">+2.5dl</button>
-                            <button onclick="addWater(500)" class="bg-cyan-900/60 hover:bg-cyan-800 text-cyan-300 text-xs px-2.5 py-1.5 rounded-lg border border-cyan-500/30 transition-colors font-medium">+5dl</button>
-                            <button onclick="resetWater()" class="bg-rose-900/40 hover:bg-rose-800 text-rose-300 text-xs px-2 py-1.5 rounded-lg border border-rose-500/30 transition-colors"><i class="fa-solid fa-rotate-left"></i></button>
-                        </div>
-                    </div>
-                </div>
+            <!-- VODA GUMBI -->
+            <div class="water-row">
+                <div class="flex items-center gap-2 mr-auto text-xs font-semibold text-slate-300"><i class="fa-solid fa-droplet text-cyan-400"></i> Dodaj vodo</div>
+                <button onclick="addWater(250)" class="water-btn">+2.5dl</button>
+                <button onclick="addWater(500)" class="water-btn">+5dl</button>
+                <button onclick="resetWater()" class="water-btn reset" title="Ponastavi vodo"><i class="fa-solid fa-rotate-left"></i></button>
             </div>
         </section>
 
         <!-- TEDENSKI POVZETEK -->
-        <section class="bg-cardBg border border-slate-800 rounded-2xl p-5 shadow-lg mb-8">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3 border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-sm font-semibold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-week text-purple-400"></i> Tedenski povzetek in cilji
-                    </h2>
-                    <p id="currentWeekRange" class="text-xs text-purple-400 font-medium mt-0.5">...</p>
+        <section class="bg-cardBg border border-slate-800 rounded-3xl p-4 sm:p-6 shadow-lg mb-8">
+            <div class="flex flex-col gap-0.5 mb-5">
+                <h2 class="text-sm font-semibold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-calendar-week text-purple-400"></i> Tedenski povzetek in cilji
+                </h2>
+                <p id="currentWeekRange" class="text-xs text-purple-400 font-medium">...</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 sm:gap-6 mb-5">
+                <div class="ring-tile">
+                    <div class="ring ring-md ring-blue"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="42" pathLength="100"/><circle id="progressBar" class="ring-fg empty" cx="50" cy="50" r="42" pathLength="100"/></svg><div class="ring-c"><i class="fa-solid fa-person-running ring-i"></i><span id="goalPercentage" class="ring-v">0%</span></div></div>
+                    <div id="weeklyActGoalLabel" class="ring-title">Cilj aktivnosti</div>
+                    <div id="weeklyActGoalText" class="ring-sub">0 / 0 min</div>
                 </div>
-                <div class="grid grid-cols-3 gap-3 text-center sm:text-right w-full sm:w-auto">
-                    <div class="bg-slate-900/50 sm:bg-transparent p-2 sm:p-0 rounded-lg">
-                        <span class="block text-[10px] text-slate-400">Aktivnost (min)</span>
-                        <span id="weeklyMinutes" class="text-sm font-bold text-blue-400">0 min</span>
-                    </div>
-                    <div class="bg-slate-900/50 sm:bg-transparent p-2 sm:p-0 rounded-lg">
-                        <span class="block text-[10px] text-slate-400">Športna poraba</span>
-                        <span id="weeklyBurned" class="text-sm font-bold text-emerald-400">0 kcal</span>
-                    </div>
-                    <div class="bg-slate-900/50 sm:bg-transparent p-2 sm:p-0 rounded-lg">
-                        <span class="block text-[10px] text-slate-400">Zaužito</span>
-                        <span id="weeklyCalories" class="text-sm font-bold text-amber-400">0 kcal</span>
-                    </div>
+                <div class="ring-tile">
+                    <div class="ring ring-md ring-emerald"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="42" pathLength="100"/><circle id="weeklyBurnProgressBar" class="ring-fg empty" cx="50" cy="50" r="42" pathLength="100"/></svg><div class="ring-c"><i class="fa-solid fa-fire ring-i"></i><span id="weeklyBurnPctText" class="ring-v">0%</span></div></div>
+                    <div class="ring-title">Cilj porabe kalorij</div>
+                    <div id="weeklyBurnGoalText" class="ring-sub">0 / 1500 kcal</div>
                 </div>
             </div>
 
+            <div class="grid grid-cols-3 gap-2 mb-5">
+                <div class="stat"><span class="k">Aktivnost</span><span id="weeklyMinutes" class="v text-blue-400">0 min</span></div>
+                <div class="stat"><span class="k">Športna poraba</span><span id="weeklyBurned" class="v text-emerald-400">0 kcal</span></div>
+                <div class="stat"><span class="k">Zaužito</span><span id="weeklyCalories" class="v text-amber-400">0 kcal</span></div>
+            </div>
+
             <!-- NETO RAZLIKA SPROTI PO DNEVIH -->
-            <div class="bg-slate-900/60 rounded-xl p-3 mb-4 space-y-2.5">
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-3 space-y-2.5">
                 <div class="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:items-center text-xs border-b border-slate-800/80 pb-2">
                     <span class="text-slate-300 font-medium">Neto razlika (Zaužito - Skupna poraba do danes):</span>
                     <span id="netCalories" class="font-bold text-sm">0 kcal</span>
                 </div>
                 <div>
-                    <span class="block text-[10px] text-slate-400 mb-1.5 font-medium">Dnevni pregled in seštevek po dnevih (Pon – Ned) – klikni na kljukico, da dan izključiš iz povzetka:</span>
+                    <span class="block text-[10px] text-slate-400 mb-1.5 font-medium">Dnevni pregled po dnevih (Pon – Ned) – krog kaže vnos glede na dnevni cilj. Klikni na kljukico, da dan izključiš iz povzetka:</span>
                     <div id="weeklyDailyNetBreakdown" class="grid grid-cols-1 sm:grid-cols-7 gap-1.5">
                         <!-- Popolnjeno dinamično z JS -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="space-y-3">
-                <div>
-                    <div class="flex justify-between items-center mb-1.5">
-                        <span id="weeklyActGoalLabel" class="text-xs font-medium text-slate-300">Personaliziran cilj aktivnosti</span>
-                        <span id="goalPercentage" class="text-xs font-bold text-blue-400">0%</span>
-                    </div>
-                    <div class="w-full bg-slate-700 rounded-full h-2.5 overflow-hidden">
-                        <div id="progressBar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:items-center mb-1.5">
-                        <span class="text-xs font-medium text-slate-300">Cilj porabe kalorij z aktivnostjo (tedensko)</span>
-                        <span id="weeklyBurnGoalText" class="text-xs font-bold text-emerald-400">0 / 1500 kcal (0%)</span>
-                    </div>
-                    <div class="w-full bg-slate-700 rounded-full h-2.5 overflow-hidden">
-                        <div id="weeklyBurnProgressBar" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
                     </div>
                 </div>
             </div>
@@ -1831,11 +1853,22 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
                         label: 'Telesna teža (kg)',
                         data: weightHistory.map(w => w.weight),
                         borderColor: '#06b6d4',
-                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                        borderWidth: 3,
+                        backgroundColor: (c) => {
+                            const ch = c.chart;
+                            if (!ch.chartArea) return 'rgba(6, 182, 212, 0.12)';
+                            const g = ch.ctx.createLinearGradient(0, ch.chartArea.top, 0, ch.chartArea.bottom);
+                            g.addColorStop(0, 'rgba(6, 182, 212, 0.35)');
+                            g.addColorStop(1, 'rgba(6, 182, 212, 0)');
+                            return g;
+                        },
                         fill: true,
-                        tension: 0.3,
+                        tension: 0.35,
                         pointBackgroundColor: '#06b6d4',
-                        pointRadius: 4
+                        pointBorderColor: '#0b0f17',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
                     }]
                 },
                 options: {
@@ -1843,18 +1876,21 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
                     maintainAspectRatio: false,
                     scales: {
                         x: {
-                            grid: { color: chartTheme().grid },
+                            grid: { display: false, color: chartTheme().grid },
+                            border: { display: false },
                             ticks: { color: chartTheme().tick, font: { size: 10 } }
                         },
                         y: {
                             min: yMin,
                             max: yMax,
                             grid: { color: chartTheme().grid },
+                            border: { display: false },
                             ticks: { color: chartTheme().tick, font: { size: 10 } }
                         }
                     },
                     plugins: {
-                        legend: { labels: { color: chartTheme().legend, font: { size: 11 }, usePointStyle: true, pointStyle: 'line' } }
+                        legend: { labels: { color: chartTheme().legend, font: { size: 11 }, usePointStyle: true, pointStyle: 'line' } },
+                        tooltip: { backgroundColor: 'rgba(15,23,42,.95)', titleColor: '#fff', bodyColor: '#cbd5e1', padding: 10, cornerRadius: 10, displayColors: false }
                     }
                 }
             });
@@ -1872,6 +1908,39 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
             weightChartInstance.data.labels = weightHistory.map(w => w.date);
             weightChartInstance.data.datasets[0].data = weightHistory.map(w => w.weight);
             weightChartInstance.update();
+        }
+
+        // --- KROŽNI INDIKATORJI ---
+        function setRing(id, pct, over) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const p = Math.max(0, Math.min(100, Number(pct) || 0));
+            el.classList.toggle('over', !!over);
+            el.classList.toggle('empty', p <= 0);
+            requestAnimationFrame(() => { el.style.strokeDasharray = `${p} 100`; });
+        }
+        function setText(id, txt) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = txt;
+        }
+        function updateMacro(key, val, target, ids) {
+            const pct = target > 0 ? Math.round((val / target) * 100) : 0;
+            const excess = val - target;
+            const over = target > 0 && excess > 0;
+            setRing(ids.ring, pct, over);
+            setText(ids.pct, `${pct}%`);
+            setText(ids.val, `${r1(val)}g`);
+            setText(ids.target, excess > 0 ? ` / ${r1(target)}g (+${r1(excess)}g)` : ` / ${r1(target)}g`);
+            const valEl = document.getElementById(ids.val);
+            if (valEl) valEl.classList.toggle('over-text', over);
+        }
+        function itemThumb(imgData, icon, tone) {
+            return imgData
+                ? `<img src="data:image/jpeg;base64,${imgData}" class="w-11 h-11 object-cover rounded-xl border border-slate-700 shrink-0" alt="">`
+                : `<div class="chip chip-${tone}"><i class="fa-solid ${icon}"></i></div>`;
+        }
+        function emptyState(icon, text) {
+            return `<div class="empty-state"><i class="fa-solid ${icon}"></i><span>${text}</span></div>`;
         }
 
         // --- RENDER APP ---
@@ -1901,13 +1970,21 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
             document.getElementById('todaySportBurn').textContent = `${r1(todaySportBurn)} kcal`;
             document.getElementById('todayTotalBurn').textContent = `${r1(todayTotalBurn)} kcal`;
 
+            // Datum
+            const dateLbl = document.getElementById('todayDateLabel');
+            if (dateLbl) {
+                try { dateLbl.textContent = new Date().toLocaleDateString('sl-SI', { weekday: 'long', day: 'numeric', month: 'long' }); }
+                catch (e) { dateLbl.textContent = formatDateSLO(new Date()); }
+            }
+
             // Dnevni cilj športne porabe: personalizirane tedenske minute + presežek vnosa
             const calSurplus = Math.max(0, r1(todayCal - metabolics.targetCalories));
             const dailySportGoal = r1(calculateDailySportBurnGoal() + calSurplus);
-            document.getElementById('dailyActiveGoalText').textContent = `${r1(todaySportBurn)} / ${dailySportGoal} kcal`;
-            const sportPct = dailySportGoal > 0 ? Math.min(100, Math.round((todaySportBurn / dailySportGoal) * 100)) : 0;
-            document.getElementById('dailyActiveProgress').style.width = `${sportPct}%`;
-            
+            const sportPct = dailySportGoal > 0 ? Math.round((todaySportBurn / dailySportGoal) * 100) : 0;
+            setRing('dailyActiveProgress', sportPct);
+            setText('dailyActivePct', `${sportPct}%`);
+            setText('dailyActiveGoalText', `${r1(todaySportBurn)} / ${dailySportGoal} kcal`);
+
             const sportRem = dailySportGoal - todaySportBurn;
             const remEl = document.getElementById('dailyActiveRemainingText');
             if (sportRem > 0) {
@@ -1918,62 +1995,30 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
                 remEl.textContent = `Dnevni športni cilj dosežen! (+${r1(Math.abs(sportRem))} kcal)`;
             }
 
-            // Prehrana
-            document.getElementById('todayCalTarget').textContent = `Cilj vnos: ~${r1(metabolics.targetCalories)} kcal`;
-            document.getElementById('todayCalories').textContent = `${r1(todayCal)} kcal`;
-            
-            const calPct = Math.round((todayCal / metabolics.targetCalories) * 100);
-            document.getElementById('calStatusText').textContent = `${calPct}% cilja`;
-            
-            const calProgressBar = document.getElementById('todayCalProgress');
-            calProgressBar.style.width = `${Math.min(100, calPct)}%`;
-
-            // OBARVANJE VRSTICE KALORIJ IN MAKROHRANIL OB PRESEŽKU
-            if (todayCal > metabolics.targetCalories) {
-                calProgressBar.className = "bg-rose-500 h-2 rounded-full transition-all duration-500";
-            } else {
-                calProgressBar.className = "bg-amber-500 h-2 rounded-full transition-all duration-500";
-            }
+            // Prehrana (krog je rdeč ob preseženem cilju)
+            const calPct = metabolics.targetCalories > 0 ? Math.round((todayCal / metabolics.targetCalories) * 100) : 0;
+            const calOver = todayCal > metabolics.targetCalories;
+            setRing('todayCalProgress', calPct, calOver);
+            setText('calStatusText', `${calPct}%`);
+            setText('todayCalories', `${r1(todayCal)} / ${r1(metabolics.targetCalories)} kcal`);
 
             const calDiff = todayCal - metabolics.targetCalories;
-            if (calDiff > 0) {
-                document.getElementById('calRemainingText').textContent = `Presežek: +${r1(calDiff)} kcal nad ciljem!`;
-                document.getElementById('calRemainingText').className = "text-[10px] text-rose-400 font-semibold mt-1 mb-2 block";
-            } else {
-                document.getElementById('calRemainingText').textContent = `Preostane še ${r1(Math.abs(calDiff))} kcal do cilja`;
-                document.getElementById('calRemainingText').className = "text-[10px] text-slate-500 mt-1 mb-2 block";
-            }
+            const calRem = document.getElementById('calRemainingText');
+            calRem.textContent = calDiff > 0
+                ? `Presežek: +${r1(calDiff)} kcal nad ciljem!`
+                : `Preostane še ${r1(Math.abs(calDiff))} kcal do cilja`;
+            calRem.classList.toggle('over-text', calDiff > 0);
 
             // Makrohranila
-            document.getElementById('proteinTargetText').textContent = `/${r1(macroTargets.proteinG)}g`;
-            const protExcess = todayProt - macroTargets.proteinG;
-            const todayProteinEl = document.getElementById('todayProtein');
-            todayProteinEl.textContent = protExcess > 0 ? `${r1(todayProt)}g (+${r1(protExcess)}g)` : `${r1(todayProt)}g`;
-            todayProteinEl.className = protExcess > 0 ? "text-xs font-bold text-rose-500 block" : "text-xs font-bold text-yellow-400 block";
-            const protProgressBar = document.getElementById('proteinProgress');
-            protProgressBar.style.width = `${Math.min(100, (todayProt / macroTargets.proteinG) * 100)}%`;
-            protProgressBar.className = todayProt > macroTargets.proteinG ? "bg-rose-500 h-1 rounded-full transition-all duration-500" : "bg-yellow-400 h-1 rounded-full transition-all duration-500";
-
-            document.getElementById('carbsTargetText').textContent = `/${r1(macroTargets.carbsG)}g`;
-            const carbsExcess = todayCarb - macroTargets.carbsG;
-            const todayCarbsEl = document.getElementById('todayCarbs');
-            todayCarbsEl.textContent = carbsExcess > 0 ? `${r1(todayCarb)}g (+${r1(carbsExcess)}g)` : `${r1(todayCarb)}g`;
-            todayCarbsEl.className = carbsExcess > 0 ? "text-xs font-bold text-rose-500 block" : "text-xs font-bold text-lime-400 block";
-            const carbsProgressBar = document.getElementById('carbsProgress');
-            carbsProgressBar.style.width = `${Math.min(100, (todayCarb / macroTargets.carbsG) * 100)}%`;
-            carbsProgressBar.className = todayCarb > macroTargets.carbsG ? "bg-rose-500 h-1 rounded-full transition-all duration-500" : "bg-lime-400 h-1 rounded-full transition-all duration-500";
-
-            document.getElementById('fatTargetText').textContent = `/${r1(macroTargets.fatG)}g`;
-            const fatExcess = todayFatVal - macroTargets.fatG;
-            const todayFatEl = document.getElementById('todayFat');
-            todayFatEl.textContent = fatExcess > 0 ? `${r1(todayFatVal)}g (+${r1(fatExcess)}g)` : `${r1(todayFatVal)}g`;
-            todayFatEl.className = fatExcess > 0 ? "text-xs font-bold text-rose-500 block" : "text-xs font-bold text-teal-300 block";
-            const fatProgressBar = document.getElementById('fatProgress');
-            fatProgressBar.style.width = `${Math.min(100, (todayFatVal / macroTargets.fatG) * 100)}%`;
-            fatProgressBar.className = todayFatVal > macroTargets.fatG ? "bg-rose-500 h-1 rounded-full transition-all duration-500" : "bg-teal-400 h-1 rounded-full transition-all duration-500";
+            updateMacro('protein', todayProt, macroTargets.proteinG, { ring: 'proteinProgress', pct: 'proteinPct', val: 'todayProtein', target: 'proteinTargetText' });
+            updateMacro('carbs', todayCarb, macroTargets.carbsG, { ring: 'carbsProgress', pct: 'carbsPct', val: 'todayCarbs', target: 'carbsTargetText' });
+            updateMacro('fat', todayFatVal, macroTargets.fatG, { ring: 'fatProgress', pct: 'fatPct', val: 'todayFat', target: 'fatTargetText' });
 
             // Voda: 35 ml/kg + 400 ml na vsakih 30 min zabeleženega športa
             const waterGoal = computeWaterGoal(metabolics.weight, todaySportMinutes);
+            const waterPct = waterGoal.total > 0 ? Math.round((waterData.amount / waterGoal.total) * 100) : 0;
+            setRing('waterProgress', waterPct);
+            setText('waterPct', `${waterPct}%`);
             const waterEl = document.getElementById('todayWaterText');
             waterEl.textContent = `${waterData.amount} / ${waterGoal.total} ml`;
             waterEl.title = waterGoal.extra > 0
@@ -2031,7 +2076,7 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
 
                 // Ustvari kartico za posamezen dan v tednu
                 const card = document.createElement('div');
-                card.className = `p-2 rounded-xl border transition-all flex items-center justify-between gap-2 sm:flex-col sm:justify-start sm:text-center ${
+                card.className = `p-2.5 rounded-2xl border transition-all flex items-center justify-between gap-2 sm:flex-col sm:items-center sm:justify-start sm:text-center ${
                     isExcluded
                         ? 'bg-slate-950/40 border-slate-800 opacity-50'
                         : day.isToday 
@@ -2042,6 +2087,18 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
                 const netColor = dNet > 0 ? 'text-rose-400 font-bold' : (dNet < 0 ? 'text-emerald-400 font-bold' : 'text-slate-400');
                 const netFormatted = dNet > 0 ? `+${r1(dNet)}` : `${r1(dNet)}`;
 
+                const dayTarget = metabolics.targetCalories;
+                const dayPct = day.isPastOrToday && dayTarget > 0 ? Math.round((dCal / dayTarget) * 100) : 0;
+                const dayOver = day.isPastOrToday && dCal > dayTarget;
+                const miniRing = `
+                    <div class="ring ring-sm ring-amber mini" title="Vnos: ${dayPct}% dnevnega cilja">
+                        <svg viewBox="0 0 100 100" aria-hidden="true">
+                            <circle class="ring-bg" cx="50" cy="50" r="42" pathLength="100"/>
+                            <circle class="ring-fg ${dayPct <= 0 ? 'empty' : ''} ${dayOver ? 'over' : ''}" cx="50" cy="50" r="42" pathLength="100" style="stroke-dasharray:${Math.min(100, dayPct)} 100"/>
+                        </svg>
+                        <div class="ring-c"><span class="ring-v">${day.isPastOrToday ? dayPct + '%' : '–'}</span></div>
+                    </div>`;
+
                 card.innerHTML = `
                     <div class="text-[10px] font-bold ${day.isToday ? 'text-blue-400' : 'text-slate-400'} flex items-center gap-1 shrink-0">
                         <button onclick="toggleDayExclusion('${day.dateStr}')" title="${isExcluded ? 'Vključi ta dan v tedenski povzetek' : 'Izključi ta dan iz tedenskega povzetka'}" class="${isExcluded ? 'text-slate-600' : 'text-slate-500'} hover:text-white transition-colors">
@@ -2051,6 +2108,7 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
                         ${day.isToday ? '<span class="text-[8px] bg-blue-500 text-white px-1 rounded font-normal">Danes</span>' : ''}
                         ${isExcluded ? '<span class="text-[8px] bg-slate-700 text-slate-300 px-1 rounded font-normal">Izklop</span>' : ''}
                     </div>
+                    ${miniRing}
                     <div class="flex items-center gap-2.5 text-[10px] sm:mt-1 sm:flex-col sm:items-center sm:gap-0.5 sm:text-[9px]">
                         <div class="text-amber-300 font-medium" title="Zaužito">+${r1(dCal)}</div>
                         <div class="text-slate-400" title="Skupna poraba">-${r1(dTotalBurn)}</div>
@@ -2071,16 +2129,17 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
             netEl.textContent = `${weeklyNet > 0 ? '+' : ''}${r1(weeklyNet)} kcal`;
             netEl.className = weeklyNet > 0 ? "font-bold text-sm text-rose-400" : "font-bold text-sm text-emerald-400";
 
-            // Tedenski cilj aktivnosti
+            // Tedenski cilji (krogi)
             const targetMin = calculatePersonalizedActivityGoal();
-            document.getElementById('weeklyActGoalLabel').textContent = `Personaliziran cilj aktivnosti (${targetMin} min/teden)`;
-            const actGoalPct = Math.min(100, Math.round((weeklyMinutesSum / targetMin) * 100));
-            document.getElementById('goalPercentage').textContent = `${actGoalPct}%`;
-            document.getElementById('progressBar').style.width = `${actGoalPct}%`;
+            const actGoalPct = targetMin > 0 ? Math.round((weeklyMinutesSum / targetMin) * 100) : 0;
+            setRing('progressBar', actGoalPct);
+            setText('goalPercentage', `${actGoalPct}%`);
+            setText('weeklyActGoalText', `${weeklyMinutesSum} / ${targetMin} min`);
 
-            const burnGoalPct = Math.min(100, Math.round((weeklySportBurnSum / WEEKLY_BURN_GOAL) * 100));
-            document.getElementById('weeklyBurnGoalText').textContent = `${r1(weeklySportBurnSum)} / ${WEEKLY_BURN_GOAL} kcal (${burnGoalPct}%)`;
-            document.getElementById('weeklyBurnProgressBar').style.width = `${burnGoalPct}%`;
+            const burnGoalPct = Math.round((weeklySportBurnSum / WEEKLY_BURN_GOAL) * 100);
+            setRing('weeklyBurnProgressBar', burnGoalPct);
+            setText('weeklyBurnPctText', `${burnGoalPct}%`);
+            setText('weeklyBurnGoalText', `${r1(weeklySportBurnSum)} / ${WEEKLY_BURN_GOAL} kcal`);
 
             renderTodayLists(todayMeals, todayActs);
         }
@@ -2089,29 +2148,29 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
             const mealList = document.getElementById('todayMealList');
             mealList.innerHTML = '';
             if (todayMeals.length === 0) {
-                mealList.innerHTML = `<p class="text-xs text-slate-500 italic">Danes še nimaš vnesenih obrokov.</p>`;
+                mealList.innerHTML = emptyState('fa-utensils', 'Danes še nimaš vnesenih obrokov.');
             } else {
                 todayMeals.forEach(m => {
                     const div = document.createElement('div');
-                    div.className = "bg-slate-900 border border-slate-800 p-3 rounded-xl flex justify-between items-center";
+                    div.className = "item-card";
                     div.innerHTML = `
-                        <div class="flex items-center gap-3">
-                            ${m.imgData ? `<img src="data:image/jpeg;base64,${m.imgData}" class="w-10 h-10 object-cover rounded-lg border border-slate-700">` : ''}
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-xs font-bold text-amber-400">${escapeHtml(m.type)}</span>
-                                    <span class="text-xs text-white font-medium">${escapeHtml(m.description)}</span>
+                        <div class="flex items-center gap-3 min-w-0">
+                            ${itemThumb(m.imgData, 'fa-utensils', 'amber')}
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="text-[10px] font-bold uppercase tracking-wide text-amber-400">${escapeHtml(m.type)}</span>
                                 </div>
+                                <div class="text-sm text-white font-medium leading-snug">${escapeHtml(m.description)}</div>
                                 <div class="text-[10px] text-slate-400 mt-0.5">
-                                    B: ${r1(m.protein)}g | OH: ${r1(m.carbs)}g | M: ${r1(m.fat)}g
+                                    B: ${r1(m.protein)}g · OH: ${r1(m.carbs)}g · M: ${r1(m.fat)}g
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <span class="text-xs font-bold text-amber-300">${r1(m.calories)} kcal</span>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <span class="text-xs font-bold text-amber-300 whitespace-nowrap">${r1(m.calories)} kcal</span>
                             <div class="flex items-center gap-1">
-                                <button onclick="editMeal('${m.id}')" class="text-slate-400 hover:text-blue-400 p-1 text-xs"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deleteMeal('${m.id}')" class="text-slate-400 hover:text-rose-400 p-1 text-xs"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="editMeal('${m.id}')" class="mini-btn edit" aria-label="Uredi"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteMeal('${m.id}')" class="mini-btn del" aria-label="Izbriši"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div>
                     `;
@@ -2122,27 +2181,25 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
             const actList = document.getElementById('todayActivityList');
             actList.innerHTML = '';
             if (todayActs.length === 0) {
-                actList.innerHTML = `<p class="text-xs text-slate-500 italic">Danes še nimaš vnesenih športnih aktivnosti.</p>`;
+                actList.innerHTML = emptyState('fa-person-running', 'Danes še nimaš vnesenih športnih aktivnosti.');
             } else {
                 todayActs.forEach(a => {
                     const div = document.createElement('div');
-                    div.className = "bg-slate-900 border border-slate-800 p-3 rounded-xl flex justify-between items-center";
+                    div.className = "item-card";
                     div.innerHTML = `
-                        <div class="flex items-center gap-3">
-                            ${a.imgData ? `<img src="data:image/jpeg;base64,${a.imgData}" class="w-10 h-10 object-cover rounded-lg border border-slate-700">` : ''}
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-xs font-bold text-blue-400">${escapeHtml(a.type)}</span>
-                                    <span class="text-xs text-slate-300">(${a.duration} min, ${escapeHtml(a.intensity || 'Srednja')})</span>
-                                </div>
-                                ${a.note ? `<div class="text-[10px] text-slate-400 mt-0.5">${escapeHtml(a.note)}</div>` : ''}
+                        <div class="flex items-center gap-3 min-w-0">
+                            ${itemThumb(a.imgData, 'fa-person-running', 'blue')}
+                            <div class="min-w-0">
+                                <div class="text-sm font-semibold text-white leading-snug">${escapeHtml(a.type)}</div>
+                                <div class="text-[10px] text-slate-400">${a.duration} min · ${escapeHtml(a.intensity || 'Srednja')}</div>
+                                ${a.note ? `<div class="text-[10px] text-slate-500 mt-0.5">${escapeHtml(a.note)}</div>` : ''}
                             </div>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <span class="text-xs font-bold text-emerald-400">-${r1(a.burnedCalories)} kcal</span>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <span class="text-xs font-bold text-emerald-400 whitespace-nowrap">-${r1(a.burnedCalories)} kcal</span>
                             <div class="flex items-center gap-1">
-                                <button onclick="editActivity('${a.id}')" class="text-slate-400 hover:text-blue-400 p-1 text-xs"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deleteActivity('${a.id}')" class="text-slate-400 hover:text-rose-400 p-1 text-xs"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="editActivity('${a.id}')" class="mini-btn edit" aria-label="Uredi"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteActivity('${a.id}')" class="mini-btn del" aria-label="Izbriši"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div>
                     `;
@@ -2160,21 +2217,21 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
             historyMealContainer.innerHTML = '';
 
             if (filteredMeals.length === 0) {
-                historyMealContainer.innerHTML = `<p class="text-xs text-slate-500 italic">Za ta datum ni vnesenih obrokov.</p>`;
+                historyMealContainer.innerHTML = emptyState('fa-utensils', 'Za ta datum ni vnesenih obrokov.');
             } else {
                 filteredMeals.forEach(m => {
                     const div = document.createElement('div');
-                    div.className = "bg-slate-900/60 border border-slate-800 p-2.5 rounded-xl flex justify-between items-center text-xs";
+                    div.className = "item-card compact";
                     div.innerHTML = `
-                        <div>
-                            <span class="font-bold text-amber-400">${escapeHtml(m.type)}:</span>
+                        <div class="min-w-0 text-xs">
+                            <span class="font-bold text-amber-400">${escapeHtml(m.type)}</span>
                             <span class="text-slate-200 ml-1">${escapeHtml(m.description)}</span>
-                            <span class="text-[10px] text-slate-400 block">B: ${r1(m.protein)}g | OH: ${r1(m.carbs)}g | M: ${r1(m.fat)}g</span>
+                            <span class="text-[10px] text-slate-400 block">B: ${r1(m.protein)}g · OH: ${r1(m.carbs)}g · M: ${r1(m.fat)}g</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <span class="font-bold text-amber-300">${r1(m.calories)} kcal</span>
-                            <button onclick="editMeal('${m.id}')" class="text-slate-400 hover:text-blue-400 p-1"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteMeal('${m.id}')" class="text-slate-400 hover:text-rose-400 p-1"><i class="fa-solid fa-trash"></i></button>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <span class="text-xs font-bold text-amber-300 whitespace-nowrap">${r1(m.calories)} kcal</span>
+                            <button onclick="editMeal('${m.id}')" class="mini-btn edit" aria-label="Uredi"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteMeal('${m.id}')" class="mini-btn del" aria-label="Izbriši"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     `;
                     historyMealContainer.appendChild(div);
@@ -2186,21 +2243,21 @@ html.light .bg-black\/70{background-color:rgba(15,23,42,.45)}
             historyActContainer.innerHTML = '';
 
             if (filteredActs.length === 0) {
-                historyActContainer.innerHTML = `<p class="text-xs text-slate-500 italic">Za ta datum ni vnesenih aktivnosti.</p>`;
+                historyActContainer.innerHTML = emptyState('fa-person-running', 'Za ta datum ni vnesenih aktivnosti.');
             } else {
                 filteredActs.forEach(a => {
                     const div = document.createElement('div');
-                    div.className = "bg-slate-900/60 border border-slate-800 p-2.5 rounded-xl flex justify-between items-center text-xs";
+                    div.className = "item-card compact";
                     div.innerHTML = `
-                        <div>
-                            <span class="font-bold text-blue-400">${escapeHtml(a.type)}:</span>
+                        <div class="min-w-0 text-xs">
+                            <span class="font-bold text-blue-400">${escapeHtml(a.type)}</span>
                             <span class="text-slate-200 ml-1">${a.duration} min (${escapeHtml(a.intensity || 'Srednja')})</span>
                             ${a.note ? `<span class="text-[10px] text-slate-400 block">${escapeHtml(a.note)}</span>` : ''}
                         </div>
-                        <div class="flex items-center gap-2">
-                            <span class="font-bold text-emerald-400">-${r1(a.burnedCalories)} kcal</span>
-                            <button onclick="editActivity('${a.id}')" class="text-slate-400 hover:text-blue-400 p-1"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteActivity('${a.id}')" class="text-slate-400 hover:text-rose-400 p-1"><i class="fa-solid fa-trash"></i></button>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <span class="text-xs font-bold text-emerald-400 whitespace-nowrap">-${r1(a.burnedCalories)} kcal</span>
+                            <button onclick="editActivity('${a.id}')" class="mini-btn edit" aria-label="Uredi"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteActivity('${a.id}')" class="mini-btn del" aria-label="Izbriši"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     `;
                     historyActContainer.appendChild(div);
