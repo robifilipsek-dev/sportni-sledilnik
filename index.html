@@ -209,6 +209,18 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
 @media(min-width:640px){.tab-btn{flex-direction:row;gap:.5rem;font-size:.85rem;padding:.65rem .6rem}.tab-btn i{font-size:.95rem}}
 .hero-card h2,.hero-card .ring-v{text-shadow:none}
     </style>
+
+<style>
+#toastHost{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 12px);z-index:100;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;padding:0 12px}
+.toast{pointer-events:auto;display:flex;align-items:center;gap:10px;max-width:min(92vw,440px);padding:10px 14px;border-radius:14px;font-size:13px;font-weight:600;line-height:1.3;color:#e6edf7;background:rgba(15,23,42,.97);border:1px solid rgba(148,163,184,.25);box-shadow:0 10px 30px rgba(0,0,0,.35);opacity:0;transform:translateY(-12px) scale(.98);transition:opacity .22s ease,transform .22s ease}
+.toast.show{opacity:1;transform:none}
+.toast .ti{width:22px;height:22px;border-radius:999px;display:grid;place-items:center;font-size:11px;flex:none}
+.toast.success .ti{background:rgba(16,185,129,.2);color:#34d399}
+.toast.info .ti{background:rgba(59,130,246,.2);color:#60a5fa}
+.toast.warn .ti{background:rgba(245,158,11,.2);color:#fbbf24}
+.toast.error .ti{background:rgba(244,63,94,.2);color:#fb7185}
+html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rgba(15,23,42,.12);box-shadow:0 10px 30px rgba(15,23,42,.15)}
+</style>
 </head>
 
 <body class="bg-darkBg text-slate-100 min-h-screen font-sans antialiased flex flex-col justify-between">
@@ -235,6 +247,10 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
                     </div>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
+                    <button id="cloudBtn" onclick="cloudHeaderClick()" title="Prijava in sinhronizacija" aria-label="Prijava in sinhronizacija" class="icon-btn relative inline-flex items-center justify-center">
+                        <i id="cloudBtnIcon" class="fa-solid fa-cloud text-sm"></i>
+                        <span id="cloudBtnDot" class="hidden absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-400"></span>
+                    </button>
                     <button id="installAppBtn" onclick="installPWA()" title="Namesti aplikacijo" class="icon-btn hidden inline-flex items-center justify-center text-blue-400">
                         <i class="fa-solid fa-download text-sm"></i>
                     </button>
@@ -648,6 +664,29 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
                 </button>
             </div>
             
+            <div id="cloudSection" class="mb-4 p-3 rounded-xl border border-slate-700 bg-slate-900/50">
+                <span class="block text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-cloud text-sky-400"></i> Račun in sinhronizacija
+                </span>
+                <div id="cloudSignedOut">
+                    <p class="text-[10px] text-slate-400 mb-2.5">Prijavi se z Google računom, da se podatki samodejno sinhronizirajo med računalnikom in telefonom.</p>
+                    <button type="button" onclick="cloudSignIn()" style="background:#fff;color:#1f2937" class="w-full text-xs px-3 py-2 rounded-lg font-semibold transition-opacity hover:opacity-90 flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-google"></i> Prijava z Google
+                    </button>
+                </div>
+                <div id="cloudSignedIn" class="hidden">
+                    <div class="flex items-center gap-3">
+                        <img id="cloudAvatar" alt="" referrerpolicy="no-referrer" class="w-9 h-9 rounded-full border border-slate-600 hidden">
+                        <div class="min-w-0 flex-1">
+                            <div id="cloudName" class="text-xs font-semibold text-slate-200 truncate"></div>
+                            <div id="cloudEmail" class="text-[10px] text-slate-400 truncate"></div>
+                        </div>
+                        <button type="button" onclick="cloudSignOut()" class="shrink-0 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-lg border border-slate-600 font-medium transition-colors">Odjava</button>
+                    </div>
+                    <div id="cloudStatus" class="text-[10px] text-emerald-400 mt-2 font-semibold"></div>
+                </div>
+            </div>
+
             <div class="space-y-4">
                 <div>
                     <span class="block text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1.5">
@@ -725,7 +764,7 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
                 <span class="block text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1.5">
                     <i class="fa-solid fa-database text-purple-400"></i> Varnostna kopija podatkov
                 </span>
-                <p class="text-[10px] text-slate-400 mb-2.5">Vsi podatki so shranjeni samo v tem brskalniku. Redno jih izvozi, sicer jih ob brisanju predpomnilnika izgubiš.</p>
+                <p class="text-[10px] text-slate-400 mb-2.5">Podatki so shranjeni v tem brskalniku, ob prijavi z Google pa tudi v oblaku. Za vsak primer jih občasno izvozi.</p>
                 <div class="flex gap-2">
                     <button onclick="exportData()" class="flex-1 bg-purple-900/40 hover:bg-purple-800/60 text-purple-300 text-xs px-3 py-2 rounded-lg border border-purple-500/30 font-medium transition-colors flex items-center justify-center gap-1.5">
                         <i class="fa-solid fa-download"></i> Izvozi (JSON)
@@ -751,6 +790,115 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
     <script>
         const r1 = num => parseFloat(Number(num || 0).toFixed(1));
 
+        // --- OBVESTILA (toast) ---
+        function toast(msg, type = 'success', ms = 2800) {
+            let host = document.getElementById('toastHost');
+            if (!host) {
+                host = document.createElement('div');
+                host.id = 'toastHost';
+                host.setAttribute('role', 'status');
+                host.setAttribute('aria-live', 'polite');
+                document.body.appendChild(host);
+            }
+            const icons = { success: 'fa-check', info: 'fa-circle-info', warn: 'fa-triangle-exclamation', error: 'fa-xmark' };
+            const el = document.createElement('div');
+            el.className = 'toast ' + type;
+            el.innerHTML = `<span class="ti"><i class="fa-solid ${icons[type] || icons.info}"></i></span><span class="tm"></span>`;
+            el.querySelector('.tm').textContent = msg;
+            host.appendChild(el);
+            while (host.children.length > 3) host.removeChild(host.firstChild);
+            requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+            const close = () => { el.classList.remove('show'); setTimeout(() => el.remove(), 260); };
+            el.addEventListener('click', close);
+            setTimeout(close, ms);
+            if (type === 'success' && navigator.vibrate) { try { navigator.vibrate(12); } catch (e) {} }
+        }
+
+        // --- OBLAK (Firebase) - most do modula na dnu datoteke ---
+        const CLOUD_SETTINGS_KEYS = ['user_gender', 'user_age', 'user_weight', 'user_height', 'user_steps', 'user_goal'];
+
+        function cloudPush(kind) {
+            try {
+                if (window.cloud) window.cloud.push(kind);
+                else localStorage.setItem('sport_cloud_dirty', '1');
+            } catch (e) {}
+        }
+
+        function cloudSignIn() {
+            if (!window.cloud) { toast('Firebase se ni naložil. Preveri internetno povezavo.', 'error', 4000); return; }
+            window.cloud.signIn();
+        }
+        function cloudSignOut() {
+            if (window.cloud) window.cloud.signOut();
+        }
+        function cloudHeaderClick() {
+            if (window.cloudUser) toggleSettingsModal();
+            else cloudSignIn();
+        }
+
+        window.cloudUI = function (s) {
+            window.cloudUser = s.user || null;
+            const out = document.getElementById('cloudSignedOut');
+            const inn = document.getElementById('cloudSignedIn');
+            const dot = document.getElementById('cloudBtnDot');
+            const icon = document.getElementById('cloudBtnIcon');
+            if (!out || !inn) return;
+            out.classList.toggle('hidden', !!s.user);
+            inn.classList.toggle('hidden', !s.user);
+            dot.classList.toggle('hidden', !s.user);
+            icon.className = 'fa-solid text-sm ' + (s.user ? 'fa-cloud-arrow-up text-emerald-400' : 'fa-cloud');
+            if (s.user) {
+                document.getElementById('cloudName').textContent = s.user.name || 'Uporabnik';
+                document.getElementById('cloudEmail').textContent = s.user.email || '';
+                const av = document.getElementById('cloudAvatar');
+                if (s.user.photo) { av.src = s.user.photo; av.classList.remove('hidden'); } else av.classList.add('hidden');
+                const st = document.getElementById('cloudStatus');
+                st.textContent = s.status || '';
+                st.className = 'text-[10px] mt-2 font-semibold ' + (s.error ? 'text-rose-400' : 'text-emerald-400');
+            }
+        };
+
+        window.cloudBridge = {
+            getAll() {
+                return {
+                    activities, meals, weights: weightHistory, water: waterData, presets, excluded: excludedDays,
+                    settings: CLOUD_SETTINGS_KEYS.reduce((acc, k) => {
+                        const v = localStorage.getItem(k);
+                        if (v !== null) acc[k] = v;
+                        return acc;
+                    }, {})
+                };
+            },
+            apply(kind, data) {
+                const today = getLocalDateStr(new Date());
+                const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+                switch (kind) {
+                    case 'activities': activities = data; store('sport_activities', activities); break;
+                    case 'meals': meals = data; store('sport_meals', meals); break;
+                    case 'weights':
+                        weightHistory = data.sort((a, b) => new Date(a.date) - new Date(b.date));
+                        store('sport_weights', weightHistory);
+                        break;
+                    case 'water':
+                        waterData = data.date === today ? { date: today, amount: Number(data.amount) || 0 } : { date: today, amount: 0 };
+                        store('sport_water', waterData);
+                        break;
+                    case 'presets':
+                        if (Array.isArray(data.list)) { presets = data.list; store('sport_presets', presets); renderPresets(); }
+                        break;
+                    case 'excluded': excludedDays = Array.isArray(data.list) ? data.list : []; store('sport_excluded_days', excludedDays); break;
+                    case 'settings':
+                        Object.entries(data.values || {}).forEach(([k, v]) => { try { localStorage.setItem(k, v); } catch (e) {} });
+                        syncWeightInputSuggestion();
+                        if (!document.getElementById('settingsModal').classList.contains('hidden')) loadSettingsToModal();
+                        break;
+                }
+                renderApp();
+                if (kind === 'weights' || kind === 'settings') updateChart();
+                if (!document.getElementById('tabContent-history').classList.contains('hidden')) renderHistory();
+            }
+        };
+
         let activities = JSON.parse(localStorage.getItem('sport_activities')) || [];
         let meals = JSON.parse(localStorage.getItem('sport_meals')) || [];
         let weightHistory = JSON.parse(localStorage.getItem('sport_weights')) || [];
@@ -766,6 +914,21 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
         ];
 
         let weightChartInstance = null;
+
+        // Zagotovi, da imajo vsi zapisi ID (potrebno za sinhronizacijo)
+        (function ensureIds() {
+            let changed = false;
+            [['act_', activities], ['meal_', meals], ['w_', weightHistory]].forEach(([p, arr]) => {
+                arr.forEach((x, i) => { if (!x.id) { x.id = p + Date.now() + '_' + i; changed = true; } });
+            });
+            if (changed) {
+                try {
+                    localStorage.setItem('sport_activities', JSON.stringify(activities));
+                    localStorage.setItem('sport_meals', JSON.stringify(meals));
+                    localStorage.setItem('sport_weights', JSON.stringify(weightHistory));
+                } catch (e) {}
+            }
+        })();
 
         document.addEventListener('DOMContentLoaded', () => {
             const today = getLocalDateStr(new Date());
@@ -839,7 +1002,8 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
                 location.reload();
             }
 
-            alert('Nastavitve in osebni podatki uspešno shranjeni!');
+            cloudPush('settings');
+            toast('Nastavitve in osebni podatki shranjeni', 'success');
             toggleSettingsModal();
             syncWeightInputSuggestion();
             renderApp();
@@ -927,7 +1091,7 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
         async function callGeminiAPI(promptText, imageBase64 = null, schema = null) {
             const apiKey = localStorage.getItem('gemini_api_key');
             if (!apiKey) {
-                alert("API ključ ni nastavljen! Prosim, odpri nastavitve in vnesi svoj Gemini API ključ.");
+                toast("API ključ ni nastavljen. Vnesi svoj Gemini API ključ v nastavitvah.", "warn", 4000);
                 toggleSettingsModal();
                 return null;
             }
@@ -1037,6 +1201,7 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
                         updateEstimatedBurnedCalories();
                     }
                     statusEl.textContent = "Aktivnost uspešno prepoznana s slike!";
+                    toast("AI je prepoznal aktivnost s slike – preveri podatke in shrani", "success", 3500);
                     statusEl.className = "text-[10px] text-emerald-400 mt-2 font-semibold";
                 }
             });
@@ -1073,6 +1238,7 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
                     if (resJson.fat !== undefined) document.getElementById('mealFat').value = r1(resJson.fat);
                     if (resJson.type) document.getElementById('mealType').value = resJson.type;
                     statusEl.textContent = `Obrok uspešno ocenjen (~${r1(resJson.calories)} kcal)!`;
+                    toast(`AI je ocenil obrok: ~${r1(resJson.calories)} kcal – preveri in shrani`, "success", 3500);
                     statusEl.className = "text-[10px] text-emerald-400 mt-2 font-semibold";
                 }
             });
@@ -1081,7 +1247,7 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
         function estimateMealFromText() {
             const desc = document.getElementById('mealDesc').value.trim();
             if (!desc) {
-                alert("Najprej vpiši opis obroka!");
+                toast("Najprej vpiši opis obroka!", "warn");
                 return;
             }
 
@@ -1100,6 +1266,7 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
                     if (aiResult.fat !== undefined) document.getElementById('mealFat').value = r1(aiResult.fat);
                     if (aiResult.type) document.getElementById('mealType').value = aiResult.type;
                     statusEl.textContent = `AI ocena uspešna (~${r1(aiResult.calories)} kcal)`;
+                    toast(`AI ocena obroka: ~${r1(aiResult.calories)} kcal`, "success");
                     statusEl.className = "text-[10px] text-emerald-400 font-semibold";
                 }
             });
@@ -1161,13 +1328,18 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
         function addWater(amount) {
             waterData.amount += amount;
             saveWater();
+            cloudPush('water');
             renderApp();
+            const fmt = ml => ml >= 1000 ? (ml / 1000).toFixed(2).replace(/\.?0+$/, '') + ' l' : ml + ' ml';
+            toast(`Dodano ${fmt(amount)} vode · danes skupaj ${fmt(waterData.amount)}`, 'success');
         }
 
         function resetWater() {
             waterData.amount = 0;
             saveWater();
+            cloudPush('water');
             renderApp();
+            toast('Vnos vode za danes ponastavljen', 'info');
         }
 
         function saveWater() {
@@ -1205,6 +1377,7 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
             a.click();
             a.remove();
             URL.revokeObjectURL(url);
+            toast('Varnostna kopija prenesena', 'success');
         }
 
         function importData(event) {
@@ -1217,13 +1390,13 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
                 try {
                     data = JSON.parse(e.target.result);
                 } catch (err) {
-                    alert("Napaka: datoteka ni veljaven JSON.");
+                    toast("Napaka: datoteka ni veljaven JSON.", "error", 4000);
                     event.target.value = '';
                     return;
                 }
 
                 if (!Array.isArray(data.activities) || !Array.isArray(data.meals)) {
-                    alert("Napaka: datoteka ne izgleda kot veljavna varnostna kopija te aplikacije.");
+                    toast("Napaka: datoteka ni veljavna varnostna kopija te aplikacije.", "error", 4000);
                     event.target.value = '';
                     return;
                 }
@@ -1244,16 +1417,17 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
                 }
 
                 try {
-                    localStorage.setItem('sport_activities', JSON.stringify(activities));
-                    localStorage.setItem('sport_meals', JSON.stringify(meals));
-                    localStorage.setItem('sport_weights', JSON.stringify(weightHistory));
+                    localStorage.setItem('sport_activities', JSON.stringify(activities)); cloudPush('activities');
+                    localStorage.setItem('sport_meals', JSON.stringify(meals)); cloudPush('meals');
+                    localStorage.setItem('sport_weights', JSON.stringify(weightHistory)); cloudPush('weights');
                     localStorage.setItem('sport_water', JSON.stringify(waterData));
-                    localStorage.setItem('sport_presets', JSON.stringify(presets));
+                    localStorage.setItem('sport_presets', JSON.stringify(presets)); cloudPush('presets');
+                    cloudPush('water'); cloudPush('settings');
                 } catch (err) {
-                    alert("Opozorilo: pomnilnik brskalnika je poln.");
+                    toast("Opozorilo: pomnilnik brskalnika je poln.", "warn", 4000);
                 }
 
-                alert("Podatki uspešno uvoženi!");
+                toast("Podatki uspešno uvoženi", "success");
                 event.target.value = '';
                 loadSettingsToModal();
                 renderPresets();
@@ -1303,15 +1477,17 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
             document.getElementById('mealProtein').value = r1(p.p || 0);
             document.getElementById('mealCarbs').value = r1(p.c || 0);
             document.getElementById('mealFat').value = r1(p.f || 0);
+            toast(`Prednastavitev naložena: ${p.desc} – preveri in shrani obrok`, 'info');
         }
 
         function deletePreset(idx) {
             if (idx >= 0 && idx < presets.length) {
                 presets.splice(idx, 1);
                 try {
-                    localStorage.setItem('sport_presets', JSON.stringify(presets));
+                    localStorage.setItem('sport_presets', JSON.stringify(presets)); cloudPush('presets');
                 } catch(e) { console.error(e); }
                 renderPresets();
+                toast('Prednastavitev izbrisana', 'info');
             }
         }
 
@@ -1324,16 +1500,16 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
             const f = parseFloat(document.getElementById('mealFat').value) || 0;
 
             if (!desc || !cal) {
-                alert("Najprej vpiši opis in kalorije obroka!");
+                toast("Najprej vpiši opis in kalorije obroka!", "warn");
                 return;
             }
 
             presets.push({ type, desc, cal: r1(cal), p: r1(p), c: r1(c), f: r1(f) });
             try {
-                localStorage.setItem('sport_presets', JSON.stringify(presets));
+                localStorage.setItem('sport_presets', JSON.stringify(presets)); cloudPush('presets');
             } catch(e) { console.error(e); }
             renderPresets();
-            alert("Obrok shranjen med hitre prednastavitve!");
+            toast("Obrok shranjen med hitre prednastavitve", "success");
         }
 
         async function generateAiPresets() {
@@ -1361,14 +1537,14 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
                         c: r1(m.c || 0),
                         f: r1(m.f || 0)
                     }));
-                    localStorage.setItem('sport_presets', JSON.stringify(presets));
+                    localStorage.setItem('sport_presets', JSON.stringify(presets)); cloudPush('presets');
                     renderPresets();
-                    alert("AI je uspešno ustvaril nove predloge obrokov!");
+                    toast("AI je ustvaril nove predloge obrokov", "success");
                 } else {
-                    alert("AI ni vrnil veljavnega seznama obrokov.");
+                    toast("AI ni vrnil veljavnega seznama obrokov.", "error", 4000);
                 }
             } catch (err) {
-                alert("Napaka pri AI generiranju prednastavitev: " + err.message);
+                toast("Napaka pri AI generiranju prednastavitev: " + err.message, "error", 5000);
             } finally {
                 aiCallInProgress = false;
                 if (btn) {
@@ -1380,7 +1556,7 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
 
         function generatePresetsFromHistory() {
             if (!meals || meals.length === 0) {
-                alert("V zgodovini še nimaš vnesenih obrokov! Najprej vnesi nekaj obrokov ali uporabi AI predloge.");
+                toast("V zgodovini še nimaš obrokov. Najprej vnesi nekaj obrokov ali uporabi AI predloge.", "warn", 4000);
                 return;
             }
 
@@ -1410,7 +1586,7 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
             items.sort((a, b) => b.count - a.count);
 
             if (items.length === 0) {
-                alert("Nisem našel veljavnih obrokov v zgodovini.");
+                toast("Nisem našel veljavnih obrokov v zgodovini.", "warn");
                 return;
             }
 
@@ -1425,11 +1601,11 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
 
             presets = topItems;
             try {
-                localStorage.setItem('sport_presets', JSON.stringify(presets));
+                localStorage.setItem('sport_presets', JSON.stringify(presets)); cloudPush('presets');
             } catch(e) { console.error(e); }
 
             renderPresets();
-            alert(`Generirano ${topItems.length} najpogostejših obrokov iz tvoje zgodovine!`);
+            toast(`Iz zgodovine dodanih ${topItems.length} najpogostejših obrokov`, "success");
         }
 
         // --- MAKRO CILJI & IZRAČUNI ---
@@ -1491,7 +1667,7 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
             const duration = parseInt(document.getElementById('actDuration').value) || 0;
             const intensity = document.getElementById('actIntensity').value;
             if (!type || !duration) {
-                alert("Najprej vnesi vrsto aktivnosti in trajanje!");
+                toast("Najprej vnesi vrsto aktivnosti in trajanje!", "warn");
                 return;
             }
             const weight = parseFloat(localStorage.getItem('user_weight')) || 75;
@@ -1508,6 +1684,7 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
                     if (aiResult.calories !== undefined) {
                         document.getElementById('actBurnedCalories').value = r1(aiResult.calories);
                         statusEl.textContent = `AI ocena: ~${r1(aiResult.calories)} kcal`;
+                    toast(`AI ocena porabe: ~${r1(aiResult.calories)} kcal`, "success");
                         statusEl.className = "text-[10px] text-emerald-400 mt-1 font-semibold";
                     }
                 }
@@ -1586,9 +1763,10 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
                 excludedDays.splice(idx, 1);
             }
             try {
-                localStorage.setItem('sport_excluded_days', JSON.stringify(excludedDays));
+                localStorage.setItem('sport_excluded_days', JSON.stringify(excludedDays)); cloudPush('excluded');
             } catch(err) { console.error(err); }
             renderApp();
+            toast(idx === -1 ? `Dan ${dateStr} izključen iz tedenskega povzetka` : `Dan ${dateStr} spet vključen v tedenski povzetek`, 'info');
         }
 
         function getMondayToSundayRange(d = new Date()) {
@@ -1644,9 +1822,12 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
             }
 
             try {
-                localStorage.setItem('sport_activities', JSON.stringify(activities));
+                localStorage.setItem('sport_activities', JSON.stringify(activities)); cloudPush('activities');
             } catch(err) { console.error(err); }
 
+            toast(editId
+                ? `Aktivnost posodobljena: ${type}`
+                : `Aktivnost shranjena: ${type} · ${duration} min · ~${r1(burnedCalories)} kcal`, 'success');
             cancelEdit('activity');
             renderApp();
             if (document.getElementById('tabContent-history').classList.contains('hidden') === false) {
@@ -1677,10 +1858,11 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
             if (confirm("Res želiš izbrisati to aktivnost?")) {
                 activities = activities.filter(a => a.id !== id);
                 try {
-                    localStorage.setItem('sport_activities', JSON.stringify(activities));
+                    localStorage.setItem('sport_activities', JSON.stringify(activities)); cloudPush('activities');
                 } catch(err) { console.error(err); }
                 renderApp();
                 renderHistory();
+                toast('Aktivnost izbrisana', 'info');
             }
         }
 
@@ -1710,9 +1892,12 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
             }
 
             try {
-                localStorage.setItem('sport_meals', JSON.stringify(meals));
+                localStorage.setItem('sport_meals', JSON.stringify(meals)); cloudPush('meals');
             } catch(err) { console.error(err); }
 
+            toast(editId
+                ? `Obrok posodobljen: ${desc || type}`
+                : `Obrok shranjen: ${desc || type} · ${r1(calories)} kcal`, 'success');
             cancelEdit('meal');
             renderApp();
             if (document.getElementById('tabContent-history').classList.contains('hidden') === false) {
@@ -1744,10 +1929,11 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
             if (confirm("Res želiš izbrisati ta obrok?")) {
                 meals = meals.filter(m => m.id !== id);
                 try {
-                    localStorage.setItem('sport_meals', JSON.stringify(meals));
+                    localStorage.setItem('sport_meals', JSON.stringify(meals)); cloudPush('meals');
                 } catch(err) { console.error(err); }
                 renderApp();
                 renderHistory();
+                toast('Obrok izbrisan', 'info');
             }
         }
 
@@ -1784,7 +1970,7 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
             const date = document.getElementById('weightDateInput').value;
             const val = parseFloat(document.getElementById('weightValueInput').value);
             if (!date || !val || isNaN(val)) {
-                alert("Prosim, vnesi veljaven datum in težo!");
+                toast("Prosim, vnesi veljaven datum in težo!", "warn");
                 return;
             }
 
@@ -1798,12 +1984,13 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
             weightHistory.sort((a, b) => new Date(a.date) - new Date(b.date));
 
             try {
-                localStorage.setItem('sport_weights', JSON.stringify(weightHistory));
+                localStorage.setItem('sport_weights', JSON.stringify(weightHistory)); cloudPush('weights');
             } catch(err) { console.error(err); }
 
             if (weightHistory.length > 0) {
                 const latest = weightHistory[weightHistory.length - 1];
                 localStorage.setItem('user_weight', latest.weight);
+                cloudPush('settings');
             }
 
             document.getElementById('weightValueInput').value = '';
@@ -1811,17 +1998,18 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
             document.getElementById('weightValueInput').placeholder = `Teža v kg (npr. ${savedAfterLog})`;
             updateChart();
             renderApp();
-            alert("Teža uspešno zabeležena!");
+            toast(`Teža zabeležena: ${r1(val)} kg`, 'success');
         }
 
         function deleteWeight(id) {
             if (confirm("Izbrišem ta vnos teže?")) {
                 weightHistory = weightHistory.filter(w => w.id !== id);
                 try {
-                    localStorage.setItem('sport_weights', JSON.stringify(weightHistory));
+                    localStorage.setItem('sport_weights', JSON.stringify(weightHistory)); cloudPush('weights');
                 } catch(err) { console.error(err); }
                 updateChart();
                 renderApp();
+                toast('Vnos teže izbrisan', 'info');
             }
         }
 
@@ -2264,6 +2452,311 @@ body button.bg-blue-600:hover,body button.bg-amber-600:hover,body button.bg-cyan
                 });
             }
         }
+    </script>
+
+    <!-- ===================== FIREBASE: Google prijava + sinhronizacija ===================== -->
+    <script type="module">
+    // ┌────────────────────────────────────────────────────────────────────┐
+    // │ 1) Tukaj prilepi svoj firebaseConfig (Firebase konzola →            │
+    // │    Project settings → Your apps → Web app → SDK setup and config). │
+    // │ 2) Podrobna navodila so v sporočilu ob tej datoteki.                │
+    // └────────────────────────────────────────────────────────────────────┘
+const firebaseConfig = {
+  apiKey: "AIzaSyCNVm_pIE450Gbpeq_ZnRZVO3BVJ1wwgZw",
+  authDomain: "sportni-sledilnik.firebaseapp.com",
+  projectId: "sportni-sledilnik",
+  storageBucket: "sportni-sledilnik.firebasestorage.app",
+  messagingSenderId: "15232861448",
+  appId: "1:15232861448:web:11952b864d24b836ed18bd"
+};
+
+    const V = '10.14.1';
+    const configured = !!firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('VPIŠI');
+    const ui = (s) => window.cloudUI && window.cloudUI(s);
+    const T = (m, t, ms) => window.toast && window.toast(m, t, ms);
+
+    if (!configured) {
+        window.cloud = {
+            configured: false,
+            push() {},
+            signOut() {},
+            signIn() { T('Firebase še ni nastavljen – v datoteko vpiši firebaseConfig (glej navodila).', 'warn', 5000); }
+        };
+    } else {
+        try {
+            const [{ initializeApp }, A, F] = await Promise.all([
+                import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`),
+                import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`),
+                import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`)
+            ]);
+
+            const app = initializeApp(firebaseConfig);
+            const auth = A.getAuth(app);
+            const db = F.initializeFirestore(app, {
+                localCache: F.persistentLocalCache({ tabManager: F.persistentMultipleTabManager() })
+            });
+
+            const bridge = () => window.cloudBridge;
+            const COLS = { activities: 'activities', meals: 'meals', weights: 'weights' };
+            const META = { water: 'water', presets: 'presets', excluded: 'excluded', settings: 'settings' };
+            const ALL = [...Object.keys(COLS), ...Object.keys(META)];
+
+            let user = null;
+            let unsubs = [];
+            let lastSynced = { activities: {}, meals: {}, weights: {} };
+            const timers = {};
+            const inflight = {};
+            let lastToastAt = 0;
+
+            const stable = (o) => JSON.stringify(o, (k, v) =>
+                (v && typeof v === 'object' && !Array.isArray(v))
+                    ? Object.keys(v).sort().reduce((a, key) => (a[key] = v[key], a), {}) : v);
+            const clean = (o) => JSON.parse(JSON.stringify(o));
+            const sortById = (arr) => [...arr].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+            const colRef = (kind) => F.collection(db, 'users', user.uid, kind);
+            const metaRef = (name) => F.doc(db, 'users', user.uid, 'meta', name);
+            const hhmm = () => new Date().toLocaleTimeString('sl-SI', { hour: '2-digit', minute: '2-digit' });
+
+            function status(text, error) {
+                if (!user) return;
+                ui({ user: userInfo(), status: text, error: !!error });
+            }
+            function userInfo() {
+                return user ? { name: user.displayName, email: user.email, photo: user.photoURL } : null;
+            }
+            function fail(e) {
+                console.error('Sync napaka:', e);
+                const denied = e && (e.code === 'permission-denied');
+                const msg = denied
+                    ? 'Sinhronizacija ni uspela: Firestore pravila ne dovolijo dostopa (glej navodila).'
+                    : 'Sinhronizacija ni uspela: ' + (e && e.message ? e.message : e);
+                status('Napaka pri sinhronizaciji', true);
+                T(msg, 'error', 6000);
+            }
+
+            // --- potisk na strežnik ---
+            function metaPayload(kind, all) {
+                if (kind === 'water') return clean(all.water);
+                if (kind === 'presets') return { list: clean(all.presets) };
+                if (kind === 'excluded') return { list: clean(all.excluded) };
+                return { values: clean(all.settings) };
+            }
+
+            async function doPush(kind) {
+                if (!user) return;
+                const all = bridge().getAll();
+                inflight[kind] = true;
+                try {
+                    if (COLS[kind]) {
+                        const arr = all[kind].filter(x => x && x.id);
+                        const seen = {};
+                        const batches = [];
+                        let batch = F.writeBatch(db), n = 0;
+                        const flush = () => { batches.push(batch.commit()); batch = F.writeBatch(db); n = 0; };
+                        const nextMap = {};
+                        for (const item of arr) {
+                            const data = clean(item);
+                            const s = stable(data);
+                            nextMap[item.id] = s;
+                            seen[item.id] = true;
+                            if (lastSynced[kind][item.id] !== s) {
+                                batch.set(F.doc(db, 'users', user.uid, kind, String(item.id)), data);
+                                if (++n >= 400) flush();
+                            }
+                        }
+                        for (const id of Object.keys(lastSynced[kind])) {
+                            if (!seen[id]) {
+                                batch.delete(F.doc(db, 'users', user.uid, kind, id));
+                                if (++n >= 400) flush();
+                            }
+                        }
+                        if (n > 0) flush();
+                        await Promise.all(batches);
+                        lastSynced[kind] = nextMap;
+                    } else {
+                        await F.setDoc(metaRef(kind), metaPayload(kind, all));
+                    }
+                    status('Sinhronizirano ob ' + hhmm());
+                } catch (e) {
+                    fail(e);
+                } finally {
+                    inflight[kind] = false;
+                }
+            }
+
+            function push(kind) {
+                if (!user) {
+                    try { localStorage.setItem('sport_cloud_dirty', '1'); } catch (e) {}
+                    return;
+                }
+                const kinds = kind === 'all' ? ALL : [kind];
+                kinds.forEach(k => {
+                    clearTimeout(timers[k]);
+                    timers[k] = setTimeout(() => { timers[k] = null; doPush(k); }, 400);
+                });
+            }
+
+            // --- prvo združevanje podatkov ob prijavi ---
+            // mode: 'first' = prva prijava na tej napravi (oblak ima prednost pri enakih ID-jih),
+            //       'dirty' = spremembe brez prijave (lokalne spremembe imajo prednost)
+            async function initialMerge(mode) {
+                const all = bridge().getAll();
+                for (const kind of Object.keys(COLS)) {
+                    const snap = await F.getDocs(colRef(kind));
+                    const remote = {};
+                    snap.forEach(d => { remote[d.id] = stable(d.data()); });
+                    let batch = F.writeBatch(db), n = 0;
+                    const commits = [];
+                    for (const item of all[kind]) {
+                        if (!item || !item.id) continue;
+                        const data = clean(item);
+                        const has = Object.prototype.hasOwnProperty.call(remote, String(item.id));
+                        if (!has || (mode === 'dirty' && remote[String(item.id)] !== stable(data))) {
+                            batch.set(F.doc(db, 'users', user.uid, kind, String(item.id)), data);
+                            if (++n >= 400) { commits.push(batch.commit()); batch = F.writeBatch(db); n = 0; }
+                        }
+                    }
+                    if (n > 0) commits.push(batch.commit());
+                    await Promise.all(commits);
+                }
+                for (const kind of Object.keys(META)) {
+                    const ref = metaRef(kind);
+                    const s = await F.getDoc(ref);
+                    if (!s.exists() || mode === 'dirty') await F.setDoc(ref, metaPayload(kind, all));
+                }
+            }
+
+            // --- poslušalci (sprejem sprememb z drugih naprav) ---
+            function attachListeners() {
+                detachListeners();
+                for (const kind of Object.keys(COLS)) {
+                    unsubs.push(F.onSnapshot(colRef(kind), { includeMetadataChanges: false }, (snap) => {
+                        if (timers[kind] || inflight[kind]) return;      // lokalne spremembe še čakajo
+                        if (snap.empty && snap.metadata.fromCache) return; // prazen predpomnilnik ni resnica
+                        const arr = snap.docs.map(d => d.data());
+                        const map = {};
+                        snap.docs.forEach(d => { map[d.id] = stable(d.data()); });
+                        const local = bridge().getAll()[kind];
+                        const same = stable(sortById(arr)) === stable(sortById(local.map(clean)));
+                        lastSynced[kind] = map;
+                        if (!same) {
+                            bridge().apply(kind, arr);
+                            if (!snap.metadata.hasPendingWrites) notifyRemote();
+                        }
+                        status('Sinhronizirano ob ' + hhmm());
+                    }, fail));
+                }
+                for (const kind of Object.keys(META)) {
+                    unsubs.push(F.onSnapshot(metaRef(kind), (snap) => {
+                        if (timers[kind] || inflight[kind]) return;
+                        if (!snap.exists()) return;
+                        const d = snap.data();
+                        const all = bridge().getAll();
+                        let cur;
+                        if (kind === 'water') cur = all.water;
+                        else if (kind === 'presets') cur = { list: all.presets };
+                        else if (kind === 'excluded') cur = { list: all.excluded };
+                        else cur = { values: all.settings };
+                        if (kind === 'water') {
+                            const today = new Date(); const pad = n => String(n).padStart(2, '0');
+                            const ts = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+                            if (d.date !== ts) return; // stara voda iz prejšnjih dni
+                        }
+                        if (stable(clean(cur)) !== stable(clean(d))) {
+                            bridge().apply(kind, d);
+                            if (!snap.metadata.hasPendingWrites) notifyRemote();
+                        }
+                    }, fail));
+                }
+            }
+            function detachListeners() { unsubs.forEach(u => { try { u(); } catch (e) {} }); unsubs = []; }
+            function notifyRemote() {
+                const now = Date.now();
+                if (now - lastToastAt < 4000) return;
+                lastToastAt = now;
+                T('Podatki posodobljeni iz oblaka', 'info', 2200);
+            }
+
+            // --- prijava / odjava ---
+            async function signIn() {
+                const provider = new A.GoogleAuthProvider();
+                provider.setCustomParameters({ prompt: 'select_account' });
+                try {
+                    await A.signInWithPopup(auth, provider);
+                } catch (e) {
+                    const c = e && e.code;
+                    if (c === 'auth/popup-blocked' || c === 'auth/operation-not-supported-in-this-environment') {
+                        T('Preusmerjam na Google prijavo ...', 'info');
+                        try { await A.signInWithRedirect(auth, provider); } catch (e2) { T('Prijava ni uspela: ' + e2.message, 'error', 5000); }
+                    } else if (c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request') {
+                        T('Prijava preklicana', 'info');
+                    } else if (c === 'auth/unauthorized-domain') {
+                        T('Domena ni dovoljena: dodaj jo v Firebase → Authentication → Settings → Authorized domains.', 'error', 7000);
+                    } else {
+                        T('Prijava ni uspela: ' + (e && e.message ? e.message : e), 'error', 5000);
+                    }
+                }
+            }
+
+            async function signOut() {
+                try {
+                    detachListeners();
+                    await A.signOut(auth);
+                } catch (e) { T('Odjava ni uspela: ' + e.message, 'error'); }
+            }
+
+            A.getRedirectResult(auth).catch(e => {
+                if (e && e.code) T('Prijava ni uspela: ' + e.message, 'error', 5000);
+            });
+
+            A.onAuthStateChanged(auth, async (u) => {
+                if (!u) {
+                    const was = user;
+                    user = null;
+                    detachListeners();
+                    lastSynced = { activities: {}, meals: {}, weights: {} };
+                    ui({ user: null });
+                    if (was) T('Odjavljen – podatki ostanejo na tej napravi', 'info');
+                    return;
+                }
+                user = u;
+                ui({ user: userInfo(), status: 'Sinhroniziram ...' });
+                try {
+                    const lastUid = localStorage.getItem('sport_cloud_uid');
+                    const flagKey = 'sport_cloud_merged_' + u.uid;
+                    const dirty = localStorage.getItem('sport_cloud_dirty') === '1';
+                    let mode = 'remote';
+                    if (lastUid && lastUid !== u.uid) {
+                        const replace = confirm('Na tej napravi so podatki drugega računa. Jih zamenjam s podatki tega računa?\n\nV redu = zamenjaj (podatki drugega računa se z naprave odstranijo)\nPreklici = odjava');
+                        if (!replace) { user = null; await A.signOut(auth); return; }
+                        mode = 'remote';
+                        // lokalne podatke zamenjamo s podatki računa
+                        ['activities', 'meals', 'weights'].forEach(k => bridge().apply(k, []));
+                        localStorage.removeItem('sport_cloud_dirty');
+                    } else if (!localStorage.getItem(flagKey)) {
+                        mode = 'first';
+                    } else if (dirty) {
+                        mode = 'dirty';
+                    }
+                    if (mode !== 'remote') await initialMerge(mode);
+                    localStorage.setItem(flagKey, '1');
+                    localStorage.setItem('sport_cloud_uid', u.uid);
+                    localStorage.removeItem('sport_cloud_dirty');
+                    attachListeners();
+                    T('Prijavljen kot ' + (u.displayName || u.email) + ' – podatki se sinhronizirajo', 'success', 3200);
+                    status('Sinhronizirano ob ' + hhmm());
+                } catch (e) {
+                    fail(e);
+                }
+            });
+
+            window.cloud = { configured: true, push, signIn, signOut };
+        } catch (e) {
+            console.error('Firebase se ni naložil', e);
+            window.cloud = null;
+            T('Firebase se ni naložil – deluje samo lokalno.', 'warn', 4000);
+        }
+    }
     </script>
 </body>
 </html>
