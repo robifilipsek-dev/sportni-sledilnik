@@ -271,7 +271,7 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
             </div>
             <ul class="list-disc list-inside space-y-1.5 text-slate-300">
                 <li><strong>Nastavitve profila in AI:</strong> Zgoraj desno klikni na ikono zobnika (tam lahko tudi preklopiš svetlo ali temno temo). Vnesi svoj Gemini API ključ (za AI funkcije), spol, starost, višino, težo, povprečne dnevne korake in cilj.</li>
-                <li><strong>Spremljanje dneva (Voda & Poraba):</strong> Na vrhu spremljaš pasivno in aktivno energijsko porabo ter vnos kalorij in makrohranil. Presežek kalorij se samodejno prišteje k cilju gibanja. S hitrimi gumbi beležiš vnos vode. Cilj vode se izračuna iz tvoje teže (35 ml/kg) in se za vsakih 30 min športa poveča za 400 ml.</li>
+                <li><strong>Spremljanje dneva (Voda & Poraba):</strong> Na vrhu spremljaš pasivno in aktivno energijsko porabo ter vnos kalorij in makrohranil. Presežek kalorij se samodejno prišteje k cilju gibanja. S hitrimi gumbi beležiš vnos vode. Cilj vode se izračuna iz tvoje teže (35 ml/kg) in se sorazmerno poveča za 400 ml na vsakih 30 min športa.</li>
                 <li><strong>Športne aktivnosti:</strong> V zavihku "Šport" lahko ročno vpišeš trening ali uporabiš <em>Kamero / Galerijo</em> za samodejno AI prepoznavo s slike.</li>
                 <li><strong>Prehrana in AI ocena:</strong> V zavihku "Prehrana" beležiš obroke, urejaš hitre prednastavitve ali uporabljaš AI oceno iz opisa ali slike.</li>
                 <li><strong>Telesna teža in zgodovina:</strong> Spremljaj napredek teže v grafu in pregleduj pretekle vnose.</li>
@@ -904,7 +904,6 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
         let weightHistory = JSON.parse(localStorage.getItem('sport_weights')) || [];
         let waterData = JSON.parse(localStorage.getItem('sport_water')) || { date: '', amount: 0 };
         let excludedDays = JSON.parse(localStorage.getItem('sport_excluded_days')) || [];
-        const WEEKLY_BURN_GOAL = 1500;
         
         let presets = JSON.parse(localStorage.getItem('sport_presets')) || [
             { type: 'Zajtrk', desc: 'Ovsena kaša', cal: 350, p: 25, c: 45, f: 8 },
@@ -1232,7 +1231,10 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
                 errorClass: "text-[10px] text-rose-400 mt-2 font-semibold",
                 onSuccess: (resJson) => {
                     if (resJson.description) document.getElementById('mealDesc').value = resJson.description;
+                    const rc = reconcileKcal(resJson.calories, resJson.protein, resJson.carbs, resJson.fat);
+                    resJson.calories = rc.cal;
                     if (resJson.calories) document.getElementById('mealCalories').value = r1(resJson.calories);
+                    if (rc.fixed) toast('Kalorije usklajene z makrohranili (P×4 + O×4 + M×9)', 'info', 3500);
                     if (resJson.protein !== undefined) document.getElementById('mealProtein').value = r1(resJson.protein);
                     if (resJson.carbs !== undefined) document.getElementById('mealCarbs').value = r1(resJson.carbs);
                     if (resJson.fat !== undefined) document.getElementById('mealFat').value = r1(resJson.fat);
@@ -1242,6 +1244,16 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
                     statusEl.className = "text-[10px] text-emerald-400 mt-2 font-semibold";
                 }
             });
+        }
+
+        // kcal iz makrohranil (Atwater): 4 / 4 / 9
+        function macroKcal(p, c, f) { return (Number(p) || 0) * 4 + (Number(c) || 0) * 4 + (Number(f) || 0) * 9; }
+        // Če se AI-jeve kalorije bistveno razlikujejo od makrohranil, uporabi vrednost iz makrov
+        function reconcileKcal(cal, p, c, f) {
+            const mk = macroKcal(p, c, f);
+            const cl = Number(cal) || 0;
+            if (mk > 0 && (cl <= 0 || Math.abs(cl - mk) / mk > 0.12)) return { cal: r1(mk), fixed: true };
+            return { cal: r1(cl), fixed: false };
         }
 
         function estimateMealFromText() {
@@ -1260,7 +1272,10 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
                 busyText: "Gemini AI ocenjuje hranilne vrednosti...",
                 onSuccess: (aiResult) => {
                     if (aiResult.description) document.getElementById('mealDesc').value = aiResult.description;
+                    const rc = reconcileKcal(aiResult.calories, aiResult.protein, aiResult.carbs, aiResult.fat);
+                    aiResult.calories = rc.cal;
                     if (aiResult.calories) document.getElementById('mealCalories').value = r1(aiResult.calories);
+                    if (rc.fixed) toast('Kalorije usklajene z makrohranili (P×4 + O×4 + M×9)', 'info', 3500);
                     if (aiResult.protein !== undefined) document.getElementById('mealProtein').value = r1(aiResult.protein);
                     if (aiResult.carbs !== undefined) document.getElementById('mealCarbs').value = r1(aiResult.carbs);
                     if (aiResult.fat !== undefined) document.getElementById('mealFat').value = r1(aiResult.fat);
@@ -1532,7 +1547,7 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
                     presets = resJson.map(m => ({
                         type: m.type || 'Kosilo',
                         desc: m.desc || 'Obrok',
-                        cal: r1(m.cal || 0),
+                        cal: reconcileKcal(m.cal, m.p, m.c, m.f).cal,
                         p: r1(m.p || 0),
                         c: r1(m.c || 0),
                         f: r1(m.f || 0)
@@ -1605,7 +1620,7 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
             } catch(e) { console.error(e); }
 
             renderPresets();
-            toast(`Iz zgodovine dodanih ${topItems.length} najpogostejših obrokov`, "success");
+            toast(`Prednastavitve nadomeščene z ${topItems.length} najpogostejšimi obroki iz zgodovine`, "success");
         }
 
         // --- MAKRO CILJI & IZRAČUNI ---
@@ -1631,17 +1646,18 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
             else bmr -= 161;
             bmr = r1(bmr);
 
-            const stepsBurn = r1(steps * 0.04);
+            const stepsBurn = r1(steps * weight * 0.0005); // ~0,0375 kcal/korak pri 75 kg
             const passiveBurn = r1(bmr + stepsBurn);
 
             let targetCalories = passiveBurn;
-            if (goal === 'lose') targetCalories = Math.max(1200, r1(passiveBurn - 500));
+            if (goal === 'lose') targetCalories = Math.max(gender === 'male' ? 1500 : 1200, r1(passiveBurn - 500));
             else if (goal === 'gain') targetCalories = r1(passiveBurn + 300);
 
             return { gender, age, weight, height, steps, goal, bmr, passiveBurn, targetCalories };
         }
 
         function estimateBurnedCalories(type, duration, intensity) {
+            const weight = parseFloat(localStorage.getItem('user_weight')) || 75;
             let baseRate = 7;
             if (['Fitnes', 'Trening z utežmi'].includes(type)) baseRate = 8;
             if (type === 'Kolesarjenje') baseRate = 9;
@@ -1650,7 +1666,8 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
             if (type === 'Odbojka na mivki' || type === 'Tenis') baseRate = 8.5;
             if (type === 'Pohodništvo' || type === 'Smučanje') baseRate = 7.5;
             let mult = intensity === 'Nizka' ? 0.8 : (intensity === 'Visoka' ? 1.3 : 1.0);
-            return r1(duration * baseRate * mult);
+            // baseRate = kcal/min pri 75 kg; preračunano na dejansko težo
+            return r1(duration * baseRate * (weight / 75) * mult);
         }
 
         function updateEstimatedBurnedCalories() {
@@ -1684,7 +1701,7 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
                     if (aiResult.calories !== undefined) {
                         document.getElementById('actBurnedCalories').value = r1(aiResult.calories);
                         statusEl.textContent = `AI ocena: ~${r1(aiResult.calories)} kcal`;
-                    toast(`AI ocena porabe: ~${r1(aiResult.calories)} kcal`, "success");
+                        toast(`AI ocena porabe: ~${r1(aiResult.calories)} kcal`, "success");
                         statusEl.className = "text-[10px] text-emerald-400 mt-1 font-semibold";
                     }
                 }
@@ -1731,12 +1748,22 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
 
         function calculateDailySportBurnGoal() {
             const weeklyMin = calculatePersonalizedActivityGoal();
-            return Math.max(100, Math.round((weeklyMin / 7) * 10));
+            return Math.max(100, Math.round(weeklyMin / 7 * kcalPerGoalMinute()));
+        }
+
+        // ~10 kcal/min pri 75 kg, preračunano na težo
+        function kcalPerGoalMinute() {
+            const weight = parseFloat(localStorage.getItem('user_weight')) || 75;
+            return weight * (10 / 75);
+        }
+
+        function weeklyBurnGoal() {
+            return Math.round(calculatePersonalizedActivityGoal() * kcalPerGoalMinute());
         }
 
         function computeWaterGoal(weightKg, sportMinutes) {
             const base = Math.max(0, Math.round((Number(weightKg) || 0) * 35));
-            const extra = Math.max(0, Math.floor((Number(sportMinutes) || 0) / 30) * 400);
+            const extra = Math.max(0, Math.round(((Number(sportMinutes) || 0) / 30) * 400));
             return { base, extra, total: base + extra };
         }
 
@@ -1878,6 +1905,9 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
             const fat = parseFloat(document.getElementById('mealFat').value) || 0;
             const imgData = document.getElementById('mealImgData').value;
 
+            const mk = macroKcal(protein, carbs, fat);
+            const kcalMismatch = (protein + carbs + fat) > 0 && mk > 0 && Math.abs(calories - mk) / mk > 0.2;
+
             if (editId) {
                 const idx = meals.findIndex(m => m.id === editId);
                 if (idx !== -1) {
@@ -1898,6 +1928,9 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
             toast(editId
                 ? `Obrok posodobljen: ${desc || type}`
                 : `Obrok shranjen: ${desc || type} · ${r1(calories)} kcal`, 'success');
+            if (kcalMismatch) {
+                setTimeout(() => toast(`Pozor: vnesene kalorije (${r1(calories)}) se ne ujemajo z makrohranili (≈ ${r1(mk)} kcal). Preveri vnos.`, 'warn', 6000), 600);
+            }
             cancelEdit('meal');
             renderApp();
             if (document.getElementById('tabContent-history').classList.contains('hidden') === false) {
@@ -2202,7 +2235,7 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
             updateMacro('carbs', todayCarb, macroTargets.carbsG, { ring: 'carbsProgress', pct: 'carbsPct', val: 'todayCarbs', target: 'carbsTargetText' });
             updateMacro('fat', todayFatVal, macroTargets.fatG, { ring: 'fatProgress', pct: 'fatPct', val: 'todayFat', target: 'fatTargetText' });
 
-            // Voda: 35 ml/kg + 400 ml na vsakih 30 min zabeleženega športa
+            // Voda: 35 ml/kg + 400 ml na vsakih 30 min zabeleženega športa (sorazmerno)
             const waterGoal = computeWaterGoal(metabolics.weight, todaySportMinutes);
             const waterPct = waterGoal.total > 0 ? Math.round((waterData.amount / waterGoal.total) * 100) : 0;
             setRing('waterProgress', waterPct);
@@ -2233,6 +2266,7 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
             }
 
             let weeklyCalSum = 0;
+            let weeklyCalNetSum = 0;
             let weeklySportBurnSum = 0;
             let weeklyMinutesSum = 0;
             let weeklyTotalBurnSum = 0;
@@ -2258,6 +2292,7 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
                     weeklySportBurnSum += dSport;
                     weeklyMinutesSum += dMin;
                     if (day.isPastOrToday) {
+                        weeklyCalNetSum += dCal;
                         weeklyTotalBurnSum += dTotalBurn;
                     }
                 }
@@ -2308,7 +2343,7 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
                 breakdownContainer.appendChild(card);
             });
 
-            const weeklyNet = weeklyCalSum - weeklyTotalBurnSum;
+            const weeklyNet = weeklyCalNetSum - weeklyTotalBurnSum;
             document.getElementById('weeklyMinutes').textContent = `${weeklyMinutesSum} min`;
             document.getElementById('weeklyBurned').textContent = `${r1(weeklySportBurnSum)} kcal`;
             document.getElementById('weeklyCalories').textContent = `${r1(weeklyCalSum)} kcal`;
@@ -2324,7 +2359,8 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
             setText('goalPercentage', `${actGoalPct}%`);
             setText('weeklyActGoalText', `${weeklyMinutesSum} / ${targetMin} min`);
 
-            const burnGoalPct = Math.round((weeklySportBurnSum / WEEKLY_BURN_GOAL) * 100);
+            const WEEKLY_BURN_GOAL = weeklyBurnGoal();
+            const burnGoalPct = WEEKLY_BURN_GOAL > 0 ? Math.round((weeklySportBurnSum / WEEKLY_BURN_GOAL) * 100) : 0;
             setRing('weeklyBurnProgressBar', burnGoalPct);
             setText('weeklyBurnPctText', `${burnGoalPct}%`);
             setText('weeklyBurnGoalText', `${r1(weeklySportBurnSum)} / ${WEEKLY_BURN_GOAL} kcal`);
@@ -2461,14 +2497,14 @@ html.light .toast{background:rgba(255,255,255,.98);color:#0f172a;border-color:rg
     // │    Project settings → Your apps → Web app → SDK setup and config). │
     // │ 2) Podrobna navodila so v sporočilu ob tej datoteki.                │
     // └────────────────────────────────────────────────────────────────────┘
-const firebaseConfig = {
-  apiKey: "AIzaSyCNVm_pIE450Gbpeq_ZnRZVO3BVJ1wwgZw",
+    const firebaseConfig = {
+        apiKey: "AIzaSyCNVm_pIE450Gbpeq_ZnRZVO3BVJ1wwgZw",
   authDomain: "sportni-sledilnik.firebaseapp.com",
   projectId: "sportni-sledilnik",
   storageBucket: "sportni-sledilnik.firebasestorage.app",
   messagingSenderId: "15232861448",
   appId: "1:15232861448:web:11952b864d24b836ed18bd"
-};
+    };
 
     const V = '10.14.1';
     const configured = !!firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('VPIŠI');
